@@ -574,21 +574,7 @@ public class CalendarProgram {
 
 			} else {
 				for (i = 0; i < eventH.getAppointments().size(); i++) {
-					if (year == eventH.getAppointments().get(i).getYear()
-							&& month == eventH.getAppointments().get(i).getMonth()
-							&& day == eventH.getAppointments().get(i).getDay()
-							&& ((shour == eventH.getAppointments().get(i).getShour()
-									&& sminute == eventH.getAppointments().get(i).getSminute())
-									|| (ehour == eventH.getAppointments().get(i).getEhour()
-											&& eminute == eventH.getAppointments().get(i).getEminute())
-									|| ((shour >= eventH.getAppointments().get(i).getShour())
-											&& (shour <= eventH.getAppointments().get(i).getEhour())
-											|| (ehour >= eventH.getAppointments().get(i).getShour())
-													&& (ehour <= eventH.getAppointments().get(i).getEhour()))
-									|| ((eventH.getAppointments().get(i).getShour() >= shour)
-											&& (eventH.getAppointments().get(i).getShour() <= ehour)
-											|| (eventH.getAppointments().get(i).getEhour() >= shour)
-													&& (eventH.getAppointments().get(i).getEhour() <= ehour)))) {
+					if (checkConflict(eventH.getAppointments().get(i), year, month, day, shour, sminute, ehour, eminute)) {
 						JOptionPane.showMessageDialog(null, "Conflict arose.");
 						break;
 					}
@@ -612,7 +598,52 @@ public class CalendarProgram {
 
 		}
 	}
+	
+	private class btnEdit implements ActionListener{
+		public void actionPerformed(ActionEvent e){
+			//load currently selected appointment into a create view
+			Appointment temp;
+			//copy currently selected appointment into the temp
+			//delete currently selected appointment
+			//compare temp to list of appointments for conflicts
+			for (int i = 0; i < eventH.getAppointments().size(); i++) {
+				if (checkConflict(eventH.getAppointments().get(i), temp.getYear(), temp.getMonth(), temp.getDay(), temp.getShour(), temp.getSminute(), temp.getEhour(), temp.getEminute())) {
+					JOptionPane.showMessageDialog(null, "Conflict arose.");
+					eventH.getAppointments().add(temp);
+					break;
+				}
+			}
+			if (i == eventH.getAppointments().size()) {
+				eventH.addAppointment(year, month, day, mainView.getCreateView().getTextFieldEvent().getText(),
+						shour, sminute, ehour, eminute, row);
+				
 
+				JOptionPane.showMessageDialog(null, "Done Adding an Event!");
+				refreshAgenda();
+				refreshDay();
+			} // adds the current edited values from the create/edit window into the arraylist
+		}
+		//if click cancel button add temp back into eventH
+	}
+
+	public boolean checkConflict(Appointment current, int year, int month, int day, int shour, int sminute, int ehour, int eminute){
+		return ((year == current.getYear()
+				&& month == current.getMonth()
+				&& day == current.getDay()
+				&& ((shour == current.getShour()
+						&& sminute == current.getSminute())
+						|| (ehour == current.getEhour()
+								&& eminute == current.getEminute())
+						|| ((shour >= current.getShour())
+								&& (shour <= current.getEhour())
+								|| (ehour >= current.getShour())
+										&& (ehour <= current.getEhour()))
+						|| ((current.getShour() >= shour)
+								&& (current.getShour() <= ehour)
+								|| (current.getEhour() >= shour)
+										&& (current.getEhour() <= ehour)))) && current.getReservedStatus());
+	}
+	
 	private class btnDiscard_Action implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			mainView.getCreateView().getTextFieldDate().setText("");
