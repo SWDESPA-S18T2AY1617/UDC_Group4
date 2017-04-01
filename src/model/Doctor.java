@@ -1,34 +1,21 @@
-package designchallenge1;
+package model;
 
-public class Doctor
+public class Doctor extends Person
 {
-	public Doctor(String name, int ID)
-	{
-		this.Name = name;
-		this.ID = ID;
+	private int secretaryid;
+	
+	public final static String TABLE_NAME = "doctor";
+	public final static String COL_ID = "iddoctor";	
+	public final static String COL_SECRETARY = "idsecretary";	
+	public final static String COL_ROOM = "room";
+	public final static String COL_NAME = "name";
+	
+	public int getSecretaryid() {
+		return secretaryid;
 	}
 	
-	public void setSecretary(Secretary secretary)
-	{
-		this.Secretary = secretary;
+	public void setSecretaryid(int secretaryid) {
+		this.secretaryid = secretaryid;
 	}
 	
-	public String getName()
-	{
-		return this.Name;
-	}
-	
-	public int getID()
-	{
-		return this.ID;
-	}
-	
-	public Secretary getSecretary()
-	{
-		return this.Secretary;
-	}
-	
-	private final String Name;
-	private int ID;
-	private Secretary Secretary;
 }

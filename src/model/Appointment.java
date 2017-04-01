@@ -1,44 +1,30 @@
-package designchallenge1;
+package model;
 
 import java.awt.Color;
+import java.sql.Date;
+import java.sql.Time;
 
 public class Appointment{
-
-	private final int day;
-    private final int year;
-    private final int month;
-    //private final Client String;
-    //private final Doctor doctor;
-    private final String event;
+	
+    private int appointmentID;
+	private String appointmentName;
     private String color;
-	private final int shour;
-	private final int sminute;
-	private final int ehour;
-	private final int eminute;
-    private int srow;
-    private int erow;
-    private int col;
-    private Boolean reserved;
-
-    public Appointment(int year, int month, int day, String event, String color, int shour, int sminute, int ehour, int eminute) {
-        this.year = year;
-        this.month = month;
-        this.day = day;
-        this.event = event;
-        this.color = color;
-		this.shour = shour;
-		this.sminute = sminute;
-		this.ehour = ehour;
-		this.eminute = eminute;
-        this.setStartRow();
-        this.setEndRow();
-        this.setCol(1);
-        this.reserved = false;
-    }
-
-    public String getEvent() {
-        return event;
-    }
+    private Date appointmentDate;
+    private Time timeIn;
+    private Time timeOut;
+    private int clientID;
+    private int doctorID;
+    private boolean status;
+    
+    public final static String TABLE_NAME = "appointment";
+	public final static String COL_ID = "appointmentID";
+	public final static String COL_APPOINTMENTNAME = "appointment_name";
+	public final static String COL_DATE = "date";
+	public final static String COL_TIMESTART = "time_start";
+	public final static String COL_TIMEEND = "time_end";
+	public final static String COL_CLIENTID = "clientID";
+	public final static String COL_DOCTORID = "doctorID";
+	public final static String COL_STATUS = "status";
 
     public Color getColor() {
         switch (color.toUpperCase()) {
@@ -61,81 +47,81 @@ public class Appointment{
     	return color.toUpperCase();
     }
     
-    public boolean checkYearMonth(int year, int month) {
-        return this.getYear() == year && this.getMonth() == month;
-    }
+//    public boolean checkYearMonth(int year, int month) {
+//        return this.getYear() == year && this.getMonth() == month;
+//    }
+//
+//    public boolean checkSameDate(int year, int month, int day) {
+//        return this.getYear() == year && this.getMonth() == month && this.getDay() == day;
+//    }
+//
+//	public String toString(){
+//		String a = month + "/" + day + "/" + year + " "+ event + " " + shour + ":" + sminute + " - " + ehour + ":" + eminute;
+//		return a;
+//	}
 
-    public boolean checkSameDate(int year, int month, int day) {
-        return this.getYear() == year && this.getMonth() == month && this.getDay() == day;
-    }
-
-	public int getDay() {
-		return day;
-	}
-
-	public int getYear() {
-		return year;
-	}
-
-	public int getMonth() {
-		return month;
+	public int getAppointmentID() {
+		return appointmentID;
 	}
 
-	public int getShour() {
-		return shour;
+	public void setAppointmentID(int appointmentID) {
+		this.appointmentID = appointmentID;
 	}
 
-	public int getSminute() {
-		return sminute;
+	public boolean isStatus() {
+		return status;
 	}
 
-	public int getEhour() {
-		return ehour;
+	public void setStatus(boolean status) {
+		this.status = status;
 	}
 
-	public int getEminute() {
-		return eminute;
+	public String getAppointmentName() {
+		return appointmentName;
 	}
 
-	public int getStartRow() {
-		return srow;
+	public void setAppointmentName(String appointmentName) {
+		this.appointmentName = appointmentName;
 	}
 
-	public void setStartRow() {
-		this.srow = shour * 2;
-		if(sminute == 30)
-			this.srow++;
-	}
-	
-	public int getEndRow() {
-		return erow;
+	public Time getTimeIn() {
+		return timeIn;
 	}
 
-	public void setEndRow() {
-		this.erow = ehour * 2;
-		if(eminute == 30)
-			this.erow++;
-	}
-	
-	public int getCol() {
-		return col;
+	public void setTimeIn(Time timeIn) {
+		this.timeIn = timeIn;
 	}
 
-	public void setCol(int col) {
-		this.col = col;
-	}
-	
-	public Boolean getReservedStatus() {
-		return reserved;
+	public Time getTimeOut() {
+		return timeOut;
 	}
 
-	public void setReservedStatus(Boolean reserved) {
-		this.reserved = reserved;
+	public void setTimeOut(Time timeOut) {
+		this.timeOut = timeOut;
 	}
 
-	public String toString(){
-		String a = month + "/" + day + "/" + year + " "+ event + " " + shour + ":" + sminute + " - " + ehour + ":" + eminute;
-		return a;
+	public Date getAppointmentDate() {
+		return appointmentDate;
+	}
+
+	public void setAppointmentDate(Date appointmentDate) {
+		this.appointmentDate = appointmentDate;
+	}
+
+	public int getClientID() {
+		return clientID;
+	}
+
+	public void setClientID(int clientID) {
+		this.clientID = clientID;
+	}
+
+	public int getDoctorID() {
+		return doctorID;
+	}
+
+	public void setDoctorID(int doctorID) {
+		this.doctorID = doctorID;
 	}
    
 }

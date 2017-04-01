@@ -1,17 +1,21 @@
-package designchallenge1;
+package model;
 
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import javax.swing.table.DefaultTableModel;
 
-public class Secretary {
+public class Secretary extends Person{
 
     private ArrayList<Appointment> Appointments = new ArrayList<Appointment>();
     private ArrayList<Integer> itemIndex = new ArrayList<Integer>();
     private DTModel calendarModel = new DTModel();
     private DayModel dayModel = new DayModel();
     private Doctor Doctors;
+    
+    public final static String TABLE_NAME = "secretary";
+	public final static String COL_ID = "idsecretary";
+	public final static String COL_NAME = "name";
 
     private void updateTable(int month, int year) {
         GregorianCalendar cal = new GregorianCalendar(year, month, 1);
