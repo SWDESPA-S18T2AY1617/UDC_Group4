@@ -10,19 +10,21 @@ import model.Doctor;
 import server.DBConnection;
 
 public class DoctorManager {
-	private DBConnection connection;
+	
+	private Connection connect ;
 	private PreparedStatement statement;
 	
 	public DoctorManager ()
 	{
-		connection = new DBConnection ();
+		DBConnection connection = new DBConnection ();
+		connect = connection.getConnection();
 	}
 	
 	public ArrayList<Doctor> getAllDoctor ()
 	{
 		ArrayList<Doctor> doctors = new ArrayList<Doctor>();
 		
-		try (Connection connect = connection.getConnection())
+		try
 		{
 			ResultSet rs;
 			String query = "SELECT * FROM " + Doctor.TABLE_NAME;
@@ -34,10 +36,7 @@ public class DoctorManager {
 				doctors.add(toDoctor(rs));
 			}
 			
-			connection.close();
-			
 			System.out.println("[" + getClass().getName() + "] Successful SELECT from " + Doctor.TABLE_NAME);
-			
 			return doctors;
 			
 		} catch (SQLException e) {
@@ -55,7 +54,7 @@ public class DoctorManager {
 										+ Doctor.COL_SECRETARY + ")"
 										+ " VALUES (?,?,?);";
 
-		try (Connection connect = connection.getConnection()) {
+		try {
 			statement = connect.prepareStatement(query);
 			
 			statement.setInt(1, doctor.getID());
@@ -64,7 +63,6 @@ public class DoctorManager {
 
 			// execute the  insert
 			statement.executeUpdate();
-			connection.close();
 			System.out.println("[" + getClass().getName() + "] Successful INSERT into " + Doctor.TABLE_NAME);
 		} 
 		catch (SQLException e)
@@ -80,14 +78,13 @@ public class DoctorManager {
 		String query = "DELETE FROM " + Doctor.TABLE_NAME + 
 						" WHERE " + Doctor.COL_ID + " = ?;";
 		
-		try (Connection connect = connection.getConnection())
+		try 
 		{
 			statement = connect.prepareStatement(query);
 			statement.setInt(1, id);
 			statement.executeUpdate();
 			
 			System.out.println("[" + getClass().getName() + "] Successful DELETE in " + Doctor.TABLE_NAME);
-			connection.close();
 		} catch (SQLException e) {
 			System.out.println("[" + getClass().getName() + "] Unable to DELETE in " + Doctor.TABLE_NAME);
 			e.printStackTrace();
@@ -100,7 +97,7 @@ public class DoctorManager {
 								" SET " + Doctor.COL_NAME + "= ?," + Doctor.COL_SECRETARY + "= ?," + 
 								" WHERE " + Doctor.COL_ID + " = ?;";
 
-		try (Connection connect = connection.getConnection())
+		try 
 		{
 			statement = connect.prepareStatement(updateTableSQL);
 
@@ -110,7 +107,6 @@ public class DoctorManager {
 			
 			// execute update SQL statement
 			statement.executeUpdate();
-			connection.close();
 			System.out.println("[" + getClass().getName() + "] Successful UPDATE in " + Doctor.TABLE_NAME);
 		} catch (SQLException e) {
 			System.out.println("[" + getClass().getName() + "] Unable to UPDATE in " + Doctor.TABLE_NAME);

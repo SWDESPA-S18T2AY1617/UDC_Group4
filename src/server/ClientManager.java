@@ -10,19 +10,21 @@ import model.Client;
 import server.DBConnection;
 
 public class ClientManager {
-	private DBConnection connection;
+	
+	private Connection connect;
 	private PreparedStatement statement;
 	
 	public ClientManager ()
 	{
-		connection = new DBConnection ();
+		DBConnection connection = new DBConnection ();
+		connect = connection.getConnection()
 	}
 	
 	public ArrayList<Client> getAllClient ()
 	{
 		ArrayList<Client> clients = new ArrayList<Client>();
 		
-		try (Connection connect = connection.getConnection())
+		try
 		{
 			ResultSet rs;
 			String query = "SELECT * FROM " + Client.TABLE_NAME;
@@ -34,7 +36,7 @@ public class ClientManager {
 				clients.add(toClient(rs));
 			}
 			
-			connection.close();
+			
 			
 			System.out.println("[" + getClass().getName() + "] Successful SELECT from " + Client.TABLE_NAME);
 			
@@ -54,7 +56,7 @@ public class ClientManager {
 										+ Client.COL_NAME + ")"
 										+ " VALUES (?,?);";
 
-		try (Connection connect = connection.getConnection()) {
+		try {
 			statement = connect.prepareStatement(query);
 			
 			statement.setInt(1, client.getID());
@@ -62,7 +64,7 @@ public class ClientManager {
 
 			// execute the  insert
 			statement.executeUpdate();
-			connection.close();
+			
 			System.out.println("[" + getClass().getName() + "] Successful INSERT into " + Client.TABLE_NAME);
 		} 
 		catch (SQLException e)
@@ -78,14 +80,14 @@ public class ClientManager {
 		String query = "DELETE FROM " + Client.TABLE_NAME + 
 						" WHERE " + Client.COL_ID + " = ?;";
 		
-		try (Connection connect = connection.getConnection())
+		try
 		{
 			statement = connect.prepareStatement(query);
 			statement.setInt(1, id);
 			statement.executeUpdate();
 			
 			System.out.println("[" + getClass().getName() + "] Successful DELETE in " + Client.TABLE_NAME);
-			connection.close();
+			
 		} catch (SQLException e) {
 			System.out.println("[" + getClass().getName() + "] Unable to DELETE in " + Client.TABLE_NAME);
 			e.printStackTrace();
@@ -98,7 +100,7 @@ public class ClientManager {
 								" SET " + Client.COL_NAME + "= ?" + 
 								" WHERE " + Client.COL_ID + " = ?;";
 
-		try (Connection connect = connection.getConnection())
+		try
 		{
 			statement = connect.prepareStatement(updateTableSQL);
 
@@ -107,7 +109,7 @@ public class ClientManager {
 			
 			// execute update SQL statement
 			statement.executeUpdate();
-			connection.close();
+			
 			System.out.println("[" + getClass().getName() + "] Successful UPDATE in " + Client.TABLE_NAME);
 		} catch (SQLException e) {
 			System.out.println("[" + getClass().getName() + "] Unable to UPDATE in " + Client.TABLE_NAME);

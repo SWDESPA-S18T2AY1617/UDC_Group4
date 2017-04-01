@@ -10,19 +10,20 @@ import model.Secretary;
 import server.DBConnection;
 
 public class SecretaryManager {
-	private DBConnection connection;
+	private Connection connect;
 	private PreparedStatement statement;
 	
 	public SecretaryManager ()
 	{
-		connection = new DBConnection ();
+		DBConnection connection = new DBConnection ();
+		connect = connection.getConnection();
 	}
 	
 	public ArrayList<Secretary> getAllSecretary ()
 	{
 		ArrayList<Secretary> secretarys = new ArrayList<Secretary>();
 		
-		try (Connection connect = connection.getConnection())
+		try 
 		{
 			ResultSet rs;
 			String query = "SELECT * FROM " + Secretary.TABLE_NAME;
@@ -34,7 +35,7 @@ public class SecretaryManager {
 				secretarys.add(toSecretary(rs));
 			}
 			
-			connection.close();
+			
 			
 			System.out.println("[" + getClass().getName() + "] Successful SELECT from " + Secretary.TABLE_NAME);
 			
@@ -54,7 +55,7 @@ public class SecretaryManager {
 										+ Secretary.COL_NAME + ")"
 										+ " VALUES (?,?);";
 
-		try (Connection connect = connection.getConnection()) {
+		try  {
 			statement = connect.prepareStatement(query);
 			
 			statement.setInt(1, secretary.getID());
@@ -62,7 +63,7 @@ public class SecretaryManager {
 
 			// execute the  insert
 			statement.executeUpdate();
-			connection.close();
+			
 			System.out.println("[" + getClass().getName() + "] Successful INSERT into " + Secretary.TABLE_NAME);
 		} 
 		catch (SQLException e)
@@ -78,14 +79,14 @@ public class SecretaryManager {
 		String query = "DELETE FROM " + Secretary.TABLE_NAME + 
 						" WHERE " + Secretary.COL_ID + " = ?;";
 		
-		try (Connection connect = connection.getConnection())
+		try 
 		{
 			statement = connect.prepareStatement(query);
 			statement.setInt(1, id);
 			statement.executeUpdate();
 			
 			System.out.println("[" + getClass().getName() + "] Successful DELETE in " + Secretary.TABLE_NAME);
-			connection.close();
+			
 		} catch (SQLException e) {
 			System.out.println("[" + getClass().getName() + "] Unable to DELETE in " + Secretary.TABLE_NAME);
 			e.printStackTrace();
@@ -98,7 +99,7 @@ public class SecretaryManager {
 								" SET " + Secretary.COL_NAME + "= ?" + 
 								" WHERE " + Secretary.COL_ID + " = ?;";
 
-		try (Connection connect = connection.getConnection())
+		try 
 		{
 			statement = connect.prepareStatement(updateTableSQL);
 
@@ -107,7 +108,7 @@ public class SecretaryManager {
 			
 			// execute update SQL statement
 			statement.executeUpdate();
-			connection.close();
+			
 			System.out.println("[" + getClass().getName() + "] Successful UPDATE in " + Secretary.TABLE_NAME);
 		} catch (SQLException e) {
 			System.out.println("[" + getClass().getName() + "] Unable to UPDATE in " + Secretary.TABLE_NAME);
