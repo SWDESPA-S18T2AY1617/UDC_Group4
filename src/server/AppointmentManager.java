@@ -11,18 +11,19 @@ import server.DBConnection;
 
 public class AppointmentManager {
 	
-	private DBConnection connection;
+	private Connection connect;
 	private PreparedStatement statement;
 	
 	public AppointmentManager ()
 	{
-		connection = new DBConnection ();
+		DBConnection connection = new DBConnection ();
+		connect = connection.getConnection();
 	}
 	
 	public ArrayList <Appointment> getAllAppointments ()
 	{
 		ArrayList <Appointment> appointments = new ArrayList<Appointment> ();
-		try (Connection connect = connection.getConnection()) {
+		try{
 			String query = "SELECT * FROM " + Appointment.TABLE_NAME;
 			
 			statement = connect.prepareStatement(query);
@@ -32,14 +33,133 @@ public class AppointmentManager {
 				appointments.add(toAppointment(rs));
 			}
 			
-			connection.close();
 			System.out.println("[" + getClass().getName() + "] Successful SELECT from " + Appointment.TABLE_NAME);
 		} catch (SQLException e) {
 			System.out.println("[" + getClass().getName() + "] Unable to SELECT from " + Appointment.TABLE_NAME);
 			e.printStackTrace();
+		} finally {
+			try {
+				statement.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 		
 		return appointments;
+	}
+	
+	public Appointment getAppointment (int id)
+	{
+		Appointment appointment = null;
+		
+		try
+		{
+			ResultSet rs;
+			String query = "SELECT * from " + Appointment.TABLE_NAME + 
+					" WHERE " + Appointment.COL_ID + " = ?";
+			
+			PreparedStatement statement = connect.prepareStatement(query);
+			statement.setInt(1, id);
+			rs = statement.executeQuery();
+			
+			
+			if(rs.next()) {
+				appointment = toAppointment(rs);
+			}
+			
+			System.out.println("[" + getClass().getName() + "] Successful SELECT from " + Appointment.TABLE_NAME);
+		} catch (SQLException e) {
+			System.out.println("[" + getClass().getName() + "] Unable to SELECT from" + Appointment.TABLE_NAME);
+		}
+		
+		return appointment;
+	}
+	
+	public ArrayList<Appointment> getAppointmentWithDoctorID(int id)
+	{
+		ArrayList <Appointment> appointments = new ArrayList<Appointment> ();
+		
+		try{
+			String query = "SELECT * FROM " + Appointment.TABLE_NAME
+					+ " WHERE " + Appointment.COL_DOCTORID + " = " + id + ";";
+			
+			statement = connect.prepareStatement(query);
+			ResultSet rs = statement.executeQuery();
+			
+			while(rs.next()) {
+				appointments.add(toAppointment(rs));
+			}
+			
+			System.out.println("[" + getClass().getName() + "] Successful SELECT from " + Appointment.TABLE_NAME);
+		} catch (SQLException e) {
+			System.out.println("[" + getClass().getName() + "] Unable to SELECT from " + Appointment.TABLE_NAME);
+			e.printStackTrace();
+		} finally {
+			try {
+				statement.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return appointments;
+	}
+	
+	public void addAppointment(Appointment appointment)
+	{
+		try {
+			String query = "INSERT INTO " + Appointment.TABLE_NAME +  
+					" (" + Appointment.COL_ID + 
+					", " + Appointment.COL_DATE + 
+					", " + Appointment.COL_TIMESTART + 
+					", " + Appointment.COL_TIMEEND +
+					", " + Appointment.COL_APPOINTMENTNAME +
+					", " + Appointment.COL_CLIENTID +
+					", " + Appointment.COL_DOCTORID + 
+					", " + Appointment.COL_STATUS + ") " +
+					" VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+			
+			statement = connect.prepareStatement(query);
+			
+			statement.setDate(1, appointment.getAppointmentDate());
+			statement.setTime(2, appointment.getTimeIn());
+			statement.setTime(3, appointment.getTimeOut());
+			statement.setString(4, appointment.getAppointmentName());
+			statement.setInt(5, appointment.getClientID());
+			statement.setInt(6, appointment.getDoctorID());
+			statement.setBoolean(7, appointment.isStatus());
+			
+			statement.executeUpdate();
+			System.out.println("[" + getClass().getName() + "] Successful INSERT to " + Appointment.TABLE_NAME);
+		} catch (SQLException e) {
+			System.out.println("[" + getClass().getName() + "] Unable to INSERT to " + Appointment.TABLE_NAME);
+			e.printStackTrace();
+		} finally {
+			try {
+				statement.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void deleteAppointment (int id)
+	{	
+		String query = "DELETE FROM " + Appointment.TABLE_NAME + 
+						" WHERE " + Appointment.COL_ID + " = ?;";
+		
+		try
+		{
+			statement = connect.prepareStatement(query);
+			statement.setInt(1, id);
+			
+			statement.executeUpdate();
+			
+			System.out.println("[" + getClass().getName() + "] Successful DELETE in " + Appointment.TABLE_NAME);
+		} catch (SQLException e) {
+			System.out.println("[" + getClass().getName() + "] Unable to DELETE in " + Appointment.TABLE_NAME);
+			e.printStackTrace();
+		}
 	}
 	
 	public Appointment toAppointment (ResultSet rs) throws SQLException {
