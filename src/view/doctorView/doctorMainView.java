@@ -1,4 +1,4 @@
-package doctorView;
+package view.doctorView;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;

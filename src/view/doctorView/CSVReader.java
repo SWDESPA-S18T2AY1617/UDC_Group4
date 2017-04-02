@@ -1,4 +1,4 @@
-package doctorView;
+package view.doctorView;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;

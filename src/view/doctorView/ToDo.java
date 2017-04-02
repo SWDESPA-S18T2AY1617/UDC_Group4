@@ -1,4 +1,4 @@
-package doctorView;
+package view.doctorView;
 
 public class ToDo extends CalendarItem
 {	

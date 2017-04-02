@@ -1,4 +1,4 @@
-package doctorView;
+package view.doctorView;
 
 import java.util.ArrayList;
 
