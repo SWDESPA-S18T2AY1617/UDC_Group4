@@ -17,7 +17,7 @@ public class ClientManager {
 	public ClientManager ()
 	{
 		DBConnection connection = new DBConnection ();
-		connect = connection.getConnection()
+		connect = connection.getConnection();
 	}
 	
 	public ArrayList<Client> getAllClient ()
@@ -47,6 +47,33 @@ public class ClientManager {
 			e.printStackTrace();
 			return null;
 		}
+	}
+	
+	public Client getClient (int id)
+	{
+		Client client = null;
+		
+		try
+		{
+			ResultSet rs;
+			String query = "SELECT * from " + Client.TABLE_NAME + 
+					" WHERE " + Client.COL_ID + " = ?";
+			
+			PreparedStatement statement = connect.prepareStatement(query);
+			statement.setInt(1, id);
+			rs = statement.executeQuery();
+			
+			
+			if(rs.next()) {
+				client = toClient(rs);
+			}
+			
+			System.out.println("[" + getClass().getName() + "] Successful SELECT from " + Client.TABLE_NAME);
+		} catch (SQLException e) {
+			System.out.println("[" + getClass().getName() + "] Unable to SELECT from" + Client.TABLE_NAME);
+		}
+		
+		return client;
 	}
 	
 	public void insertToClient(Client client)

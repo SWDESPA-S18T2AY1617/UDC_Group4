@@ -121,13 +121,14 @@ public class AppointmentManager {
 			
 			statement = connect.prepareStatement(query);
 			
-			statement.setDate(1, appointment.getAppointmentDate());
-			statement.setTime(2, appointment.getTimeIn());
-			statement.setTime(3, appointment.getTimeOut());
-			statement.setString(4, appointment.getAppointmentName());
-			statement.setInt(5, appointment.getClientID());
-			statement.setInt(6, appointment.getDoctorID());
-			statement.setBoolean(7, appointment.isStatus());
+			statement.setInt(1, appointment.getAppointmentID());
+			statement.setDate(2, appointment.getAppointmentDate());
+			statement.setTime(3, appointment.getTimeIn());
+			statement.setTime(4, appointment.getTimeOut());
+			statement.setString(5, appointment.getAppointmentName());
+			statement.setInt(6, appointment.getClientID());
+			statement.setInt(7, appointment.getDoctorID());
+			statement.setBoolean(8, appointment.isStatus());
 			
 			statement.executeUpdate();
 			System.out.println("[" + getClass().getName() + "] Successful INSERT to " + Appointment.TABLE_NAME);

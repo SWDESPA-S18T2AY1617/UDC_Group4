@@ -46,6 +46,33 @@ public class DoctorManager {
 		}
 	}
 	
+	public Doctor getDoctor (int id)
+	{
+		Doctor doctor = null;
+		
+		try
+		{
+			ResultSet rs;
+			String query = "SELECT * from " + Doctor.TABLE_NAME + 
+					" WHERE " + Doctor.COL_ID + " = ?";
+			
+			PreparedStatement statement = connect.prepareStatement(query);
+			statement.setInt(1, id);
+			rs = statement.executeQuery();
+			
+			
+			if(rs.next()) {
+				doctor = toDoctor(rs);
+			}
+			
+			System.out.println("[" + getClass().getName() + "] Successful SELECT from " + Doctor.TABLE_NAME);
+		} catch (SQLException e) {
+			System.out.println("[" + getClass().getName() + "] Unable to SELECT from" + Doctor.TABLE_NAME);
+		}
+		
+		return doctor;
+	}
+	
 	public void insertToDoctor(Doctor doctor)
 	{
 		String query = "INSERT INTO " 	+ Doctor.TABLE_NAME + "(" 

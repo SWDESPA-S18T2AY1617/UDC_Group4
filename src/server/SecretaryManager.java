@@ -48,6 +48,33 @@ public class SecretaryManager {
 		}
 	}
 	
+	public Secretary getSecretary (int id)
+	{
+		Secretary secretary = null;
+		
+		try
+		{
+			ResultSet rs;
+			String query = "SELECT * from " + Secretary.TABLE_NAME + 
+					" WHERE " + Secretary.COL_ID + " = ?";
+			
+			PreparedStatement statement = connect.prepareStatement(query);
+			statement.setInt(1, id);
+			rs = statement.executeQuery();
+			
+			
+			if(rs.next()) {
+				secretary = toSecretary(rs);
+			}
+			
+			System.out.println("[" + getClass().getName() + "] Successful SELECT from " + Secretary.TABLE_NAME);
+		} catch (SQLException e) {
+			System.out.println("[" + getClass().getName() + "] Unable to SELECT from" + Secretary.TABLE_NAME);
+		}
+		
+		return secretary;
+	}
+	
 	public void insertToSecretary(Secretary secretary)
 	{
 		String query = "INSERT INTO " 	+ Secretary.TABLE_NAME + "(" 
