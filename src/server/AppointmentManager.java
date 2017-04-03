@@ -17,7 +17,8 @@ public class AppointmentManager {
 	public AppointmentManager ()
 	{
 		DBConnection connection = new DBConnection ();
-		connect = connection.getConnection();
+		if(connection.openConnection())
+			connect = connection.getActiveConnection();
 	}
 	
 	public ArrayList <Appointment> getAllAppointments ()

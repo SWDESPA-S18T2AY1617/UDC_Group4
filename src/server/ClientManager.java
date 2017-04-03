@@ -17,7 +17,8 @@ public class ClientManager {
 	public ClientManager ()
 	{
 		DBConnection connection = new DBConnection ();
-		connect = connection.getConnection();
+		if(connection.openConnection())
+			connect = connection.getActiveConnection();
 	}
 	
 	public ArrayList<Client> getAllClient ()

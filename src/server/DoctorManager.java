@@ -17,7 +17,8 @@ public class DoctorManager {
 	public DoctorManager ()
 	{
 		DBConnection connection = new DBConnection ();
-		connect = connection.getConnection();
+		if(connection.openConnection())
+			connect = connection.getActiveConnection();
 	}
 	
 	public ArrayList<Doctor> getAllDoctor ()
