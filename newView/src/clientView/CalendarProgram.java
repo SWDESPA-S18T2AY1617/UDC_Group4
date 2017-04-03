@@ -56,12 +56,12 @@ public class CalendarProgram {
 			mainView.getCalendarView().getCmbYear().addItem(String.valueOf(i)); // adds																			// box
 		}
 
-		for (int i = 0; i < 24; i++) {
-			mainView.getCreateView().getComboBoxFrom().addItem(i + ":00");
-			mainView.getCreateView().getComboBoxFrom().addItem(i + ":30");
-			mainView.getCreateView().getComboBoxTo().addItem(i + ":30");
-			mainView.getCreateView().getComboBoxTo().addItem((i + 1) + ":00");
-		}
+//		for (int i = 0; i < 24; i++) {
+//			mainView.getCreateView().getComboBoxFrom().addItem(i + ":00");
+//			mainView.getCreateView().getComboBoxFrom().addItem(i + ":30");
+//			mainView.getCreateView().getComboBoxTo().addItem(i + ":30");
+//			mainView.getCreateView().getComboBoxTo().addItem((i + 1) + ":00");
+//		}
 
 		mainView.getCalendarView().getBtnPrev().addActionListener(new btnPrev_Action()); // adds
 																							// action
@@ -69,14 +69,14 @@ public class CalendarProgram {
 		mainView.getCalendarView().getBtnNext().addActionListener(new btnNext_Action()); // adds
 																							// action
 																							// listener
-		mainView.getCalendarView().getBtnCreate().addActionListener(new btnCreate_Action());
+//		mainView.getCalendarView().getBtnCreate().addActionListener(new btnCreate_Action());
 		mainView.getCalendarView().getCalendarTable().addMouseListener(new scrollPanelCal_Action());
 		mainView.getHeaderView().getDayBtn().addActionListener(new btnDay_Action());
 		mainView.getHeaderView().getWeekBtn().addActionListener(new btnWeek_Action());
 		mainView.getHeaderView().getAgendaBtn().addActionListener(new btnAgenda_Action());
 //		mainView.getCreateView().getrdBtnEvent().addActionListener(new rdBtnEvent_Action());
 //		mainView.getCreateView().getrdBtnTask().addActionListener(new rdBtnTask_Action());
-		mainView.getCreateView().getBtnSave().addActionListener(new btnSave_Action());
+//		mainView.getCreateView().getBtnSave().addActionListener(new btnSave_Action());
 //		mainView.getCreateView().getBtnDiscard().addActionListener(new btnDiscard_Action());
 //		mainView.getDayView().getDayTable().addMouseListener(new scrollPanelDay_Action());
 		mainView.getTypeView().getFreeCheckBox().addItemListener(new ItemListener() {
@@ -421,18 +421,18 @@ public class CalendarProgram {
 		}
 	}
 
-	private class btnCreate_Action implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			mainView.getDayView().setVisible(false);
-			mainView.getAgendaView().setVisible(false);
-			mainView.getWeekView().setVisible(false);
-			mainView.getCreateView().setVisible(true);
-		}
-	}
+//	private class btnCreate_Action implements ActionListener {
+//		public void actionPerformed(ActionEvent e) {
+//			mainView.getDayView().setVisible(false);
+//			mainView.getAgendaView().setVisible(false);
+//			mainView.getWeekView().setVisible(false);
+//			mainView.getCreateView().setVisible(true);
+//		}
+//	}
 
 	private class btnDay_Action implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			mainView.getCreateView().setVisible(false);
+//			mainView.getCreateView().setVisible(false);
 			mainView.getAgendaView().setVisible(false);
 			mainView.getWeekView().setVisible(false);
 			mainView.getDayView().setVisible(true);
@@ -441,7 +441,7 @@ public class CalendarProgram {
 	
 	private class btnWeek_Action implements ActionListener{
 		public void actionPerformed(ActionEvent e){
-			mainView.getCreateView().setVisible(false);
+//			mainView.getCreateView().setVisible(false);
 			mainView.getDayView().setVisible(false);
 			mainView.getAgendaView().setVisible(false);
 			mainView.getWeekView().setVisible(true);
@@ -450,7 +450,7 @@ public class CalendarProgram {
 
 	private class btnAgenda_Action implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			mainView.getCreateView().setVisible(false);
+//			mainView.getCreateView().setVisible(false);
 			mainView.getAgendaView().setVisible(true);
 			mainView.getWeekView().setVisible(false);
 			mainView.getDayView().setVisible(false);
@@ -469,7 +469,7 @@ public class CalendarProgram {
 				dayToday = (Integer) mainView.getCalendarView().getCalendarTable().getValueAt(row, col);
 
 			mainView.getHeaderView().getDateLabel().setText(months[monthToday] + " " + dayToday + ", " + yearToday);
-			mainView.getCreateView().getTextFieldDate().setText((monthToday+1) + "/" + dayToday + "/" + yearToday);
+//			mainView.getCreateView().getTextFieldDate().setText((monthToday+1) + "/" + dayToday + "/" + yearToday);
 			refreshAgenda();
 			refreshDay();
 		}
@@ -502,21 +502,21 @@ public class CalendarProgram {
 //		}
 //	}
 
-	private class rdBtnEvent_Action implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			mainView.getCreateView().getComboBoxFrom().setVisible(true);
-			mainView.getCreateView().getComboBoxTo().setVisible(true);
-			mainView.getCreateView().getLabelTo().setVisible(true);
-		}
-	}
+//	private class rdBtnEvent_Action implements ActionListener {
+//		public void actionPerformed(ActionEvent e) {
+//			mainView.getCreateView().getComboBoxFrom().setVisible(true);
+//			mainView.getCreateView().getComboBoxTo().setVisible(true);
+//			mainView.getCreateView().getLabelTo().setVisible(true);
+//		}
+//	}
 
-	private class rdBtnTask_Action implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			mainView.getCreateView().getComboBoxFrom().setVisible(true);
-			mainView.getCreateView().getComboBoxTo().setVisible(false);
-			mainView.getCreateView().getLabelTo().setVisible(false);
-		}
-	}
+//	private class rdBtnTask_Action implements ActionListener {
+//		public void actionPerformed(ActionEvent e) {
+//			mainView.getCreateView().getComboBoxFrom().setVisible(true);
+//			mainView.getCreateView().getComboBoxTo().setVisible(false);
+//			mainView.getCreateView().getLabelTo().setVisible(false);
+//		}
+//	}
 
 	private class cmbYear_Action implements ActionListener {
 
@@ -532,19 +532,19 @@ public class CalendarProgram {
 		}
 	}
 
-	private class btnSave_Action implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			int i = 0;
-			String[] dates = mainView.getCreateView().getTextFieldDate().getText().split("/");
-			int month = Integer.parseInt(dates[0]);
-			int day = Integer.parseInt(dates[1]);
-			int year = Integer.parseInt(dates[2]);
-			String[] stime = mainView.getCreateView().getComboBoxFrom().getSelectedItem().toString().split(":");
-			int shour = Integer.parseInt(stime[0]);
-			int sminute = Integer.parseInt(stime[1]);
-			String[] etime = mainView.getCreateView().getComboBoxTo().getSelectedItem().toString().split(":");
-			int ehour = Integer.parseInt(etime[0]);
-			int eminute = Integer.parseInt(etime[1]);
+//	private class btnSave_Action implements ActionListener {
+//		public void actionPerformed(ActionEvent e) {
+//			int i = 0;
+//			String[] dates = mainView.getCreateView().getTextFieldDate().getText().split("/");
+//			int month = Integer.parseInt(dates[0]);
+//			int day = Integer.parseInt(dates[1]);
+//			int year = Integer.parseInt(dates[2]);
+//			String[] stime = mainView.getCreateView().getComboBoxFrom().getSelectedItem().toString().split(":");
+//			int shour = Integer.parseInt(stime[0]);
+//			int sminute = Integer.parseInt(stime[1]);
+//			String[] etime = mainView.getCreateView().getComboBoxTo().getSelectedItem().toString().split(":");
+//			int ehour = Integer.parseInt(etime[0]);
+//			int eminute = Integer.parseInt(etime[1]);
 //			if (mainView.getCreateView().getrdBtnTask().isSelected()) {
 //				// determines type of input before adding
 //
@@ -580,36 +580,36 @@ public class CalendarProgram {
 //				}
 //
 //			} else {
-				for (i = 0; i < eventH.getCalendarItems().size(); i++) {
-					if (year == eventH.getCalendarItems().get(i).getYear()
-							&& month == eventH.getCalendarItems().get(i).getMonth()
-							&& day == eventH.getCalendarItems().get(i).getDay()
-							&& ((shour == eventH.getCalendarItems().get(i).getShour()
-									&& sminute == eventH.getCalendarItems().get(i).getSminute())
-									|| (ehour == eventH.getCalendarItems().get(i).getEhour()
-											&& eminute == eventH.getCalendarItems().get(i).getEminute())
-									|| ((shour >= eventH.getCalendarItems().get(i).getShour())
-											&& (shour <= eventH.getCalendarItems().get(i).getEhour())
-											|| (ehour >= eventH.getCalendarItems().get(i).getShour())
-													&& (ehour <= eventH.getCalendarItems().get(i).getEhour()))
-									|| ((eventH.getCalendarItems().get(i).getShour() >= shour)
-											&& (eventH.getCalendarItems().get(i).getShour() <= ehour)
-											|| (eventH.getCalendarItems().get(i).getEhour() >= shour)
-													&& (eventH.getCalendarItems().get(i).getEhour() <= ehour)))) {
-						JOptionPane.showMessageDialog(null, "Conflict arose.");
-						break;
-					}
-				}
-
-				if (i == eventH.getCalendarItems().size()) {
-					eventH.addCalendarItem(year, month, day, "",shour, sminute, ehour, eminute, row);
-
-					JOptionPane.showMessageDialog(null, "Done Setting for Appointments!");
-
-					refreshAgenda();
-					refreshDay();
-				}
-			}
+//				for (i = 0; i < eventH.getCalendarItems().size(); i++) {
+//					if (year == eventH.getCalendarItems().get(i).getYear()
+//							&& month == eventH.getCalendarItems().get(i).getMonth()
+//							&& day == eventH.getCalendarItems().get(i).getDay()
+//							&& ((shour == eventH.getCalendarItems().get(i).getShour()
+//									&& sminute == eventH.getCalendarItems().get(i).getSminute())
+//									|| (ehour == eventH.getCalendarItems().get(i).getEhour()
+//											&& eminute == eventH.getCalendarItems().get(i).getEminute())
+//									|| ((shour >= eventH.getCalendarItems().get(i).getShour())
+//											&& (shour <= eventH.getCalendarItems().get(i).getEhour())
+//											|| (ehour >= eventH.getCalendarItems().get(i).getShour())
+//													&& (ehour <= eventH.getCalendarItems().get(i).getEhour()))
+//									|| ((eventH.getCalendarItems().get(i).getShour() >= shour)
+//											&& (eventH.getCalendarItems().get(i).getShour() <= ehour)
+//											|| (eventH.getCalendarItems().get(i).getEhour() >= shour)
+//													&& (eventH.getCalendarItems().get(i).getEhour() <= ehour)))) {
+//						JOptionPane.showMessageDialog(null, "Conflict arose.");
+//						break;
+//					}
+//				}
+//
+//				if (i == eventH.getCalendarItems().size()) {
+//					eventH.addCalendarItem(year, month, day, "",shour, sminute, ehour, eminute, row);
+//
+//					JOptionPane.showMessageDialog(null, "Done Setting for Appointments!");
+//
+//					refreshAgenda();
+//					refreshDay();
+//				}
+//			}
 
 //			mainView.getCreateView().getTextFieldDate().setText("");
 //			mainView.getCreateView().getTextFieldEvent().setText("");
@@ -617,7 +617,7 @@ public class CalendarProgram {
 //			mainView.getCreateView().getComboBoxTo().setSelectedIndex(0);
 
 		}
-	}
+//	}
 
 //	private class btnDiscard_Action implements ActionListener {
 //		public void actionPerformed(ActionEvent e) {
