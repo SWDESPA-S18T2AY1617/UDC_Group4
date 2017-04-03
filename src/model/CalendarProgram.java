@@ -1,4 +1,4 @@
-package designchallenge1;
+package model;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

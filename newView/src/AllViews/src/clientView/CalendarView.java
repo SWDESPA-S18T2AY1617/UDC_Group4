@@ -14,7 +14,7 @@ public class CalendarView extends JPanel {
 	private final JLabel yearLabel;
 	private final JButton btnPrev;
 	private final JButton btnNext;
-//	private final JButton btnCreate;
+	private final JButton btnCreate;
 	private final JScrollPane scrollCalendarTable;
 	private final JComboBox<String> cmbYear;
 	private final JTable calendarTable;
@@ -26,7 +26,7 @@ public class CalendarView extends JPanel {
 		add(getYearLabel());
 		add(getBtnPrev());
 		add(getBtnNext());
-//		add(getBtnCreate());
+		add(getBtnCreate());
 		add(getCmbYear());
 		add(scrollCalendarTable);
 
@@ -44,7 +44,7 @@ public class CalendarView extends JPanel {
 		getBtnPrev().setBounds(15, 183, 50, 30);
 		getBtnNext().setBounds(155, 183, 50, 30);
 		scrollCalendarTable.setBounds(20, 60, 195, 113);
-//		getBtnCreate().setBounds(20, 100, 80, 35);
+		getBtnCreate().setBounds(20, 100, 80, 35);
 	}
 
 	public CalendarView() {
@@ -52,7 +52,7 @@ public class CalendarView extends JPanel {
 		yearLabel = new JLabel();
 		btnPrev = new JButton("<<");
 		btnNext = new JButton(">>");
-//		btnCreate = new JButton("SET");
+		btnCreate = new JButton("SET");
 		calendarTable = new JTable();
 		cmbYear = new JComboBox<String>();
 		scrollCalendarTable = new JScrollPane(getCalendarTable());
@@ -79,9 +79,9 @@ public class CalendarView extends JPanel {
 		return btnNext;
 	}
 
-//	public JButton getBtnCreate() {
-//		return btnCreate;
-//	}
+	public JButton getBtnCreate() {
+		return btnCreate;
+	}
 
 	public JComboBox<String> getCmbYear() {
 		return cmbYear;
