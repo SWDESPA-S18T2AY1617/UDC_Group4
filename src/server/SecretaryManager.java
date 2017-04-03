@@ -16,7 +16,8 @@ public class SecretaryManager {
 	public SecretaryManager ()
 	{
 		DBConnection connection = new DBConnection ();
-		connect = connection.getConnection();
+		if(connection.openConnection())
+			connect = connection.getActiveConnection();
 	}
 	
 	public ArrayList<Secretary> getAllSecretary ()
