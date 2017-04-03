@@ -1,4 +1,4 @@
-package view.doctorView;
+package clientView;
 
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
@@ -12,8 +12,8 @@ public class TypeView extends JPanel{
 	public TypeView()
 	{
 		setLayout(null);
-		setReservedCheckBox(new JCheckBox("Reseved"));
-		setFreeCheckBox(new JCheckBox("Free"));
+		setReservedCheckBox(new JCheckBox("All"));
+		setFreeCheckBox(new JCheckBox("Reservations"));
 		
 		add(viewCB);
 		add(getReservedCheckBox());
@@ -21,7 +21,7 @@ public class TypeView extends JPanel{
 		
 		viewCB.setBounds(10,10,50,30);
 		getReservedCheckBox().setBounds(10,30,100,30);
-		getFreeCheckBox().setBounds(10,60,100,30);
+		getFreeCheckBox().setBounds(10,60,130,30);
 	}
 
 	public JCheckBox getFreeCheckBox() {

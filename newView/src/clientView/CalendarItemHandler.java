@@ -1,4 +1,4 @@
-package view.doctorView;
+package clientView;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -136,25 +136,7 @@ public class CalendarItemHandler {
         }
             
     }
-    public WeekTableRenderer getWeekRenderer(){
-        
-    	ArrayList<Integer> startRowList = new ArrayList<Integer>();
-    	ArrayList<Integer> endRowList = new ArrayList<Integer>();
-    	ArrayList<Color> colorList = new ArrayList<Color>();
-    	
-//    	System.out.println("Number = " +itemIndex.size());
-    	
-    	for(int i = 0; i < itemIndex.size();i++){
-    		startRowList.add(getCalendarItems().get(itemIndex.get(i)).getStartRow());
-    		endRowList.add(getCalendarItems().get(itemIndex.get(i)).getEndRow());
-    		colorList.add(getCalendarItems().get(itemIndex.get(i)).getColor());
-    	}
-    	
-    	itemIndex.clear();
-    	
-    	return new WeekTableRenderer(startRowList, endRowList, colorList);
-    }
-
+    
     public DayTableRenderer getDayRenderer(){
         
     	ArrayList<Integer> startRowList = new ArrayList<Integer>();

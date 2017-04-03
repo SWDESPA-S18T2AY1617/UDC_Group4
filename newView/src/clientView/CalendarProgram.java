@@ -1,4 +1,4 @@
-package view.doctorView;
+package clientView;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,7 +21,7 @@ public class CalendarProgram {
 	private int col = -1;
 	private int row = -1;
 	private CalendarItemHandler eventH;
-	private doctorMainView mainView;
+	private clientMainView mainView;
 	private Writer writer;
 	private ArrayList<CalendarItem> sortedDay;
 
@@ -32,7 +32,7 @@ public class CalendarProgram {
 		dayToday = cal.get(GregorianCalendar.DAY_OF_MONTH);
 
 		sIndex = 100;
-		this.mainView = new doctorMainView();
+		this.mainView = new clientMainView();
 		this.eventH = new CalendarItemHandler();
 		this.writer = new Writer();
 		eventH.load();
@@ -207,12 +207,7 @@ public class CalendarProgram {
 																										// a
 																										// cell
 	}
-	private void refreshWeek() {
-		mainView.getWeekView().getWeekTable().setModel(eventH.getWeekModel(monthToday, yearToday, dayToday));
-		mainView.getWeekView().getWeekTable().setDefaultRenderer(mainView.getWeekView().getWeekTable().getColumnClass(0),
-				eventH.getWeekRenderer());
-	}
-	
+
 	private void refreshDay() {
 
 		mainView.getDayView().getDayTable().setModel(eventH.getDayModel(monthToday, yearToday, dayToday));

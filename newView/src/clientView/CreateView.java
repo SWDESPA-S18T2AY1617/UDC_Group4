@@ -1,4 +1,4 @@
-package view.doctorView;
+package clientView;
 
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;

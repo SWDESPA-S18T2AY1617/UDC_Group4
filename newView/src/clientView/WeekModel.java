@@ -1,6 +1,6 @@
-package view.doctorView;
+package clientView;
 
-import javax.swing.table.*;
+import javax.swing.table.DefaultTableModel;
 
 public class WeekModel extends DefaultTableModel{
 	 public boolean isCellEditable(int rowIndex, int mColIndex) {
