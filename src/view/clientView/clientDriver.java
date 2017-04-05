@@ -1,4 +1,4 @@
-package clientView;
+package view.clientView;
 
 public class clientDriver {
 	public static void main(String[] args ){

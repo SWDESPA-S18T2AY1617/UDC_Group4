@@ -1,9 +1,11 @@
-package testingsir;
+package testClasses;
 
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.Scanner;
+
+import model.Appointment;
 
 public class DateRecurTest {
 	Boolean isConflict; 

@@ -1,4 +1,4 @@
-package clientView;
+package view.clientView;
 
 public class ToDo extends CalendarItem
 {	

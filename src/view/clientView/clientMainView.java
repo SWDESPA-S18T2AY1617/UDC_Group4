@@ -1,4 +1,4 @@
-package clientView;
+package view.clientView;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
