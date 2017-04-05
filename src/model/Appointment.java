@@ -51,6 +51,11 @@ public class Appointment{
     	return color.toUpperCase();
     }
     
+    public boolean checkSameDate(Date day)
+    {
+    	return this.appointmentDate.equals(day);
+    }
+    
 //    public boolean checkYearMonth(int year, int month) {
 //        return this.getYear() == year && this.getMonth() == month;
 //    }

@@ -1,9 +1,13 @@
 package model;
 
 import java.awt.Color;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.TimeZone;
+
 import javax.swing.table.DefaultTableModel;
+import view.doctorView.*;
 
 public class Secretary extends Person{
 
@@ -58,7 +62,13 @@ public class Secretary extends Person{
         
         for (int ctr = 0; ctr < Appointments.size(); ctr++) { //searches for the events for this month and year
         	
-        	if (Appointments.get(ctr).checkSameDate(year, month+1, day)) {
+        	GregorianCalendar gc = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
+            gc.clear();
+            gc.set(year, month, day);
+
+            long left = gc.getTimeInMillis();
+        	
+        	if (Appointments.get(ctr).checkSameDate(new Date(left))) {
                index = ctr;
                event = Appointments.get(index).getEvent();
                dayRow = Appointments.get(ctr).getShour() * 2;
