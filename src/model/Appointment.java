@@ -26,6 +26,10 @@ public class Appointment{
 	public final static String COL_DOCTORID = "doctorID";
 	public final static String COL_STATUS = "status";
 
+	public Appointment(int Appointmentid, String AppointmentName)
+	
+	
+	
     public Color getColor() {
         switch (color.toUpperCase()) {
             case "GREEN":
