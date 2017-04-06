@@ -18,7 +18,7 @@ public class Secretary extends Person{
     private DayModel dayModel = new DayModel();
     
     public final static String TABLE_NAME = "secretary";
-	public final static String COL_ID = "idsecretary";
+	public final static String COL_ID = "secretaryId";
 	public final static String COL_NAME = "name";
 
     private void updateTable(int month, int year) {

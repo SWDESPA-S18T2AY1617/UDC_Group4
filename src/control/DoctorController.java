@@ -6,7 +6,8 @@ import server.DoctorManager;
 import view.CalendarProgram;
 import view.DoctorMainView;
 
-public class DoctorController {
+public class DoctorController 
+{
 	private DoctorManager doctorManager;
 	private ArrayList<CalendarProgram> calendarProgram;
 	
@@ -14,7 +15,8 @@ public class DoctorController {
 	{
 		doctorManager = new DoctorManager();
 		calendarProgram = new ArrayList<CalendarProgram>();
-		for(int ctr = 0; ctr<doctorManager.getAllDoctor().size(); ctr++){
+		int maxCtr = doctorManager.getAllDoctor().size();
+		for(int ctr = 0; ctr < maxCtr; ctr++){
 			calendarProgram.add(new CalendarProgram(new DoctorMainView()));
 		}
 	}

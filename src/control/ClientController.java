@@ -15,9 +15,9 @@ public class ClientController
 	{
 		clientManager = new ClientManager();
 		calendarProgram = new ArrayList<CalendarProgram>();
-		for(int ctr = 0; ctr<clientManager.getAllClient().size(); ctr++){
+		int maxCtr = clientManager.getAllClient().size();
+		for(int ctr = 0; ctr < maxCtr; ctr++){
 			calendarProgram.add(new CalendarProgram(new ClientMainView()));
 		}
 	}
-	
 }

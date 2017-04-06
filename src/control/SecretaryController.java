@@ -6,8 +6,8 @@ import server.SecretaryManager;
 import view.CalendarProgram;
 import view.SecretaryMainView;
 
-public class SecretaryController {
-
+public class SecretaryController 
+{
 	private SecretaryManager secretaryManager;
 	private ArrayList<CalendarProgram> calendarProgram;
 	
@@ -15,10 +15,9 @@ public class SecretaryController {
 	{
 		secretaryManager = new SecretaryManager();
 		calendarProgram = new ArrayList<CalendarProgram>();
-		for(int ctr = 0; ctr<secretaryManager.getAllSecretary().size(); ctr++){
+		int maxCtr = secretaryManager.getAllSecretary().size();
+		for(int ctr = 0; ctr < maxCtr; ctr++){
 			calendarProgram.add(new CalendarProgram(new SecretaryMainView()));
-		}
-		
+		}	
 	}
-
 }

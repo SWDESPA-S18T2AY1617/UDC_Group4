@@ -1,8 +1,8 @@
 package server;
 
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -19,16 +19,18 @@ public class DBConnection {
 	
 	public DBConnection () {
 		open = false;
-		String file = "/config/db.config";
-		try (BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(file)))) {
-			DRIVER_NAME = br.readLine();
-			URL = br.readLine();
-			USERNAME = br.readLine();
-			PASSWORD = br.readLine();
-			
+		BufferedReader reader;
+		String FILE = "";
+		
+		try {
+			reader = new BufferedReader(new FileReader("src/config/db.config"));
+			DRIVER_NAME = reader.readLine();
+			URL = reader.readLine();
+			USERNAME = reader.readLine();
+			PASSWORD = reader.readLine();
 		} catch (IOException e) {
-			System.err.println("Error! " + file + " not loaded!");
-		}	
+			System.err.println("Error! " + FILE + " not loaded!");
+		}
 	}
 	
 	public boolean openConnection () {
