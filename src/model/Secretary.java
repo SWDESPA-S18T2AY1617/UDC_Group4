@@ -8,7 +8,7 @@ import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
 import javax.swing.table.DefaultTableModel;
-import view.doctorView.*;
+import view.*;
 
 public class Secretary extends Person{
 
@@ -16,7 +16,6 @@ public class Secretary extends Person{
     private ArrayList<Integer> itemIndex = new ArrayList<Integer>();
     private DTModel calendarModel = new DTModel();
     private DayModel dayModel = new DayModel();
-    private Doctor Doctors;
     
     public final static String TABLE_NAME = "secretary";
 	public final static String COL_ID = "idsecretary";

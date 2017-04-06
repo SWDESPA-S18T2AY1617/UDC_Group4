@@ -26,6 +26,11 @@ public class Appointment{
 	public final static String COL_DOCTORID = "doctorID";
 	public final static String COL_STATUS = "status";
 	
+	public Appointment()
+	{
+		appointmentDate = null;
+	}
+	
 	public Appointment(int appointmentID, String color, Date appointmentDate, Time TimeIn, Time TimeOut, int ClientID, int DoctorID){
 		this.appointmentID = appointmentID;
 		this.appointmentName = "";
