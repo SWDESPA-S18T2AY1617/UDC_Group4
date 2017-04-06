@@ -2,6 +2,7 @@ package model;
 
 import java.awt.Color;
 import java.sql.Date;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
@@ -69,10 +70,16 @@ public class Secretary extends Person{
             long left = gc.getTimeInMillis();
         	
         	if (Appointments.get(ctr).checkSameDate(new Date(left))) {
+        	   String Stime =  Appointments.get(ctr).getTimeIn().toString();
+        	   String delims = ":";
+        	   String tokens[] = Stime.split(delims);
+        	   
+        	   int Shour = Integer.parseInt(tokens[0]);
+        	   int Sminute = Integer.parseInt(tokens[1]);
                index = ctr;
-               event = Appointments.get(index).getEvent();
-               dayRow = Appointments.get(ctr).getShour() * 2;
-               if(Appointments.get(ctr).getSminute() == 30)
+               event = Appointments.get(index).getAppointmentName();
+               dayRow = Shour * 2;
+               if(Sminute == 30)
                    dayRow++;
                
                dayModel.setValueAt(event, dayRow, 1);
@@ -97,13 +104,21 @@ public class Secretary extends Person{
         String event = "";
         
         for (int ctr = 0; ctr < Appointments.size(); ctr++) { //searches for the events for this month and year
-        	
-        	if (Appointments.get(ctr).checkSameDate(year, month+1, day)) {
-               index = ctr;
-               event = Appointments.get(index).getEvent();
-               dayRow = Appointments.get(ctr).getShour() * 2;
-               if(Appointments.get(ctr).getSminute() == 30)
-                   dayRow++;
+        	GregorianCalendar Ttemp = new GregorianCalendar(year, month + 1, day);
+        	long mili1 = Ttemp.getTimeInMillis();
+        	Date tDate = new Date(mili1);
+        	if (Appointments.get(ctr).getAppointmentDate().compareTo(tDate) == 0) {
+        		String Stime =  Appointments.get(ctr).getTimeIn().toString();
+        	   	String delims = ":";
+         	   	String tokens[] = Stime.split(delims);
+         	   
+         	   	int Shour = Integer.parseInt(tokens[0]);
+         	   	int Sminute = Integer.parseInt(tokens[1]);
+                index = ctr;
+                event = Appointments.get(index).getAppointmentName();
+                dayRow = Shour * 2;
+                if(Sminute == 30)
+                    dayRow++;
                
              /*  if(style.equalsIgnoreCase("todo") && Appointments.get(ctr) instanceof ToDo){
             	   dayModel.setValueAt(event, dayRow, 1);
@@ -131,8 +146,8 @@ public class Secretary extends Person{
 //    	System.out.println("Number = " +itemIndex.size());
     	
     	for(int i = 0; i < itemIndex.size();i++){
-    		startRowList.add(getAppointments().get(itemIndex.get(i)).getStartRow());
-    		endRowList.add(getAppointments().get(itemIndex.get(i)).getEndRow());
+    	//	startRowList.add(getAppointments().get(itemIndex.get(i)).getStartRow()); idk what to do with these
+    	//	endRowList.add(getAppointments().get(itemIndex.get(i)).getEndRow());
     		colorList.add(getAppointments().get(itemIndex.get(i)).getColor());
     	}
     	
@@ -141,11 +156,15 @@ public class Secretary extends Person{
     	return new DayTableRenderer(startRowList, endRowList, colorList);
     }
 
-    public void addAppointment(int year, int month, int day, String event, int SHour, int SMinute, int EHour, int EMinute, int row) {
+  /*  public void addAppointment(int year, int month, int day, String event, int SHour, int SMinute, int EHour, int EMinute, int row) {
         row = SHour * 2;
         if(SMinute == 30)
         	row++;
     	this.getAppointments().add(new Appointment(year, month, day, event, "BLUE", SHour, SMinute, EHour, EMinute));
+    }*/
+    
+    public void addAppointment(Date date, Time TimeIn, Time TimeOut, int clientID, int doctorID){
+    	Appointments.add(new Appointment(Appointments.get(Appointments.size()-1).getAppointmentID()+1, "BLUE", date, TimeIn, TimeOut, clientID, doctorID));
     }
     
     public DefaultTableModel getCalendarModel(int month, int year) {
@@ -183,7 +202,12 @@ public class Secretary extends Person{
 	public ArrayList<Appointment> getDayEvents(int m, int d, int y){
 		ArrayList<Appointment> filtered = new ArrayList<Appointment>();
 		for(int i = 0;i<Appointments.size();i++){
-			if(Appointments.get(i).getDay()==d && Appointments.get(i).getYear()==y && Appointments.get(i).getMonth()==m)
+			String delims = "-";
+			String tokens[] = Appointments.get(i).getAppointmentDate().toString().split(delims);
+			int Day = Integer.parseInt(tokens[2]);
+			int Month = Integer.parseInt(tokens[1]);
+			int Year = Integer.parseInt(tokens[0]);
+			if(Day ==d && Year ==y && Month==m)
 				filtered.add(Appointments.get(i));
 		}
 		
@@ -196,14 +220,27 @@ public class Secretary extends Person{
 		
 		for(int i = 0;i<temp1;i++)
 			for(int j = 0;j<temp1-1;j++){
-				if(temp[j].getShour()>temp[j+1].getShour()){
+				String Stime1 =  temp[j].getTimeIn().toString();
+        	   	String delims = ":";
+         	   	String tokens1[] = Stime1.split(delims);
+         	   	
+         	   	String Stime2 =  temp[j+1].getTimeIn().toString();
+         	   	String tokens2[] = Stime2.split(delims);
+         	   	
+         	   	int Shour1 = Integer.parseInt(tokens1[0]);
+         	   	int Sminute1 = Integer.parseInt(tokens1[1]);
+         	   	
+         	   	int Shour2 = Integer.parseInt(tokens2[0]);
+        	   	int Sminute2 = Integer.parseInt(tokens2[1]);
+         	   	
+				if(Shour1 > Shour2){
 					temp2 = temp[j];
 					temp[j]= temp[j+1];
 					temp[j+1]= temp2;
 				}
 			
-				if(temp[j].getShour()==temp[j+1].getShour()){
-					if(temp[j].getSminute()>temp[j+1].getSminute()){
+				if(Shour1==Shour2){
+					if(Sminute1>Sminute2){
 						temp2 = temp[j];
 						temp[j]= temp[j+1];
 						temp[j+1]= temp2;

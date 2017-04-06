@@ -26,7 +26,20 @@ public class Appointment{
 	public final static String COL_DOCTORID = "doctorID";
 	public final static String COL_STATUS = "status";
 	
-    public Color getColor() {
+	public Appointment(int appointmentID, String color, Date appointmentDate, Time TimeIn, Time TimeOut, int ClientID, int DoctorID){
+		this.appointmentID = appointmentID;
+		this.appointmentName = "";
+		this.color = color;
+		this.appointmentDate = appointmentDate;
+		this.timeIn = TimeIn;
+		this.timeOut = TimeOut;
+		this.clientID = ClientID;
+		this.doctorID = DoctorID;
+		this.status = false;
+	}
+	
+
+	public Color getColor() {
         switch (color.toUpperCase()) {
             case "GREEN":
                 return Color.GREEN;
