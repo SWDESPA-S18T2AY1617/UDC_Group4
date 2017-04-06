@@ -52,7 +52,7 @@ public class CalendarView extends JPanel {
 		yearLabel = new JLabel();
 		btnPrev = new JButton("<<");
 		btnNext = new JButton(">>");
-		btnCreate = new JButton("SET");
+		btnCreate = new JButton("CREATE");
 		calendarTable = new JTable();
 		cmbYear = new JComboBox<String>();
 		scrollCalendarTable = new JScrollPane(getCalendarTable());

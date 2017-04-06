@@ -2,7 +2,7 @@ package model;
 
 import java.awt.Color;
 import java.sql.Date;
-import java.sql.Time;
+import java.time.LocalTime;
 
 public class Appointment{
 	
@@ -10,8 +10,8 @@ public class Appointment{
 	private String appointmentName;
     private String color;
     private Date appointmentDate;
-    private Time timeIn;
-    private Time timeOut;
+    private LocalTime timeIn;
+    private LocalTime timeOut;
     private int clientID;
     private int doctorID;
     private boolean status;
@@ -31,13 +31,13 @@ public class Appointment{
 		appointmentDate = null;
 	}
 	
-	public Appointment(int appointmentID, String color, Date appointmentDate, Time TimeIn, Time TimeOut, int ClientID, int DoctorID){
+	public Appointment(int appointmentID, String color, Date appointmentDate, LocalTime LocalTimeIn, LocalTime LocalTimeOut, int ClientID, int DoctorID){
 		this.appointmentID = appointmentID;
 		this.appointmentName = "";
 		this.color = color;
 		this.appointmentDate = appointmentDate;
-		this.timeIn = TimeIn;
-		this.timeOut = TimeOut;
+		this.timeIn = LocalTimeIn;
+		this.timeOut = LocalTimeOut;
 		this.clientID = ClientID;
 		this.doctorID = DoctorID;
 		this.status = false;
@@ -107,19 +107,19 @@ public class Appointment{
 		this.appointmentName = appointmentName;
 	}
 
-	public Time getTimeIn() {
+	public LocalTime getLocalTimeIn() {
 		return timeIn;
 	}
 
-	public void setTimeIn(Time timeIn) {
+	public void setLocalTimeIn(LocalTime timeIn) {
 		this.timeIn = timeIn;
 	}
 
-	public Time getTimeOut() {
+	public LocalTime getLocalTimeOut() {
 		return timeOut;
 	}
 
-	public void setTimeOut(Time timeOut) {
+	public void setLocalTimeOut(LocalTime timeOut) {
 		this.timeOut = timeOut;
 	}
 

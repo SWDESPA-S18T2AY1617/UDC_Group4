@@ -20,4 +20,17 @@ public class DoctorController
 			calendarProgram.add(new CalendarProgram(new DoctorMainView()));
 		}
 	}
+	
+	public CalendarProgram getSpecificCalendarProgram(int value)
+	{
+		return calendarProgram.get(value);
+	}
+
+	public ArrayList<CalendarProgram> getCalendarProgram() {
+		return calendarProgram;
+	}
+
+	public void setCalendarProgram(ArrayList<CalendarProgram> calendarProgram) {
+		this.calendarProgram = calendarProgram;
+	}
 }

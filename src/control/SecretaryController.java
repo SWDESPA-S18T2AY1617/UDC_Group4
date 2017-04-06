@@ -14,10 +14,23 @@ public class SecretaryController
 	public SecretaryController()
 	{
 		secretaryManager = new SecretaryManager();
-		calendarProgram = new ArrayList<CalendarProgram>();
+		setCalendarProgram(new ArrayList<CalendarProgram>());
 		int maxCtr = secretaryManager.getAllSecretary().size();
 		for(int ctr = 0; ctr < maxCtr; ctr++){
-			calendarProgram.add(new CalendarProgram(new SecretaryMainView()));
+			getCalendarProgram().add(new CalendarProgram(new SecretaryMainView()));
 		}	
+	}
+	
+	public CalendarProgram getSpecificCalendarProgram(int value)
+	{
+		return calendarProgram.get(value);
+	}
+
+	public ArrayList<CalendarProgram> getCalendarProgram() {
+		return calendarProgram;
+	}
+
+	public void setCalendarProgram(ArrayList<CalendarProgram> calendarProgram) {
+		this.calendarProgram = calendarProgram;
 	}
 }

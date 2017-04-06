@@ -72,7 +72,7 @@ public class CalendarProgram {
 		mainView.getCalendarView().getBtnNext().addActionListener(new btnNext_Action()); // adds
 																							// action
 																							// listener
-//		mainView.getCalendarView().getBtnCreate().addActionListener(new btnCreate_Action());
+		mainView.getCalendarView().getBtnCreate().addActionListener(new btnCreate_Action());
 		mainView.getCalendarView().getCalendarTable().addMouseListener(new scrollPanelCal_Action());
 		mainView.getHeaderView().getDayBtn().addActionListener(new btnDay_Action());
 		mainView.getHeaderView().getWeekBtn().addActionListener(new btnWeek_Action());
@@ -424,14 +424,14 @@ public class CalendarProgram {
 		}
 	}
 
-//	private class btnCreate_Action implements ActionListener {
-//		public void actionPerformed(ActionEvent e) {
-//			mainView.getDayView().setVisible(false);
-//			mainView.getAgendaView().setVisible(false);
-//			mainView.getWeekView().setVisible(false);
-//			mainView.getCreateView().setVisible(true);
-//		}
-//	}
+	private class btnCreate_Action implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			mainView.getDayView().setVisible(false);
+			mainView.getAgendaView().setVisible(false);
+			mainView.getWeekView().setVisible(false);
+			mainView.getCreateView().setVisible(true);
+		}
+	}
 
 	private class btnDay_Action implements ActionListener {
 		public void actionPerformed(ActionEvent e) {

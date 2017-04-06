@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
 import java.util.ArrayList;
 
 import model.Appointment;
@@ -124,8 +125,8 @@ public class AppointmentManager {
 			
 			statement.setInt(1, appointment.getAppointmentID());
 			statement.setDate(2, appointment.getAppointmentDate());
-			statement.setTime(3, appointment.getTimeIn());
-			statement.setTime(4, appointment.getTimeOut());
+			statement.setTime(3, Time.valueOf(appointment.getLocalTimeIn()));
+			statement.setTime(4, Time.valueOf(appointment.getLocalTimeOut()));
 			statement.setString(5, appointment.getAppointmentName());
 			statement.setInt(6, appointment.getClientID());
 			statement.setInt(7, appointment.getDoctorID());
@@ -168,8 +169,8 @@ public class AppointmentManager {
 		Appointment appointment = new Appointment();
 			
 		appointment.setAppointmentID(rs.getInt(Appointment.COL_ID));
-		appointment.setTimeIn(rs.getTime(Appointment.COL_TIMESTART));
-		appointment.setTimeOut(rs.getTime(Appointment.COL_TIMEEND));
+		appointment.setLocalTimeIn(rs.getTime(Appointment.COL_TIMESTART).toLocalTime());
+		appointment.setLocalTimeOut(rs.getTime(Appointment.COL_TIMEEND).toLocalTime());
 		appointment.setAppointmentDate(rs.getDate(Appointment.COL_DATE));
 		appointment.setAppointmentName(rs.getString(Appointment.COL_APPOINTMENTNAME));
 		appointment.setDoctorID(rs.getInt(Appointment.COL_DOCTORID));

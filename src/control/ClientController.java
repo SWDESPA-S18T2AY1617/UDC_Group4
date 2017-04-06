@@ -20,4 +20,17 @@ public class ClientController
 			calendarProgram.add(new CalendarProgram(new ClientMainView()));
 		}
 	}
+	
+	public CalendarProgram getSpecificCalendarProgram(int value)
+	{
+		return calendarProgram.get(value);
+	}
+
+	public ArrayList<CalendarProgram> getCalendarProgram() {
+		return calendarProgram;
+	}
+
+	public void setCalendarProgram(ArrayList<CalendarProgram> calendarProgram) {
+		this.calendarProgram = calendarProgram;
+	}
 }

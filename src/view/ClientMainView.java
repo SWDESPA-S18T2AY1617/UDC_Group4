@@ -1,18 +1,17 @@
+
 package view;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class ClientMainView extends MainView {
-	
-	
+
 	public ClientMainView() {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(650, 530);
 		getContentPane().setLayout(null);
 
-		
 		// initializing the panels
 		JPanel mainPanel = new JPanel(null);
 		getContentPane().add(mainPanel);
@@ -23,7 +22,7 @@ public class ClientMainView extends MainView {
 		setDayView(new DayView());
 		setWeekView(new WeekView());
 		setAgendaView(new AgendaView());
-		
+
 		// adding to the main panel
 		mainPanel.add(getCalendarView());
 		mainPanel.add(getTypeView());
@@ -39,12 +38,12 @@ public class ClientMainView extends MainView {
 		getTypeView().setBounds(20, 352, 100, 100);
 		getAgendaView().setBounds(240, 110, 400, 350);
 		getDayView().setBounds(240, 110, 400, 350);
-		getWeekView().setBounds(240,110,400,350);
-		
-		//Hide unnecessary objects
+		getWeekView().setBounds(240, 110, 400, 350);
+
+		// Hide unnecessary objects
 		getCalendarView().getBtnCreate().setVisible(false);
-		
-		//Modify objects
+
+		// Modify objects
 		getTypeView().getReservedCheckBox().setText("Reservation");
 		getTypeView().getFreeCheckBox().setText("All");
 		// Panels

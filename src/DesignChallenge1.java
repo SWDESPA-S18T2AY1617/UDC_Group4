@@ -1,12 +1,9 @@
-import control.ClientController;
-import control.DoctorController;
-import control.SecretaryController;
+import control.MainController;
 
 public class DesignChallenge1 {
 
-    public static void main(String[] args) {
-        new ClientController();
-        new DoctorController();
-        new SecretaryController();
+    public static void main(String[] args)
+    {
+    	new MainController();
     }
 }
