@@ -25,7 +25,7 @@ public class Appointment{
 	public final static String COL_CLIENTID = "clientID";
 	public final static String COL_DOCTORID = "doctorID";
 	public final static String COL_STATUS = "status";
-
+	
     public Color getColor() {
         switch (color.toUpperCase()) {
             case "GREEN":
@@ -45,6 +45,11 @@ public class Appointment{
     
     public String getColorName(){
     	return color.toUpperCase();
+    }
+    
+    public boolean checkSameDate(Date day)
+    {
+    	return this.appointmentDate.equals(day);
     }
     
 //    public boolean checkYearMonth(int year, int month) {

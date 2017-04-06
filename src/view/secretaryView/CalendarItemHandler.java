@@ -1,25 +1,17 @@
-package model;
+package view.secretaryView;
 
 import java.awt.Color;
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
-import java.util.TimeZone;
-
 import javax.swing.table.DefaultTableModel;
-import view.doctorView.*;
 
-public class Secretary extends Person{
+public class CalendarItemHandler {
 
-    private ArrayList<Appointment> Appointments = new ArrayList<Appointment>();
+    private ArrayList<CalendarItem> calendarItems = new ArrayList<CalendarItem>();
     private ArrayList<Integer> itemIndex = new ArrayList<Integer>();
     private DTModel calendarModel = new DTModel();
+    private WeekModel weekModel = new WeekModel();
     private DayModel dayModel = new DayModel();
-    private Doctor Doctors;
-    
-    public final static String TABLE_NAME = "secretary";
-	public final static String COL_ID = "idsecretary";
-	public final static String COL_NAME = "name";
 
     private void updateTable(int month, int year) {
         GregorianCalendar cal = new GregorianCalendar(year, month, 1);
@@ -60,22 +52,46 @@ public class Secretary extends Person{
         int dayRow = 0;
         String event = "";
         
-        for (int ctr = 0; ctr < Appointments.size(); ctr++) { //searches for the events for this month and year
+        for (int ctr = 0; ctr < calendarItems.size(); ctr++) { //searches for the events for this month and year
         	
-        	GregorianCalendar gc = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
-            gc.clear();
-            gc.set(year, month, day);
-
-            long left = gc.getTimeInMillis();
-        	
-        	if (Appointments.get(ctr).checkSameDate(new Date(left))) {
+        	if (calendarItems.get(ctr).checkSameDate(year, month+1, day)) {
                index = ctr;
-               event = Appointments.get(index).getEvent();
-               dayRow = Appointments.get(ctr).getShour() * 2;
-               if(Appointments.get(ctr).getSminute() == 30)
+               event = calendarItems.get(index).getEvent();
+               dayRow = calendarItems.get(ctr).getShour() * 2;
+               if(calendarItems.get(ctr).getSminute() == 30)
                    dayRow++;
                
                dayModel.setValueAt(event, dayRow, 1);
+               itemIndex.add(ctr);
+            }
+        	
+        }
+            
+    }
+    
+    private void updateWeekTable(int month, int year,int day)
+    {
+        int index = -1; //index of the event found
+        
+        for (int j = 0; j < 48; j++) {
+        	if(j%2==0)
+        		weekModel.setValueAt(j/2+":00", j, 0);
+        	weekModel.setValueAt(null, j, 1);
+        }
+        
+        int weekRow = 0;
+        String event = "";
+        
+        for (int ctr = 0; ctr < calendarItems.size(); ctr++) { //searches for the events for this month and year
+        	
+        	if (calendarItems.get(ctr).checkSameDate(year, month+1, day)) {
+               index = ctr;
+               event = calendarItems.get(index).getEvent();
+               weekRow = calendarItems.get(ctr).getShour() * 2;
+               if(calendarItems.get(ctr).getSminute() == 30)
+                   weekRow++;
+               
+               weekModel.setValueAt(event, weekRow, 1);
                itemIndex.add(ctr);
             }
         	
@@ -96,26 +112,25 @@ public class Secretary extends Person{
         int dayRow = 0;
         String event = "";
         
-        for (int ctr = 0; ctr < Appointments.size(); ctr++) { //searches for the events for this month and year
+        for (int ctr = 0; ctr < calendarItems.size(); ctr++) { //searches for the events for this month and year
         	
-        	if (Appointments.get(ctr).checkSameDate(year, month+1, day)) {
+        	if (calendarItems.get(ctr).checkSameDate(year, month+1, day)) {
                index = ctr;
-               event = Appointments.get(index).getEvent();
-               dayRow = Appointments.get(ctr).getShour() * 2;
-               if(Appointments.get(ctr).getSminute() == 30)
+               event = calendarItems.get(index).getEvent();
+               dayRow = calendarItems.get(ctr).getShour() * 2;
+               if(calendarItems.get(ctr).getSminute() == 30)
                    dayRow++;
                
-             /*  if(style.equalsIgnoreCase("todo") && Appointments.get(ctr) instanceof ToDo){
+               if(style.equalsIgnoreCase("todo") && calendarItems.get(ctr) instanceof ToDo){
             	   dayModel.setValueAt(event, dayRow, 1);
             	   itemIndex.add(ctr);
                }
             	   
-               else if(style.equalsIgnoreCase("event") && !(Appointments.get(ctr) instanceof ToDo)){
+               else if(style.equalsIgnoreCase("event") && !(calendarItems.get(ctr) instanceof ToDo)){
             	   dayModel.setValueAt(event, dayRow, 1);
             	   itemIndex.add(ctr);
-               }*/ // no need for ToDo
-               dayModel.setValueAt(event, dayRow, 1);
-        	   itemIndex.add(ctr);
+               }
+            	   
             }
         	
         }
@@ -131,9 +146,9 @@ public class Secretary extends Person{
 //    	System.out.println("Number = " +itemIndex.size());
     	
     	for(int i = 0; i < itemIndex.size();i++){
-    		startRowList.add(getAppointments().get(itemIndex.get(i)).getStartRow());
-    		endRowList.add(getAppointments().get(itemIndex.get(i)).getEndRow());
-    		colorList.add(getAppointments().get(itemIndex.get(i)).getColor());
+    		startRowList.add(getCalendarItems().get(itemIndex.get(i)).getStartRow());
+    		endRowList.add(getCalendarItems().get(itemIndex.get(i)).getEndRow());
+    		colorList.add(getCalendarItems().get(itemIndex.get(i)).getColor());
     	}
     	
     	itemIndex.clear();
@@ -141,11 +156,16 @@ public class Secretary extends Person{
     	return new DayTableRenderer(startRowList, endRowList, colorList);
     }
 
-    public void addAppointment(int year, int month, int day, String event, int SHour, int SMinute, int EHour, int EMinute, int row) {
+    public void addCalendarItem(int year, int month, int day, String event, int SHour, int SMinute, int EHour, int EMinute, int row) {
         row = SHour * 2;
         if(SMinute == 30)
         	row++;
-    	this.getAppointments().add(new Appointment(year, month, day, event, "BLUE", SHour, SMinute, EHour, EMinute));
+    	this.getCalendarItems().add(new CalendarItem(year, month, day, event, "BLUE", SHour, SMinute, EHour, EMinute));
+    }
+
+    
+    public void addTask(int year, int month, int day, String event, int SHour, int SMinute, int EHour, int EMinute, boolean type) {
+        this.getCalendarItems().add(new ToDo(year, month, day, event, "RED", SHour, SMinute, EHour, EMinute, type));
     }
     
     public DefaultTableModel getCalendarModel(int month, int year) {
@@ -158,6 +178,15 @@ public class Secretary extends Person{
     	return dayModel;
     }
     
+	public DefaultTableModel getWeekModel(int month, int year, int day) {
+		this.updateWeekTable(month,year,day);
+		return weekModel;
+	}
+
+	public void setWeekModel(WeekModel weekModel) {
+		this.weekModel = weekModel;
+	}
+	
     public DefaultTableModel getEventDayModel(int month, int year, int day, String style)
     {
     	this.updateDayTableSpecific(month, year, day, style);
@@ -165,31 +194,31 @@ public class Secretary extends Person{
     	return dayModel;
     }
     
-	/* public void load(){
+	 public void load(){
     	Reader temp = new CSVReader();
     	temp.Read();
     	
-    	Appointments.addAll(temp.getEvents());
-    }*/ //legacy loader
+    	calendarItems.addAll(temp.getEvents());
+    }
 
-	public ArrayList<Appointment> getAppointments() {
-		return Appointments;
+	public ArrayList<CalendarItem> getCalendarItems() {
+		return calendarItems;
 	}
 
-	public void setAppointments(ArrayList<Appointment> Appointments) {
-		this.Appointments = Appointments;
+	public void setCalendarItems(ArrayList<CalendarItem> calendarItems) {
+		this.calendarItems = calendarItems;
 	}
 	
-	public ArrayList<Appointment> getDayEvents(int m, int d, int y){
-		ArrayList<Appointment> filtered = new ArrayList<Appointment>();
-		for(int i = 0;i<Appointments.size();i++){
-			if(Appointments.get(i).getDay()==d && Appointments.get(i).getYear()==y && Appointments.get(i).getMonth()==m)
-				filtered.add(Appointments.get(i));
+	public ArrayList<CalendarItem> getDayEvents(int m, int d, int y){
+		ArrayList<CalendarItem> filtered = new ArrayList<CalendarItem>();
+		for(int i = 0;i<calendarItems.size();i++){
+			if(calendarItems.get(i).getDay()==d && calendarItems.get(i).getYear()==y && calendarItems.get(i).getMonth()==m)
+				filtered.add(calendarItems.get(i));
 		}
 		
 		int temp1 = filtered.size();
-		Appointment temp2;
-		Appointment [] temp = new Appointment[temp1];
+		CalendarItem temp2;
+		CalendarItem [] temp = new CalendarItem[temp1];
 		for (int i = 0; i<temp1;i++){
 			temp[i]=filtered.get(i);
 		}
@@ -221,9 +250,9 @@ public class Secretary extends Person{
 		return filtered;	
 	}
 	
-	/*public String getdata(){ //legacy csv reader
+	public String getdata(){
 		StringBuilder sb = new StringBuilder();
-        ArrayList<Appointment> a = Appointments;
+        ArrayList<CalendarItem> a = calendarItems;
         for(int j=0; j<a.size();j++)
         {
         	if(a.get(j) instanceof ToDo){
@@ -269,6 +298,8 @@ public class Secretary extends Person{
 	        sb.append('\n');
 		}
 		return sb.toString();
-	}*/
+	}
+
+
     
 }
