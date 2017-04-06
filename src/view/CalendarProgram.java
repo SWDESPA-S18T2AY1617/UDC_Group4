@@ -23,27 +23,19 @@ public class CalendarProgram {
 	
 	private MainView mainView;
 	private CalendarItemHandler eventH;
-	private ArrayList<MainView> views;
 	
 	private Writer writer;
 	private ArrayList<CalendarItem> sortedDay;
 
-	public CalendarProgram() {
+	public CalendarProgram(MainView mainView) {
 		monthToday = cal.get(GregorianCalendar.MONTH);
 		yearToday = cal.get(GregorianCalendar.YEAR);
 		yearBound = cal.get(GregorianCalendar.YEAR);
 		dayToday = cal.get(GregorianCalendar.DAY_OF_MONTH);
 
-		mainView = new ClientMainView();	
-		
-		views.add(new DoctorMainView());
-		views.add(new DoctorMainView());
-		views.add(new ClientMainView());
-		views.add(new ClientMainView());
-		views.add(new SecretaryMainView());
+		this.mainView = mainView;
 		
 		sIndex = 100;
-		this.mainView = new ClientMainView();
 		this.eventH = new CalendarItemHandler();
 		this.writer = new Writer();
 		eventH.load();

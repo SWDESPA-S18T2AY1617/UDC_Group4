@@ -19,7 +19,7 @@ public class DBConnection {
 	
 	public DBConnection () {
 		open = false;
-		String file = "src/config/db.config";
+		String file = "/config/db.config";
 		try (BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(file)))) {
 			DRIVER_NAME = br.readLine();
 			URL = br.readLine();
