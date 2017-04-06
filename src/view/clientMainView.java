@@ -6,7 +6,7 @@ import javax.swing.JPanel;
 public class clientMainView extends MainView {
 	
 	
-	public void mainView() {
+	public clientMainView() {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(650, 530);

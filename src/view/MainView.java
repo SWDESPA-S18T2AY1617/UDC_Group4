@@ -3,7 +3,7 @@ package view;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-public abstract class MainView extends JFrame {
+public class MainView extends JFrame {
 
 	private DayView dayView;
 	private AgendaView agendaView;
@@ -13,7 +13,7 @@ public abstract class MainView extends JFrame {
 	private HeaderView headerView;
 	private WeekView weekView;
 	
-	public abstract void mainView();
+//	public abstract void mainView();
 	
 	public CalendarView getCalendarView() {
 		return calendarView;

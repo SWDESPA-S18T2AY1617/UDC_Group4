@@ -5,7 +5,7 @@ import javax.swing.JPanel;
 
 public class doctorMainView extends MainView{
 
-	public void mainView() {
+	public doctorMainView() {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(650, 530);
