@@ -3,10 +3,9 @@ package view;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-public class clientMainView extends MainView {
+public class SecretaryMainView extends MainView{
 	
-	
-	public clientMainView() {
+	public SecretaryMainView() {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(650, 530);
@@ -16,9 +15,11 @@ public class clientMainView extends MainView {
 		// initializing the panels
 		JPanel mainPanel = new JPanel(null);
 		getContentPane().add(mainPanel);
-		setTitle("Clients's Calendar");
+		setTitle("Secretary's Calendar");
 		setCalendarView(new CalendarView());
+		getCalendarView().getBtnCreate().setLocation(70, 180);
 		setTypeView(new TypeView());
+		setCreateView(new CreateView());
 		setHeaderView(new HeaderView());
 		setDayView(new DayView());
 		setWeekView(new WeekView());
@@ -27,6 +28,7 @@ public class clientMainView extends MainView {
 		// adding to the main panel
 		mainPanel.add(getCalendarView());
 		mainPanel.add(getTypeView());
+		mainPanel.add(getCreateView());
 		mainPanel.add(getHeaderView());
 		mainPanel.add(getAgendaView());
 		mainPanel.add(getWeekView());
@@ -37,17 +39,17 @@ public class clientMainView extends MainView {
 		getHeaderView().setBounds(10, 0, 630, 100);
 		getCalendarView().setBounds(10, 110, 230, 230);
 		getTypeView().setBounds(20, 352, 100, 100);
+		getCreateView().setBounds(240, 110, 400, 350);
 		getAgendaView().setBounds(240, 110, 400, 350);
 		getDayView().setBounds(240, 110, 400, 350);
 		getWeekView().setBounds(240,110,400,350);
 		
-		//Hide unnecessary objects
-		getCalendarView().getBtnCreate().setVisible(false);
+		//Modify necessary objects
+		getTypeView().getFreeCheckBox().setText("Free");
+		getTypeView().getReservedCheckBox().setText("Reserved");
 		
-		//Modify objects
-		getTypeView().getReservedCheckBox().setText("Reservation");
-		getTypeView().getFreeCheckBox().setText("All");
 		// Panels
+		getCreateView().setVisible(false);
 		getWeekView().setVisible(false);
 		getAgendaView().setVisible(false);
 

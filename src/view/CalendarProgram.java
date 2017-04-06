@@ -34,16 +34,16 @@ public class CalendarProgram {
 		yearBound = cal.get(GregorianCalendar.YEAR);
 		dayToday = cal.get(GregorianCalendar.DAY_OF_MONTH);
 
-		mainView = new clientMainView();	
+		mainView = new ClientMainView();	
 		
-		views.add(new doctorMainView());
-		views.add(new doctorMainView());
-		views.add(new clientMainView());
-		views.add(new clientMainView());
-		views.add(new secretaryMainView());
+		views.add(new DoctorMainView());
+		views.add(new DoctorMainView());
+		views.add(new ClientMainView());
+		views.add(new ClientMainView());
+		views.add(new SecretaryMainView());
 		
 		sIndex = 100;
-		this.mainView = new clientMainView();
+		this.mainView = new ClientMainView();
 		this.eventH = new CalendarItemHandler();
 		this.writer = new Writer();
 		eventH.load();

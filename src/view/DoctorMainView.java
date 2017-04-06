@@ -3,9 +3,9 @@ package view;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-public class doctorMainView extends MainView{
+public class DoctorMainView extends MainView{
 
-	public doctorMainView() {
+	public DoctorMainView() {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(650, 530);
