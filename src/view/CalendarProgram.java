@@ -20,8 +20,11 @@ public class CalendarProgram {
 	private int yearBound;
 	private int col = -1;
 	private int row = -1;
+	
+	private MainView mainView;
 	private CalendarItemHandler eventH;
-	private clientMainView mainView;
+	private ArrayList<MainView> views;
+	
 	private Writer writer;
 	private ArrayList<CalendarItem> sortedDay;
 
@@ -31,6 +34,14 @@ public class CalendarProgram {
 		yearBound = cal.get(GregorianCalendar.YEAR);
 		dayToday = cal.get(GregorianCalendar.DAY_OF_MONTH);
 
+		mainView = new clientMainView();	
+		
+		views.add(new doctorMainView());
+		views.add(new doctorMainView());
+		views.add(new clientMainView());
+		views.add(new clientMainView());
+		views.add(new secretaryMainView());
+		
 		sIndex = 100;
 		this.mainView = new clientMainView();
 		this.eventH = new CalendarItemHandler();
@@ -40,7 +51,7 @@ public class CalendarProgram {
 		for (int i = 0; i < eventH.getCalendarItems().size(); i++) {
 			System.out.println(eventH.getCalendarItems().get(i).toString());
 		}
-
+		
 		setFrame();
 
 		this.mainView.setVisible(true);
