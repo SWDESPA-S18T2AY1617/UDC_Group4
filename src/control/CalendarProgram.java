@@ -400,7 +400,9 @@ public class CalendarProgram {
 				monthToday -= 1;
 				sIndex = mainView.getCalendarView().getCmbYear().getSelectedIndex();
 			}
-
+			
+			date = LocalDate.of(yearToday, monthToday, dayToday);
+			
 			refreshCalendar();
 			refreshAgenda();
 			refreshDay();
@@ -422,6 +424,8 @@ public class CalendarProgram {
 				sIndex = mainView.getCalendarView().getCmbYear().getSelectedIndex();
 			}
 
+			date = LocalDate.of(yearToday, monthToday, dayToday);
+			
 			refreshCalendar();
 			refreshAgenda();
 			refreshDay();
@@ -435,6 +439,7 @@ public class CalendarProgram {
 			mainView.getAgendaView().setVisible(false);
 			mainView.getWeekView().setVisible(false);
 			mainView.getCreateView().setVisible(true);
+			
 		}
 	}
 
