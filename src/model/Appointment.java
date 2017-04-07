@@ -2,13 +2,14 @@ package model;
 
 import java.awt.Color;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class Appointment{
 	
     private int appointmentID;
 	private String appointmentName;
-    private Date appointmentDate;
+    private LocalDate appointmentDate;
     private LocalTime timeIn;
     private LocalTime timeOut;
     private int clientID;
@@ -16,7 +17,6 @@ public class Appointment{
     private boolean status;
     private int startRowDay;
     private int endRowDay;
-    private int colDay;
     private int colWeek;
     private String color;
     
@@ -39,7 +39,7 @@ public class Appointment{
 		appointmentDate = null;
 	}
 	
-	public Appointment(int appointmentID, String appointmentName, String color, Date appointmentDate, LocalTime LocalTimeIn, LocalTime LocalTimeOut, int DoctorID){
+	public Appointment(int appointmentID, String appointmentName, String color, LocalDate appointmentDate, LocalTime LocalTimeIn, LocalTime LocalTimeOut, int DoctorID){
 		this.appointmentID = appointmentID;
 		this.appointmentName = appointmentName;
 		this.appointmentDate = appointmentDate;
@@ -50,7 +50,6 @@ public class Appointment{
 		this.status = false;
         this.setStartRowDay();
         this.setEndRowDay();
-        this.colDay = 1;
 	}
 	
 	public Color getColor() {
@@ -74,9 +73,9 @@ public class Appointment{
     	return color.toUpperCase();
     }
     
-    public boolean checkSameDate(Date day)
-    {
-    	return this.appointmentDate.equals(day);
+    public int checkSameDate(LocalDate day)
+    {	
+    	return this.appointmentDate.compareTo(day);
     }
     
 //    public boolean checkYearMonth(int year, int month) {
@@ -132,11 +131,11 @@ public class Appointment{
 		this.timeOut = timeOut;
 	}
 
-	public Date getAppointmentDate() {
+	public LocalDate getAppointmentDate() {
 		return appointmentDate;
 	}
 
-	public void setAppointmentDate(Date appointmentDate) {
+	public void setAppointmentDate(LocalDate appointmentDate) {
 		this.appointmentDate = appointmentDate;
 	}
 

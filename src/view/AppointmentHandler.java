@@ -2,8 +2,10 @@ package view;
 
 import java.awt.Color;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 import javax.swing.table.DefaultTableModel;
 
@@ -43,8 +45,8 @@ public class AppointmentHandler {
         }
     }
     
-    private void updateDayTable(Date date)
-    {
+    private void updateDayTable(LocalDate date)
+    {	
         int index = -1; //index of the event found
         
         for (int j = 0; j < 48; j++) {
@@ -57,8 +59,8 @@ public class AppointmentHandler {
         String event = "";
         
         for (int ctr = 0; ctr < Appointments.size(); ctr++) { //searches for the events for this month and year
-        	
-        	if (Appointments.get(ctr).checkSameDate(date)) {
+        	System.out.println("Compare Result: " + Appointments.get(ctr).checkSameDate(date));
+        	if (Appointments.get(ctr).checkSameDate(date) == 0) {
                index = ctr;
                event = Appointments.get(index).getAppointmentName();
                dayRow = Appointments.get(ctr).getLocalTimeIn().getHour() * 2;
@@ -68,12 +70,13 @@ public class AppointmentHandler {
                dayModel.setValueAt(event, dayRow, 1);
                itemIndex.add(ctr);
             }
+        	System.out.println("Items: " + itemIndex.size());
         	
         }
             
     }
     
-    private void updateWeekTable(Date date)
+    private void updateWeekTable(LocalDate date)
     {
         int index = -1; //index of the event found
         
@@ -83,19 +86,38 @@ public class AppointmentHandler {
         	weekModel.setValueAt(null, j, 1);
         }
         
-        int weekRow = 0;
+        int dayRow = 0;
+        int weekCol = 0;
         String event = "";
         
         for (int ctr = 0; ctr < Appointments.size(); ctr++) { //searches for the events for this month and year
         	
-        	if (Appointments.get(ctr).checkSameDate(date)) {
+        	if (Appointments.get(ctr).checkSameDate(date) == 0) {
                index = ctr;
                event = Appointments.get(index).getAppointmentName();
-               weekRow = Appointments.get(ctr).getLocalTimeIn().getHour() * 2;
+               dayRow = Appointments.get(ctr).getLocalTimeIn().getHour() * 2;
                if(Appointments.get(ctr).getLocalTimeIn().getMinute() == 30)
-                   weekRow++;
+                   dayRow++;
                
-               weekModel.setValueAt(event, weekRow, 1);
+               System.out.println(date);
+               System.out.println(date.getDayOfWeek().name());
+               
+               if(date.getDayOfWeek().name().equalsIgnoreCase("Monday"))
+            	   weekCol = 1;
+               else if(date.getDayOfWeek().name().equalsIgnoreCase("Tuesday"))
+            	   weekCol = 2;
+               else if(date.getDayOfWeek().name().equalsIgnoreCase("Wednesday"))
+            	   weekCol = 3;
+               else if(date.getDayOfWeek().name().equalsIgnoreCase("Thursday"))
+            	   weekCol = 4;
+               else if(date.getDayOfWeek().name().equalsIgnoreCase("Friday"))
+            	   weekCol = 5;
+               
+               System.out.println("Week COlumn" + weekCol);
+               
+               Appointments.get(ctr).setColWeek(weekCol);
+               
+               weekModel.setValueAt(event, dayRow, weekCol);
                itemIndex.add(ctr);
             }
         	
@@ -103,7 +125,7 @@ public class AppointmentHandler {
             
     }
     
-    private void updateDayTableSpecific(Date date)
+    private void updateDayTableSpecific(LocalDate date)
     {
         int index = -1; //index of the event found
         
@@ -118,7 +140,7 @@ public class AppointmentHandler {
         
         for (int ctr = 0; ctr < Appointments.size(); ctr++) { //searches for the events for this month and year
         	
-        	if (Appointments.get(ctr).checkSameDate(date)) {
+        	if (Appointments.get(ctr).checkSameDate(date) == 0) {
                index = ctr;
                event = Appointments.get(index).getAppointmentName();
                dayRow = Appointments.get(ctr).getLocalTimeIn().getHour() * 2;
@@ -152,8 +174,28 @@ public class AppointmentHandler {
     	
     	return new DayTableRenderer(startRowList, endRowList,colorList);
     }
+    
+    public WeekTableRenderer getWeekRenderer(){
+        
+    	ArrayList<Integer> startRowList = new ArrayList<Integer>();
+    	ArrayList<Integer> endRowList = new ArrayList<Integer>();
+    	ArrayList<Color> colorList = new ArrayList<Color>();
+    	ArrayList<Integer> columnList = new ArrayList<Integer>();
+    	
+    	
+    	for(int i = 0; i < itemIndex.size();i++){
+    		startRowList.add(getAppointments().get(itemIndex.get(i)).getStartRowDay());
+    		endRowList.add(getAppointments().get(itemIndex.get(i)).getEndRowDay());
+    		colorList.add(getAppointments().get(itemIndex.get(i)).getColor());
+    		columnList.add(getAppointments().get(itemIndex.get(i)).getColWeek());
+    	}
+    	
+    	itemIndex.clear();
+    	
+    	return new WeekTableRenderer(startRowList, endRowList,colorList, columnList);
+    }
 
-    public void addAppointment(Date date, String event, LocalTime timeIn, LocalTime timeOut, int doctorID, String color) {
+    public void addAppointment(LocalDate date, String event, LocalTime timeIn, LocalTime timeOut, int doctorID, String color) {
     	this.getAppointments().add(new Appointment(Appointments.size(), event, color, date, timeIn, timeOut, doctorID));
     }
     
@@ -162,12 +204,12 @@ public class AppointmentHandler {
         return calendarModel;
     }
     
-    public DefaultTableModel getDayModel(Date date){
+    public DefaultTableModel getDayModel(LocalDate date){
     	this.updateDayTable(date);
     	return dayModel;
     }
     
-	public DefaultTableModel getWeekModel(Date date) {
+	public DefaultTableModel getWeekModel(LocalDate date) {
 		this.updateWeekTable(date);
 		return weekModel;
 	}
@@ -176,7 +218,7 @@ public class AppointmentHandler {
 		this.weekModel = weekModel;
 	}
 	
-    public DefaultTableModel getEventDayModel(Date date)
+    public DefaultTableModel getEventDayModel(LocalDate date)
     {
     	this.updateDayTableSpecific(date);
     	
@@ -191,10 +233,10 @@ public class AppointmentHandler {
 		this.Appointments = Appointments;
 	}
 	
-	public ArrayList<Appointment> getDayEvents(Date date){
+	public ArrayList<Appointment> getDayEvents(LocalDate date){
 		ArrayList<Appointment> filtered = new ArrayList<Appointment>();
 		for(int i = 0;i<Appointments.size();i++){
-			if(Appointments.get(i).checkSameDate(date))
+			if(Appointments.get(i).checkSameDate(date) == 0)
 				filtered.add(Appointments.get(i));
 		}
 		

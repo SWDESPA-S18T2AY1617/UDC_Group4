@@ -1,6 +1,7 @@
 package server;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -124,7 +125,7 @@ public class AppointmentManager {
 			statement = connect.prepareStatement(query);
 			
 			statement.setInt(1, appointment.getAppointmentID());
-			statement.setDate(2, appointment.getAppointmentDate());
+			statement.setDate(2, Date.valueOf(appointment.getAppointmentDate()));
 			statement.setTime(3, Time.valueOf(appointment.getLocalTimeIn()));
 			statement.setTime(4, Time.valueOf(appointment.getLocalTimeOut()));
 			statement.setString(5, appointment.getAppointmentName());
@@ -171,7 +172,7 @@ public class AppointmentManager {
 		appointment.setAppointmentID(rs.getInt(Appointment.COL_ID));
 		appointment.setLocalTimeIn(rs.getTime(Appointment.COL_TIMESTART).toLocalTime());
 		appointment.setLocalTimeOut(rs.getTime(Appointment.COL_TIMEEND).toLocalTime());
-		appointment.setAppointmentDate(rs.getDate(Appointment.COL_DATE));
+		appointment.setAppointmentDate(rs.getDate(Appointment.COL_DATE).toLocalDate());
 		appointment.setAppointmentName(rs.getString(Appointment.COL_APPOINTMENTNAME));
 		appointment.setDoctorID(rs.getInt(Appointment.COL_DOCTORID));
 		appointment.setClientID(rs.getInt(Appointment.COL_CLIENTID));

@@ -6,23 +6,16 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.FileNotFoundException;
 import java.util.*;
-import javax.swing.JOptionPane;
-
-import model.Appointment;
-
-import java.sql.Date;
+import java.time.LocalDate;
 import java.time.LocalTime;
 
-import view.CalendarItem;
+import model.Appointment;
 import view.DoctorMainView;
 import view.AppointmentHandler;
 import view.MainView;
 import view.SecretaryMainView;
 import view.TableRenderer;
-import view.ToDo;
-import view.Writer;
 
 public class CalendarProgram {
 
@@ -32,7 +25,7 @@ public class CalendarProgram {
 	private int dayToday;
 	private int sIndex = 100;
 	private int yearBound;
-	private Date date;
+	private LocalDate date;
 	private int col = -1;
 	private int row = -1;
 	
@@ -45,10 +38,7 @@ public class CalendarProgram {
 		yearToday = cal.get(GregorianCalendar.YEAR);
 		yearBound = cal.get(GregorianCalendar.YEAR);
 		dayToday = cal.get(GregorianCalendar.DAY_OF_MONTH);
-		GregorianCalendar gc = new GregorianCalendar();
-		gc.set(yearToday, monthToday, dayToday);
-		date = new Date(gc.getTimeInMillis());
-
+		date = LocalDate.of(yearToday, monthToday + 1, dayToday);
 		this.mainView = mainView;
 		
 		sIndex = 100;
@@ -58,8 +48,8 @@ public class CalendarProgram {
 
 		this.mainView.setVisible(true);
 		this.mainView.getCalendarView().getCalendarTable().setModel(eventH.getCalendarModel(monthToday, yearToday));
-		this.mainView.getDayView().getDayTable().setModel(eventH.getDayModel(date));
-		this.mainView.getWeekView().getWeekTable().setModel(eventH.getWeekModel(date));
+		this.mainView.getDayView().getDayTable().setModel(eventH.getDayModel(getDate()));
+		this.mainView.getWeekView().getWeekTable().setModel(eventH.getWeekModel(getDate()));
 		refreshCalendar();
 	}
 
@@ -143,6 +133,7 @@ public class CalendarProgram {
 
 		refreshAgenda();
 		refreshDay();
+		refreshWeek();
 	}
 
 	private void refreshCalendar() { // sets the view based on the current month
@@ -213,25 +204,30 @@ public class CalendarProgram {
 
 	private void refreshDay() {
 
-		mainView.getDayView().getDayTable().setModel(eventH.getDayModel(date));
+		mainView.getDayView().getDayTable().setModel(eventH.getDayModel(getDate()));
 		mainView.getDayView().getDayTable().setDefaultRenderer(mainView.getDayView().getDayTable().getColumnClass(0),
 				eventH.getDayRenderer());
 	}
 
 	private void refreshDaySpecific(String style) {
-		mainView.getDayView().getDayTable().setModel(eventH.getEventDayModel(date));
+		mainView.getDayView().getDayTable().setModel(eventH.getEventDayModel(getDate()));
 		mainView.getDayView().getDayTable().setDefaultRenderer(mainView.getDayView().getDayTable().getColumnClass(0),
 				eventH.getDayRenderer());
+	}
+	
+	public void refreshWeek() {
+		mainView.getWeekView().getWeekTable().setModel(eventH.getWeekModel(getDate()));
+		mainView.getWeekView().getWeekTable().setDefaultRenderer(mainView.getWeekView().getWeekTable().getColumnClass(0), eventH.getWeekRenderer());
 	}
 
 	private void refreshAgenda() {
 		mainView.getAgendaView().getLblEventName().setText("No Upcoming Events");
 		mainView.getAgendaView().getLblEventTime().setText("");
 
-		sortedDay = eventH.getDayEvents(date);
+		sortedDay = eventH.getDayEvents(getDate());
 
 		for (int ctr = 0; ctr < sortedDay.size(); ctr++) {
-			if (sortedDay.get(ctr).checkSameDate(date)) {
+			if (sortedDay.get(ctr).checkSameDate(getDate()) == 0) {
 //				if (mainView.getAgendaView().getLblEventName().getText().equalsIgnoreCase("No Upcoming Events")) {
 //					mainView.getAgendaView().getLblEventName().setText("<html><font color='"
 //							+ sortedDay.get(ctr).getColorName() + "'>" + sortedDay.get(ctr).getEvent());
@@ -280,7 +276,7 @@ public class CalendarProgram {
 		mainView.getAgendaView().getLblEventName().setText("No Upcoming Events");
 		mainView.getAgendaView().getLblEventTime().setText("");
 
-		sortedDay = eventH.getDayEvents(date);
+		sortedDay = eventH.getDayEvents(getDate());
 
 		for (int ctr = 0; ctr < sortedDay.size(); ctr++) {
 //			if (!(sortedDay.get(ctr) instanceof ToDo) && dayToday == sortedDay.get(ctr).getDay()
@@ -333,7 +329,7 @@ public class CalendarProgram {
 		mainView.getAgendaView().getLblEventName().setText("No Upcoming Events");
 		mainView.getAgendaView().getLblEventTime().setText("");
 
-		sortedDay = eventH.getDayEvents(date);
+		sortedDay = eventH.getDayEvents(getDate());
 
 		for (int ctr = 0; ctr < sortedDay.size(); ctr++) {
 //			if (sortedDay.get(ctr) instanceof ToDo && dayToday == sortedDay.get(ctr).getDay()
@@ -382,6 +378,14 @@ public class CalendarProgram {
 		}
 	}
 
+	public LocalDate getDate() {
+		return date;
+	}
+
+	public void setDate(LocalDate date) {
+		this.date = date;
+	}
+
 	//////////////////////////// ACTION LISTENERS////////////////////////////
 	private class btnPrev_Action implements ActionListener {
 
@@ -400,6 +404,7 @@ public class CalendarProgram {
 			refreshCalendar();
 			refreshAgenda();
 			refreshDay();
+			refreshWeek();
 		}
 	}
 
@@ -420,6 +425,7 @@ public class CalendarProgram {
 			refreshCalendar();
 			refreshAgenda();
 			refreshDay();
+			refreshWeek();
 		}
 	}
 
@@ -472,11 +478,15 @@ public class CalendarProgram {
 			row = mainView.getCalendarView().getCalendarTable().getSelectedRow();
 			if (mainView.getCalendarView().getCalendarTable().getValueAt(row, col) != null)
 				dayToday = (Integer) mainView.getCalendarView().getCalendarTable().getValueAt(row, col);
-
+			
+			System.out.println("Month: " + monthToday);
+			date = LocalDate.of(yearToday, monthToday + 1, dayToday);
+			
 			mainView.getHeaderView().getDateLabel().setText(months[monthToday] + " " + dayToday + ", " + yearToday);
 			mainView.getCreateView().getTextFieldDate().setText((monthToday+1) + "/" + dayToday + "/" + yearToday);
 			refreshAgenda();
 			refreshDay();
+			refreshWeek();
 		}
 
 		@Override
@@ -542,11 +552,10 @@ public class CalendarProgram {
 		public void actionPerformed(ActionEvent e) {
 
 			int i = 0;
+			
 			String[] dates = mainView.getCreateView().getTextFieldDate().getText().split("/");
 			
-			GregorianCalendar gc = new GregorianCalendar();
-			gc.set(Integer.parseInt(dates[2]), Integer.parseInt(dates[0]), Integer.parseInt(dates[1]));
-			Date day = new Date(gc.getTimeInMillis());
+			date = LocalDate.of(Integer.parseInt(dates[2]), Integer.parseInt(dates[0]), Integer.parseInt(dates[1]));
 			
 			String[] stime = mainView.getCreateView().getComboBoxFrom().getSelectedItem().toString().split(":");
 			int shour = Integer.parseInt(stime[0]);
@@ -555,11 +564,12 @@ public class CalendarProgram {
 			int ehour = Integer.parseInt(etime[0]);
 			int eminute = Integer.parseInt(etime[1]);
 			
-			eventH.addAppointment(day, "Appointment 1", LocalTime.of(shour, sminute), LocalTime.of(ehour, eminute), mainView.getAppID(), "Red");
-			
+			eventH.addAppointment(getDate(), "Appointment " + (eventH.getAppointments().size() + 1), LocalTime.of(shour, sminute), LocalTime.of(ehour, eminute), mainView.getAppID(), "Red");
+			System.out.println("DAy of Event" + getDate());
 			System.out.println("Added");
 			refreshDay();
 			refreshAgenda();
+			refreshWeek();
 		
 //			for (i = 0; i < eventH.getAppointments().size(); i++) {
 //				if (year == eventH.getAppointments().get(i).getYear()
@@ -591,10 +601,10 @@ public class CalendarProgram {
 //				refreshDay();
 //			}
 
-//			mainView.getCreateView().getTextFieldDate().setText("");
+			mainView.getCreateView().getTextFieldDate().setText("");
 //			mainView.getCreateView().getTextFieldEvent().setText("");
-//			mainView.getCreateView().getComboBoxFrom().setSelectedIndex(0);
-//			mainView.getCreateView().getComboBoxTo().setSelectedIndex(0);
+			mainView.getCreateView().getComboBoxFrom().setSelectedIndex(0);
+			mainView.getCreateView().getComboBoxTo().setSelectedIndex(0);
 
 		}
 	}
