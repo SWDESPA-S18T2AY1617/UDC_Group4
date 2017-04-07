@@ -142,64 +142,20 @@ public class CalendarProgram {
 				"October", "November", "December" };
 
 		mainView.getHeaderView().getDateLabel().setText(months[monthToday] + " " + dayToday + ", " + yearToday);
-		mainView.getCalendarView().getBtnPrev().setEnabled(true); // enables the
-																	// previous
-																	// button
-		mainView.getCalendarView().getBtnNext().setEnabled(true); // enables the
-																	// next
-																	// button
+		mainView.getCalendarView().getBtnPrev().setEnabled(true); // enables the previous button
+		mainView.getCalendarView().getBtnNext().setEnabled(true); // enables the next button 
 		if (monthToday == 0 && yearToday <= yearBound - 100)
-			mainView.getCalendarView().getBtnPrev().setEnabled(false); // disables
-																		// the
-																		// previous
-																		// button
+			mainView.getCalendarView().getBtnPrev().setEnabled(false); // disables the previous button
 		if (monthToday == 11 && yearToday >= yearBound + 100)
-			mainView.getCalendarView().getBtnNext().setEnabled(false); // disables
-																		// the
-																		// next
-																		// button
+			mainView.getCalendarView().getBtnNext().setEnabled(false); // disables the next button 
 
-		mainView.getCalendarView().getMonthLabel().setText(months[monthToday]); // changes
-																				// the
-																				// month
-																				// label
-																				// based
-																				// on
-																				// the
-																				// current
-																				// month
+		mainView.getCalendarView().getMonthLabel().setText(months[monthToday]); // changes the month label based on the current month 
 		mainView.getCalendarView().getMonthLabel().setBounds(20, 25, 100, 30);
 
-		mainView.getCalendarView().getCmbYear().setSelectedIndex(sIndex); // changes
-																			// the
-																			// selected
-																			// index
-																			// in
-																			// the
-																			// combo
-																			// box
-																			// based
-																			// on
-																			// the
-																			// current
-																			// year
-		mainView.getCalendarView().getCalendarTable().setModel(eventH.getCalendarModel(monthToday, yearToday)); // updates
-																												// the
-																												// model
-																												// being
-																												// used
+		mainView.getCalendarView().getCmbYear().setSelectedIndex(sIndex); // changes  the selected index in the combo box based on the current year 
+		mainView.getCalendarView().getCalendarTable().setModel(eventH.getCalendarModel(monthToday, yearToday)); // updates the model being used 
 		mainView.getCalendarView().getCalendarTable().setDefaultRenderer(
-				mainView.getCalendarView().getCalendarTable().getColumnClass(0), new TableRenderer()); // updates
-																										// the
-																										// renderer
-																										// used
-																										// to
-																										// change
-																										// the
-																										// color
-																										// of
-																										// a
-																										// cell
+				mainView.getCalendarView().getCalendarTable().getColumnClass(0), new TableRenderer()); // updates the renderer used to change the color of a cell 
 	}
 
 	private void refreshDay() {
@@ -477,40 +433,7 @@ public class CalendarProgram {
 		public void mouseReleased(MouseEvent arg0) {}
 
 	}
-
-//	private class btnToday_Action implements ActionListener {
-//		public void actionPerformed(ActionEvent e) {
-//			monthToday = cal.get(GregorianCalendar.MONTH);
-//			yearToday = cal.get(GregorianCalendar.YEAR);
-//			dayToday = cal.get(GregorianCalendar.DAY_OF_MONTH);
-//			sIndex = 100;
-//
-//			mainView.getDayView().setVisible(true);
-//			mainView.getAgendaView().setVisible(false);
-//			mainView.getCreateView().setVisible(false);
-//
-//			refreshCalendar();
-//			refreshAgenda();
-//			refreshDay();
-//		}
-//	}
-
-//	private class rdBtnEvent_Action implements ActionListener {
-//		public void actionPerformed(ActionEvent e) {
-//			mainView.getCreateView().getComboBoxFrom().setVisible(true);
-//			mainView.getCreateView().getComboBoxTo().setVisible(true);
-//			mainView.getCreateView().getLabelTo().setVisible(true);
-//		}
-//	}
-
-//	private class rdBtnTask_Action implements ActionListener {
-//		public void actionPerformed(ActionEvent e) {
-//			mainView.getCreateView().getComboBoxFrom().setVisible(true);
-//			mainView.getCreateView().getComboBoxTo().setVisible(false);
-//			mainView.getCreateView().getLabelTo().setVisible(false);
-//		}
-//	}
-
+	
 	private class cmbYear_Action implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
@@ -590,7 +513,6 @@ public class CalendarProgram {
 //			}
 
 			mainView.getCreateView().getTextFieldDate().setText("");
-//			mainView.getCreateView().getTextFieldEvent().setText("");
 			mainView.getCreateView().getComboBoxFrom().setSelectedIndex(0);
 			mainView.getCreateView().getComboBoxTo().setSelectedIndex(0);
 
@@ -630,22 +552,5 @@ public class CalendarProgram {
 //		}
 //	}
 	
-//	private class scrollPanelDay_Action implements MouseListener {
-//
-//		@Override
-//		public void mouseClicked(MouseEvent arg0) {
-//			int rowDay = mainView.getDayView().getDayTable().getSelectedRow();
-//			markAsDone(mainView.getDayView().getDayTable().getValueAt(rowDay, 1).toString());
-//		}
-//		
-//		@Override
-//		public void mouseEntered(MouseEvent arg0) {}
-//		@Override
-//		public void mouseExited(MouseEvent arg0) {}
-//		@Override
-//		public void mousePressed(MouseEvent arg0) {}
-//		@Override
-//		public void mouseReleased(MouseEvent arg0) {}
-//
-//	}
+
 }

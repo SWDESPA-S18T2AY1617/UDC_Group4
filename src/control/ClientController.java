@@ -4,32 +4,22 @@ import java.util.ArrayList;
 
 import server.ClientManager;
 import view.ClientMainView;
+import view.DoctorMainView;
 
-public class ClientController
+public class ClientController extends CalendarProgram
 {
 	private ClientManager clientManager;
-	private ArrayList<CalendarProgram> calendarProgram;
 	
 	public ClientController()
-	{
+	{	
+		super(new ClientMainView());
 		clientManager = new ClientManager();
-		calendarProgram = new ArrayList<CalendarProgram>();
-		int maxCtr = clientManager.getAllClient().size();
-		for(int ctr = 0; ctr < maxCtr; ctr++){
-			calendarProgram.add(new CalendarProgram(new ClientMainView()));
-		}
+//		calendarProgram = new ArrayList<CalendarProgram>();
+//		int maxCtr = clientManager.getAllClient().size();
+//		for(int ctr = 0; ctr < maxCtr; ctr++){
+//			calendarProgram.add(new CalendarProgram(new ClientMainView()));
+//		}
 	}
 	
-	public CalendarProgram getSpecificCalendarProgram(int value)
-	{
-		return calendarProgram.get(value);
-	}
 
-	public ArrayList<CalendarProgram> getCalendarProgram() {
-		return calendarProgram;
-	}
-
-	public void setCalendarProgram(ArrayList<CalendarProgram> calendarProgram) {
-		this.calendarProgram = calendarProgram;
-	}
 }

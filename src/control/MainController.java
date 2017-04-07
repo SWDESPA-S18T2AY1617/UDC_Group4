@@ -1,18 +1,20 @@
 package control;
 
+import java.util.ArrayList;
+
 public class MainController
 {
-	private ClientController clientController;
-	private DoctorController doctorController;
-	private SecretaryController secretaryController;
 	private AppointmentController appointmentController;
+	private ArrayList<CalendarProgram> AllController = new ArrayList<CalendarProgram>();
 	
 	public MainController()
 	{
-		clientController = new ClientController();
-	    doctorController = new DoctorController();
-	    secretaryController = new SecretaryController();
-	    appointmentController = new AppointmentController();
+		AllController.add(new DoctorController());
+		AllController.add(new ClientController());
+		AllController.add(new ClientController());
+		AllController.add(new DoctorController());
+		AllController.add(new SecretaryController());
+		appointmentController = new AppointmentController();
 	}
 	
 	
