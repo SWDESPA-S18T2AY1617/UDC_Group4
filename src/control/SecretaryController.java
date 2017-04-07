@@ -3,7 +3,6 @@ package control;
 import java.util.ArrayList;
 
 import server.SecretaryManager;
-import view.CalendarProgram;
 import view.SecretaryMainView;
 
 public class SecretaryController 

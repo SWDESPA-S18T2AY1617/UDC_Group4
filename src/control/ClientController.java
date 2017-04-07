@@ -3,7 +3,6 @@ package control;
 import java.util.ArrayList;
 
 import server.ClientManager;
-import view.CalendarProgram;
 import view.ClientMainView;
 
 public class ClientController

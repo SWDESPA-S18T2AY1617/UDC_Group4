@@ -179,9 +179,7 @@ public class DateRecurTest {
 	public void checkForConflict(Appointment reserved, Appointment input) {
 		
 		//Checks if there is conflict
-		if(reserved.getDay() == input.getDay() && reserved.getYear() == input.getYear() &&
-		   reserved.getMonth() == input.getMonth() && //<< Checks if the input appointment has the same day as the reserved appointment
-		   
+		if(reserved.checkSameDate(input.getAppointmentDate()) && //<< Checks if the input appointment has the same day as the reserved appointment
 		   ( 
 			 //Reserverd Appointment's start hour is in between the input appointment.
 		     ((reserved.getShour() > input.getShour() && reserved.getShour() < input.getEhour()) || //OR
@@ -246,11 +244,5 @@ public class DateRecurTest {
 	
 	public static void main(String[] args) {
 		new DateRecurTest();
-		
-		
-		
-	
-	
-	
 	}
 }

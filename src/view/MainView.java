@@ -4,6 +4,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class MainView extends JFrame {
+	
 
 	private DayView dayView;
 	private AgendaView agendaView;
@@ -12,8 +13,14 @@ public class MainView extends JFrame {
 	private CreateView createView;
 	private HeaderView headerView;
 	private WeekView weekView;
+	private int appID;
+	
 	
 //	public abstract void mainView();
+	
+	public MainView() {
+		
+	}
 	
 	public CalendarView getCalendarView() {
 		return calendarView;
@@ -69,6 +76,14 @@ public class MainView extends JFrame {
 
 	public void setCreateView(CreateView createView) {
 		this.createView = createView;
+	}
+
+	public int getAppID() {
+		return appID;
+	}
+
+	public void setAppID(int appID) {
+		this.appID = appID;
 	}
 
 }

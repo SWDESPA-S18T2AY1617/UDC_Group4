@@ -6,8 +6,13 @@ import javax.swing.JPanel;
 
 public class ClientMainView extends MainView {
 
+	private static int appIDTracker = 0;
+	private int appID;
+	
 	public ClientMainView() {
 
+		appID = ++appIDTracker;
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(650, 530);
 		getContentPane().setLayout(null);
@@ -15,7 +20,7 @@ public class ClientMainView extends MainView {
 		// initializing the panels
 		JPanel mainPanel = new JPanel(null);
 		getContentPane().add(mainPanel);
-		setTitle("Clients's Calendar");
+		setTitle("Clients's Calendar #" + appID);
 		setCalendarView(new CalendarView());
 		setTypeView(new TypeView());
 		setHeaderView(new HeaderView());

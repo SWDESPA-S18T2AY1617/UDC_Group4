@@ -1,6 +1,5 @@
 package model;
 
-import java.awt.Color;
 import java.sql.Date;
 import java.time.LocalTime;
 
@@ -8,13 +7,15 @@ public class Appointment{
 	
     private int appointmentID;
 	private String appointmentName;
-    private String color;
     private Date appointmentDate;
     private LocalTime timeIn;
     private LocalTime timeOut;
     private int clientID;
     private int doctorID;
     private boolean status;
+    private int startRowDay;
+    private int endRowDay;
+    private int colWeek;
     
     public final static String TABLE_NAME = "appointment";
 	public final static String COL_ID = "appointmentID";
@@ -25,45 +26,25 @@ public class Appointment{
 	public final static String COL_CLIENTID = "clientID";
 	public final static String COL_DOCTORID = "doctorID";
 	public final static String COL_STATUS = "status";
+	public final static String COL_STARTROW = "startRowDay";
+	public final static String COL_ENDROW = "endRowDay";
+	public final static String COL_COLWEEK = "colWeek";
 	
 	public Appointment()
 	{
 		appointmentDate = null;
 	}
 	
-	public Appointment(int appointmentID, String color, Date appointmentDate, LocalTime LocalTimeIn, LocalTime LocalTimeOut, int ClientID, int DoctorID){
+	public Appointment(int appointmentID, String appointmentName, Date appointmentDate, LocalTime LocalTimeIn, LocalTime LocalTimeOut, int DoctorID){
 		this.appointmentID = appointmentID;
-		this.appointmentName = "";
-		this.color = color;
+		this.appointmentName = appointmentName;
 		this.appointmentDate = appointmentDate;
 		this.timeIn = LocalTimeIn;
 		this.timeOut = LocalTimeOut;
-		this.clientID = ClientID;
 		this.doctorID = DoctorID;
 		this.status = false;
 	}
 	
-
-	public Color getColor() {
-        switch (color.toUpperCase()) {
-            case "GREEN":
-                return Color.GREEN;
-            case "RED":
-                return Color.RED;
-            case "BLUE":
-                return Color.BLUE;
-            default:
-                return Color.ORANGE;
-        }
-    }
-    
-    public void setColor(String color){
-    	this.color = color;
-    }
-    
-    public String getColorName(){
-    	return color.toUpperCase();
-    }
     
     public boolean checkSameDate(Date day)
     {
@@ -145,6 +126,30 @@ public class Appointment{
 
 	public void setDoctorID(int doctorID) {
 		this.doctorID = doctorID;
+	}
+
+	public int getStartRowDay() {
+		return startRowDay;
+	}
+
+	public void setStartRowDay(int startRowDay) {
+		this.startRowDay = startRowDay;
+	}
+
+	public int getEndRowDay() {
+		return endRowDay;
+	}
+
+	public void setEndRowDay(int endRowDay) {
+		this.endRowDay = endRowDay;
+	}
+
+	public int getColWeek() {
+		return colWeek;
+	}
+
+	public void setColWeek(int colWeek) {
+		this.colWeek = colWeek;
 	}
    
 }

@@ -5,8 +5,13 @@ import javax.swing.JPanel;
 
 public class DoctorMainView extends MainView{
 
+	private static int appIDTracker = 0;
+	private int appID;
+	
 	public DoctorMainView() {
-
+		
+		appID = ++appIDTracker;
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(650, 530);
 		getContentPane().setLayout(null);
@@ -15,7 +20,7 @@ public class DoctorMainView extends MainView{
 		// initializing the panels
 		JPanel mainPanel = new JPanel(null);
 		getContentPane().add(mainPanel);
-		setTitle("Doctor's Calendar");
+		setTitle("Doctor's Calendar #" + appID);
 		setCalendarView(new CalendarView());
 		getCalendarView().getBtnCreate().setLocation(70, 180);
 		setTypeView(new TypeView());

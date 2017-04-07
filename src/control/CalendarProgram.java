@@ -1,4 +1,4 @@
-package view;
+package control;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,6 +10,19 @@ import java.io.FileNotFoundException;
 import java.util.*;
 import javax.swing.JOptionPane;
 
+import model.Appointment;
+
+import java.sql.Date;
+import java.time.LocalTime;
+
+import view.CalendarItem;
+import view.DoctorMainView;
+import view.AppointmentHandler;
+import view.MainView;
+import view.TableRenderer;
+import view.ToDo;
+import view.Writer;
+
 public class CalendarProgram {
 
 	private GregorianCalendar cal = new GregorianCalendar();
@@ -18,38 +31,34 @@ public class CalendarProgram {
 	private int dayToday;
 	private int sIndex = 100;
 	private int yearBound;
+	private Date date;
 	private int col = -1;
 	private int row = -1;
 	
 	private MainView mainView;
-	private CalendarItemHandler eventH;
-	
-	private Writer writer;
-	private ArrayList<CalendarItem> sortedDay;
+	private AppointmentHandler eventH;
+	private ArrayList<Appointment> sortedDay;
 
 	public CalendarProgram(MainView mainView) {
 		monthToday = cal.get(GregorianCalendar.MONTH);
 		yearToday = cal.get(GregorianCalendar.YEAR);
 		yearBound = cal.get(GregorianCalendar.YEAR);
 		dayToday = cal.get(GregorianCalendar.DAY_OF_MONTH);
+		GregorianCalendar gc = new GregorianCalendar();
+		gc.set(yearToday, monthToday, dayToday);
+		date = new Date(gc.getTimeInMillis());
 
 		this.mainView = mainView;
 		
 		sIndex = 100;
-		this.eventH = new CalendarItemHandler();
-		this.writer = new Writer();
-		eventH.load();
-
-		for (int i = 0; i < eventH.getCalendarItems().size(); i++) {
-			System.out.println(eventH.getCalendarItems().get(i).toString());
-		}
+		this.eventH = new AppointmentHandler();
 		
 		setFrame();
 
 		this.mainView.setVisible(true);
 		this.mainView.getCalendarView().getCalendarTable().setModel(eventH.getCalendarModel(monthToday, yearToday));
-		this.mainView.getDayView().getDayTable().setModel(eventH.getDayModel(monthToday, yearToday, dayToday));
-		this.mainView.getWeekView().getWeekTable().setModel(eventH.getWeekModel(monthToday,yearToday,dayToday));
+		this.mainView.getDayView().getDayTable().setModel(eventH.getDayModel(date));
+		this.mainView.getWeekView().getWeekTable().setModel(eventH.getWeekModel(date));
 		refreshCalendar();
 	}
 
@@ -59,12 +68,13 @@ public class CalendarProgram {
 			mainView.getCalendarView().getCmbYear().addItem(String.valueOf(i)); // adds																			// box
 		}
 
-//		for (int i = 0; i < 24; i++) {
-//			mainView.getCreateView().getComboBoxFrom().addItem(i + ":00");
-//			mainView.getCreateView().getComboBoxFrom().addItem(i + ":30");
-//			mainView.getCreateView().getComboBoxTo().addItem(i + ":30");
-//			mainView.getCreateView().getComboBoxTo().addItem((i + 1) + ":00");
-//		}
+		if(mainView instanceof DoctorMainView)
+			for (int i = 0; i < 24; i++) {
+				mainView.getCreateView().getComboBoxFrom().addItem(i + ":00");
+				mainView.getCreateView().getComboBoxFrom().addItem(i + ":30");
+				mainView.getCreateView().getComboBoxTo().addItem(i + ":30");
+				mainView.getCreateView().getComboBoxTo().addItem((i + 1) + ":00");
+			}
 
 		mainView.getCalendarView().getBtnPrev().addActionListener(new btnPrev_Action()); // adds
 																							// action
@@ -79,7 +89,8 @@ public class CalendarProgram {
 		mainView.getHeaderView().getAgendaBtn().addActionListener(new btnAgenda_Action());
 //		mainView.getCreateView().getrdBtnEvent().addActionListener(new rdBtnEvent_Action());
 //		mainView.getCreateView().getrdBtnTask().addActionListener(new rdBtnTask_Action());
-//		mainView.getCreateView().getBtnSave().addActionListener(new btnSave_Action());
+		if(mainView instanceof DoctorMainView)
+			mainView.getCreateView().getBtnSave().addActionListener(new btnSave_Action());
 //		mainView.getCreateView().getBtnDiscard().addActionListener(new btnDiscard_Action());
 //		mainView.getDayView().getDayTable().addMouseListener(new scrollPanelDay_Action());
 		mainView.getTypeView().getFreeCheckBox().addItemListener(new ItemListener() {
@@ -128,18 +139,6 @@ public class CalendarProgram {
 		});
 
 		mainView.getCalendarView().getCmbYear().addActionListener(new cmbYear_Action());
-		// Initialize Contents
-		mainView.addWindowListener(new java.awt.event.WindowAdapter() {
-			@Override
-			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-				try {
-					writer.write(eventH.getdata());
-				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
 
 		refreshAgenda();
 		refreshDay();
@@ -213,13 +212,13 @@ public class CalendarProgram {
 
 	private void refreshDay() {
 
-		mainView.getDayView().getDayTable().setModel(eventH.getDayModel(monthToday, yearToday, dayToday));
+		mainView.getDayView().getDayTable().setModel(eventH.getDayModel(date));
 		mainView.getDayView().getDayTable().setDefaultRenderer(mainView.getDayView().getDayTable().getColumnClass(0),
 				eventH.getDayRenderer());
 	}
 
 	private void refreshDaySpecific(String style) {
-		mainView.getDayView().getDayTable().setModel(eventH.getEventDayModel(monthToday, yearToday, dayToday, style));
+		mainView.getDayView().getDayTable().setModel(eventH.getEventDayModel(date));
 		mainView.getDayView().getDayTable().setDefaultRenderer(mainView.getDayView().getDayTable().getColumnClass(0),
 				eventH.getDayRenderer());
 	}
@@ -228,50 +227,49 @@ public class CalendarProgram {
 		mainView.getAgendaView().getLblEventName().setText("No Upcoming Events");
 		mainView.getAgendaView().getLblEventTime().setText("");
 
-		sortedDay = eventH.getDayEvents(monthToday + 1, dayToday, yearToday);
+		sortedDay = eventH.getDayEvents(date);
 
 		for (int ctr = 0; ctr < sortedDay.size(); ctr++) {
-			if (dayToday == sortedDay.get(ctr).getDay() && (monthToday + 1) == sortedDay.get(ctr).getMonth()
-					&& yearToday == sortedDay.get(ctr).getYear()) {
-				if (mainView.getAgendaView().getLblEventName().getText().equalsIgnoreCase("No Upcoming Events")) {
-					mainView.getAgendaView().getLblEventName().setText("<html><font color='"
-							+ sortedDay.get(ctr).getColorName() + "'>" + sortedDay.get(ctr).getEvent());
-					mainView.getAgendaView().getLblEventTime().setText("<html><font color='"
-							+ sortedDay.get(ctr).getColorName() + "'>" + sortedDay.get(ctr).getShour() + ":");
-				} else {
-					mainView.getAgendaView().getLblEventName()
-							.setText(mainView.getAgendaView().getLblEventName().getText() + "<br><font color='"
-									+ sortedDay.get(ctr).getColorName() + "'>" + sortedDay.get(ctr).getEvent());
-					mainView.getAgendaView().getLblEventTime()
-							.setText(mainView.getAgendaView().getLblEventTime().getText() + "<br><font color='"
-									+ sortedDay.get(ctr).getColorName() + "'>" + sortedDay.get(ctr).getShour() + ":");
-				}
-
-				if (sortedDay.get(ctr).getSminute() < 10)
-					mainView.getAgendaView().getLblEventTime()
-							.setText(mainView.getAgendaView().getLblEventTime().getText() + "0"
-									+ Integer.toString(sortedDay.get(ctr).getSminute()));
-				else
-					mainView.getAgendaView().getLblEventTime()
-							.setText(mainView.getAgendaView().getLblEventTime().getText()
-									+ Integer.toString(sortedDay.get(ctr).getSminute()));
-
-				mainView.getAgendaView().getLblEventTime().setText(mainView.getAgendaView().getLblEventTime().getText()
-						+ "-" + sortedDay.get(ctr).getEhour() + ":");
-
-				if (sortedDay.get(ctr).getEminute() < 10)
-					mainView.getAgendaView().getLblEventTime()
-							.setText(mainView.getAgendaView().getLblEventTime().getText() + "0"
-									+ Integer.toString(sortedDay.get(ctr).getEminute()));
-				else
-					mainView.getAgendaView().getLblEventTime()
-							.setText(mainView.getAgendaView().getLblEventTime().getText()
-									+ Integer.toString(sortedDay.get(ctr).getEminute()));
-
-				mainView.getAgendaView().getLblEventName()
-						.setText(mainView.getAgendaView().getLblEventName().getText() + "</font>");
-				mainView.getAgendaView().getLblEventTime()
-						.setText(mainView.getAgendaView().getLblEventTime().getText() + "</font>");
+			if (sortedDay.get(ctr).checkSameDate(date)) {
+//				if (mainView.getAgendaView().getLblEventName().getText().equalsIgnoreCase("No Upcoming Events")) {
+//					mainView.getAgendaView().getLblEventName().setText("<html><font color='"
+//							+ sortedDay.get(ctr).getColorName() + "'>" + sortedDay.get(ctr).getEvent());
+//					mainView.getAgendaView().getLblEventTime().setText("<html><font color='"
+//							+ sortedDay.get(ctr).getColorName() + "'>" + sortedDay.get(ctr).getShour() + ":");
+//				} else {
+//					mainView.getAgendaView().getLblEventName()
+//							.setText(mainView.getAgendaView().getLblEventName().getText() + "<br><font color='"
+//									+ sortedDay.get(ctr).getColorName() + "'>" + sortedDay.get(ctr).getEvent());
+//					mainView.getAgendaView().getLblEventTime()
+//							.setText(mainView.getAgendaView().getLblEventTime().getText() + "<br><font color='"
+//									+ sortedDay.get(ctr).getColorName() + "'>" + sortedDay.get(ctr).getShour() + ":");
+//				}
+//
+//				if (sortedDay.get(ctr).getSminute() < 10)
+//					mainView.getAgendaView().getLblEventTime()
+//							.setText(mainView.getAgendaView().getLblEventTime().getText() + "0"
+//									+ Integer.toString(sortedDay.get(ctr).getSminute()));
+//				else
+//					mainView.getAgendaView().getLblEventTime()
+//							.setText(mainView.getAgendaView().getLblEventTime().getText()
+//									+ Integer.toString(sortedDay.get(ctr).getSminute()));
+//
+//				mainView.getAgendaView().getLblEventTime().setText(mainView.getAgendaView().getLblEventTime().getText()
+//						+ "-" + sortedDay.get(ctr).getEhour() + ":");
+//
+//				if (sortedDay.get(ctr).getEminute() < 10)
+//					mainView.getAgendaView().getLblEventTime()
+//							.setText(mainView.getAgendaView().getLblEventTime().getText() + "0"
+//									+ Integer.toString(sortedDay.get(ctr).getEminute()));
+//				else
+//					mainView.getAgendaView().getLblEventTime()
+//							.setText(mainView.getAgendaView().getLblEventTime().getText()
+//									+ Integer.toString(sortedDay.get(ctr).getEminute()));
+//
+//				mainView.getAgendaView().getLblEventName()
+//						.setText(mainView.getAgendaView().getLblEventName().getText() + "</font>");
+//				mainView.getAgendaView().getLblEventTime()
+//						.setText(mainView.getAgendaView().getLblEventTime().getText() + "</font>");
 
 			}
 		}
@@ -281,52 +279,52 @@ public class CalendarProgram {
 		mainView.getAgendaView().getLblEventName().setText("No Upcoming Events");
 		mainView.getAgendaView().getLblEventTime().setText("");
 
-		sortedDay = eventH.getDayEvents(monthToday + 1, dayToday, yearToday);
+		sortedDay = eventH.getDayEvents(date);
 
 		for (int ctr = 0; ctr < sortedDay.size(); ctr++) {
-			if (!(sortedDay.get(ctr) instanceof ToDo) && dayToday == sortedDay.get(ctr).getDay()
-					&& (monthToday + 1) == sortedDay.get(ctr).getMonth() && yearToday == sortedDay.get(ctr).getYear()) {
-				if (mainView.getAgendaView().getLblEventName().getText().equalsIgnoreCase("No Upcoming Events")) {
-					mainView.getAgendaView().getLblEventName().setText("<html><font color='"
-							+ sortedDay.get(ctr).getColorName() + "'>" + sortedDay.get(ctr).getEvent());
-					mainView.getAgendaView().getLblEventTime().setText("<html><font color='"
-							+ sortedDay.get(ctr).getColorName() + "'>" + sortedDay.get(ctr).getShour() + ":");
-				} else {
-					mainView.getAgendaView().getLblEventName()
-							.setText(mainView.getAgendaView().getLblEventName().getText() + "<br><font color='"
-									+ sortedDay.get(ctr).getColorName() + "'>" + sortedDay.get(ctr).getEvent());
-					mainView.getAgendaView().getLblEventTime()
-							.setText(mainView.getAgendaView().getLblEventTime().getText() + "<br><font color='"
-									+ sortedDay.get(ctr).getColorName() + "'>" + sortedDay.get(ctr).getShour() + ":");
-				}
-
-				if (sortedDay.get(ctr).getSminute() < 10)
-					mainView.getAgendaView().getLblEventTime()
-							.setText(mainView.getAgendaView().getLblEventTime().getText() + "0"
-									+ Integer.toString(sortedDay.get(ctr).getSminute()));
-				else
-					mainView.getAgendaView().getLblEventTime()
-							.setText(mainView.getAgendaView().getLblEventTime().getText()
-									+ Integer.toString(sortedDay.get(ctr).getSminute()));
-
-				mainView.getAgendaView().getLblEventTime().setText(mainView.getAgendaView().getLblEventTime().getText()
-						+ "-" + sortedDay.get(ctr).getEhour() + ":");
-
-				if (sortedDay.get(ctr).getEminute() < 10)
-					mainView.getAgendaView().getLblEventTime()
-							.setText(mainView.getAgendaView().getLblEventTime().getText() + "0"
-									+ Integer.toString(sortedDay.get(ctr).getEminute()));
-				else
-					mainView.getAgendaView().getLblEventTime()
-							.setText(mainView.getAgendaView().getLblEventTime().getText()
-									+ Integer.toString(sortedDay.get(ctr).getEminute()));
-
-				mainView.getAgendaView().getLblEventName()
-						.setText(mainView.getAgendaView().getLblEventName().getText() + "</font>");
-				mainView.getAgendaView().getLblEventTime()
-						.setText(mainView.getAgendaView().getLblEventTime().getText() + "</font>");
-
-			}
+//			if (!(sortedDay.get(ctr) instanceof ToDo) && dayToday == sortedDay.get(ctr).getDay()
+//					&& (monthToday + 1) == sortedDay.get(ctr).getMonth() && yearToday == sortedDay.get(ctr).getYear()) {
+//				if (mainView.getAgendaView().getLblEventName().getText().equalsIgnoreCase("No Upcoming Events")) {
+//					mainView.getAgendaView().getLblEventName().setText("<html><font color='"
+//							+ sortedDay.get(ctr).getColorName() + "'>" + sortedDay.get(ctr).getEvent());
+//					mainView.getAgendaView().getLblEventTime().setText("<html><font color='"
+//							+ sortedDay.get(ctr).getColorName() + "'>" + sortedDay.get(ctr).getShour() + ":");
+//				} else {
+//					mainView.getAgendaView().getLblEventName()
+//							.setText(mainView.getAgendaView().getLblEventName().getText() + "<br><font color='"
+//									+ sortedDay.get(ctr).getColorName() + "'>" + sortedDay.get(ctr).getEvent());
+//					mainView.getAgendaView().getLblEventTime()
+//							.setText(mainView.getAgendaView().getLblEventTime().getText() + "<br><font color='"
+//									+ sortedDay.get(ctr).getColorName() + "'>" + sortedDay.get(ctr).getShour() + ":");
+//				}
+//
+//				if (sortedDay.get(ctr).getSminute() < 10)
+//					mainView.getAgendaView().getLblEventTime()
+//							.setText(mainView.getAgendaView().getLblEventTime().getText() + "0"
+//									+ Integer.toString(sortedDay.get(ctr).getSminute()));
+//				else
+//					mainView.getAgendaView().getLblEventTime()
+//							.setText(mainView.getAgendaView().getLblEventTime().getText()
+//									+ Integer.toString(sortedDay.get(ctr).getSminute()));
+//
+//				mainView.getAgendaView().getLblEventTime().setText(mainView.getAgendaView().getLblEventTime().getText()
+//						+ "-" + sortedDay.get(ctr).getEhour() + ":");
+//
+//				if (sortedDay.get(ctr).getEminute() < 10)
+//					mainView.getAgendaView().getLblEventTime()
+//							.setText(mainView.getAgendaView().getLblEventTime().getText() + "0"
+//									+ Integer.toString(sortedDay.get(ctr).getEminute()));
+//				else
+//					mainView.getAgendaView().getLblEventTime()
+//							.setText(mainView.getAgendaView().getLblEventTime().getText()
+//									+ Integer.toString(sortedDay.get(ctr).getEminute()));
+//
+//				mainView.getAgendaView().getLblEventName()
+//						.setText(mainView.getAgendaView().getLblEventName().getText() + "</font>");
+//				mainView.getAgendaView().getLblEventTime()
+//						.setText(mainView.getAgendaView().getLblEventTime().getText() + "</font>");
+//
+//			}
 		}
 	}
 
@@ -334,52 +332,52 @@ public class CalendarProgram {
 		mainView.getAgendaView().getLblEventName().setText("No Upcoming Events");
 		mainView.getAgendaView().getLblEventTime().setText("");
 
-		sortedDay = eventH.getDayEvents(monthToday + 1, dayToday, yearToday);
+		sortedDay = eventH.getDayEvents(date);
 
 		for (int ctr = 0; ctr < sortedDay.size(); ctr++) {
-			if (sortedDay.get(ctr) instanceof ToDo && dayToday == sortedDay.get(ctr).getDay()
-					&& (monthToday + 1) == sortedDay.get(ctr).getMonth() && yearToday == sortedDay.get(ctr).getYear()) {
-				if (mainView.getAgendaView().getLblEventName().getText().equalsIgnoreCase("No Upcoming Events")) {
-					mainView.getAgendaView().getLblEventName().setText("<html><font color='"
-							+ sortedDay.get(ctr).getColorName() + "'>" + sortedDay.get(ctr).getEvent());
-					mainView.getAgendaView().getLblEventTime().setText("<html><font color='"
-							+ sortedDay.get(ctr).getColorName() + "'>" + sortedDay.get(ctr).getShour() + ":");
-				} else {
-					mainView.getAgendaView().getLblEventName()
-							.setText(mainView.getAgendaView().getLblEventName().getText() + "<br><font color='"
-									+ sortedDay.get(ctr).getColorName() + "'>" + sortedDay.get(ctr).getEvent());
-					mainView.getAgendaView().getLblEventTime()
-							.setText(mainView.getAgendaView().getLblEventTime().getText() + "<br><font color='"
-									+ sortedDay.get(ctr).getColorName() + "'>" + sortedDay.get(ctr).getShour() + ":");
-				}
-
-				if (sortedDay.get(ctr).getSminute() < 10)
-					mainView.getAgendaView().getLblEventTime()
-							.setText(mainView.getAgendaView().getLblEventTime().getText() + "0"
-									+ Integer.toString(sortedDay.get(ctr).getSminute()));
-				else
-					mainView.getAgendaView().getLblEventTime()
-							.setText(mainView.getAgendaView().getLblEventTime().getText()
-									+ Integer.toString(sortedDay.get(ctr).getSminute()));
-
-				mainView.getAgendaView().getLblEventTime().setText(mainView.getAgendaView().getLblEventTime().getText()
-						+ "-" + sortedDay.get(ctr).getEhour() + ":");
-
-				if (sortedDay.get(ctr).getEminute() < 10)
-					mainView.getAgendaView().getLblEventTime()
-							.setText(mainView.getAgendaView().getLblEventTime().getText() + "0"
-									+ Integer.toString(sortedDay.get(ctr).getEminute()));
-				else
-					mainView.getAgendaView().getLblEventTime()
-							.setText(mainView.getAgendaView().getLblEventTime().getText()
-									+ Integer.toString(sortedDay.get(ctr).getEminute()));
-
-				mainView.getAgendaView().getLblEventName()
-						.setText(mainView.getAgendaView().getLblEventName().getText() + "</font>");
-				mainView.getAgendaView().getLblEventTime()
-						.setText(mainView.getAgendaView().getLblEventTime().getText() + "</font>");
-
-			}
+//			if (sortedDay.get(ctr) instanceof ToDo && dayToday == sortedDay.get(ctr).getDay()
+//					&& (monthToday + 1) == sortedDay.get(ctr).getMonth() && yearToday == sortedDay.get(ctr).getYear()) {
+//				if (mainView.getAgendaView().getLblEventName().getText().equalsIgnoreCase("No Upcoming Events")) {
+//					mainView.getAgendaView().getLblEventName().setText("<html><font color='"
+//							+ sortedDay.get(ctr).getColorName() + "'>" + sortedDay.get(ctr).getEvent());
+//					mainView.getAgendaView().getLblEventTime().setText("<html><font color='"
+//							+ sortedDay.get(ctr).getColorName() + "'>" + sortedDay.get(ctr).getShour() + ":");
+//				} else {
+//					mainView.getAgendaView().getLblEventName()
+//							.setText(mainView.getAgendaView().getLblEventName().getText() + "<br><font color='"
+//									+ sortedDay.get(ctr).getColorName() + "'>" + sortedDay.get(ctr).getEvent());
+//					mainView.getAgendaView().getLblEventTime()
+//							.setText(mainView.getAgendaView().getLblEventTime().getText() + "<br><font color='"
+//									+ sortedDay.get(ctr).getColorName() + "'>" + sortedDay.get(ctr).getShour() + ":");
+//				}
+//
+//				if (sortedDay.get(ctr).getSminute() < 10)
+//					mainView.getAgendaView().getLblEventTime()
+//							.setText(mainView.getAgendaView().getLblEventTime().getText() + "0"
+//									+ Integer.toString(sortedDay.get(ctr).getSminute()));
+//				else
+//					mainView.getAgendaView().getLblEventTime()
+//							.setText(mainView.getAgendaView().getLblEventTime().getText()
+//									+ Integer.toString(sortedDay.get(ctr).getSminute()));
+//
+//				mainView.getAgendaView().getLblEventTime().setText(mainView.getAgendaView().getLblEventTime().getText()
+//						+ "-" + sortedDay.get(ctr).getEhour() + ":");
+//
+//				if (sortedDay.get(ctr).getEminute() < 10)
+//					mainView.getAgendaView().getLblEventTime()
+//							.setText(mainView.getAgendaView().getLblEventTime().getText() + "0"
+//									+ Integer.toString(sortedDay.get(ctr).getEminute()));
+//				else
+//					mainView.getAgendaView().getLblEventTime()
+//							.setText(mainView.getAgendaView().getLblEventTime().getText()
+//									+ Integer.toString(sortedDay.get(ctr).getEminute()));
+//
+//				mainView.getAgendaView().getLblEventName()
+//						.setText(mainView.getAgendaView().getLblEventName().getText() + "</font>");
+//				mainView.getAgendaView().getLblEventTime()
+//						.setText(mainView.getAgendaView().getLblEventTime().getText() + "</font>");
+//
+//			}
 		}
 	}
 
@@ -535,83 +533,57 @@ public class CalendarProgram {
 		}
 	}
 
-//	private class btnSave_Action implements ActionListener {
-//		public void actionPerformed(ActionEvent e) {
-//			int i = 0;
-//			String[] dates = mainView.getCreateView().getTextFieldDate().getText().split("/");
-//			int month = Integer.parseInt(dates[0]);
-//			int day = Integer.parseInt(dates[1]);
-//			int year = Integer.parseInt(dates[2]);
-//			String[] stime = mainView.getCreateView().getComboBoxFrom().getSelectedItem().toString().split(":");
-//			int shour = Integer.parseInt(stime[0]);
-//			int sminute = Integer.parseInt(stime[1]);
-//			String[] etime = mainView.getCreateView().getComboBoxTo().getSelectedItem().toString().split(":");
-//			int ehour = Integer.parseInt(etime[0]);
-//			int eminute = Integer.parseInt(etime[1]);
-//			if (mainView.getCreateView().getrdBtnTask().isSelected()) {
-//				// determines type of input before adding
-//
-//				if (sminute == 0) {
-//					ehour = shour;
-//					eminute = 30;
-//				} else {
-//					ehour = shour + 1;
-//					eminute = 0;
+	private class btnSave_Action implements ActionListener {
+		
+		public void actionPerformed(ActionEvent e) {
+
+			int i = 0;
+			String[] dates = mainView.getCreateView().getTextFieldDate().getText().split("/");
+			
+			GregorianCalendar gc = new GregorianCalendar();
+			gc.set(Integer.parseInt(dates[2]), Integer.parseInt(dates[0]), Integer.parseInt(dates[1]));
+			Date day = new Date(gc.getTimeInMillis());
+			
+			String[] stime = mainView.getCreateView().getComboBoxFrom().getSelectedItem().toString().split(":");
+			int shour = Integer.parseInt(stime[0]);
+			int sminute = Integer.parseInt(stime[1]);
+			String[] etime = mainView.getCreateView().getComboBoxTo().getSelectedItem().toString().split(":");
+			int ehour = Integer.parseInt(etime[0]);
+			int eminute = Integer.parseInt(etime[1]);
+			
+			eventH.addAppointment(day, "Appointment 1", LocalTime.of(shour, sminute), LocalTime.of(ehour, eminute), mainView.getAppID());
+			
+			System.out.println("Added");
+			
+		
+//			for (i = 0; i < eventH.getAppointments().size(); i++) {
+//				if (year == eventH.getAppointments().get(i).getYear()
+//						&& month == eventH.getAppointments().get(i).getMonth()
+//						&& day == eventH.getAppointments().get(i).getDay()
+//						&& ((shour == eventH.getAppointments().get(i).getShour()
+//								&& sminute == eventH.getAppointments().get(i).getSminute())
+//								|| (ehour == eventH.getAppointments().get(i).getEhour()
+//										&& eminute == eventH.getAppointments().get(i).getEminute())
+//								|| ((shour >= eventH.getAppointments().get(i).getShour())
+//										&& (shour <= eventH.getAppointments().get(i).getEhour())
+//										|| (ehour >= eventH.getAppointments().get(i).getShour())
+//												&& (ehour <= eventH.getAppointments().get(i).getEhour()))
+//								|| ((eventH.getAppointments().get(i).getShour() >= shour)
+//										&& (eventH.getAppointments().get(i).getShour() <= ehour)
+//										|| (eventH.getAppointments().get(i).getEhour() >= shour)
+//												&& (eventH.getAppointments().get(i).getEhour() <= ehour)))) {
+//					JOptionPane.showMessageDialog(null, "Conflict arose.");
+//					break;
 //				}
+//			}
+
+//			if (i == eventH.getAppointments().size()) {
+//				eventH.addCalendarItem(year, month, day, "",shour, sminute, ehour, eminute, row);
 //
-//				for (i = 0; i < eventH.getCalendarItems().size(); i++) {
-//					if (year == eventH.getCalendarItems().get(i).getYear()
-//							&& month == eventH.getCalendarItems().get(i).getMonth()
-//							&& day == eventH.getCalendarItems().get(i).getDay()
-//							&& ((shour == eventH.getCalendarItems().get(i).getShour()
-//									&& sminute == eventH.getCalendarItems().get(i).getSminute())
-//									|| (ehour == eventH.getCalendarItems().get(i).getEhour()
-//											&& eminute == eventH.getCalendarItems().get(i).getEminute()))) {
-//						JOptionPane.showMessageDialog(null, "Conflict arose.");
-//						break;
-//					}
-//				}
+//				JOptionPane.showMessageDialog(null, "Done Setting for Appointments!");
 //
-//				if (i == eventH.getCalendarItems().size()) {
-//					eventH.addTask(year, month, day, mainView.getCreateView().getTextFieldEvent().getText(), shour,
-//							sminute, ehour, eminute, false);
-//
-//					JOptionPane.showMessageDialog(null, "Done Adding a Task!");
-//
-//					refreshAgenda();
-//					refreshDay();
-//				}
-//
-//			} else {
-//				for (i = 0; i < eventH.getCalendarItems().size(); i++) {
-//					if (year == eventH.getCalendarItems().get(i).getYear()
-//							&& month == eventH.getCalendarItems().get(i).getMonth()
-//							&& day == eventH.getCalendarItems().get(i).getDay()
-//							&& ((shour == eventH.getCalendarItems().get(i).getShour()
-//									&& sminute == eventH.getCalendarItems().get(i).getSminute())
-//									|| (ehour == eventH.getCalendarItems().get(i).getEhour()
-//											&& eminute == eventH.getCalendarItems().get(i).getEminute())
-//									|| ((shour >= eventH.getCalendarItems().get(i).getShour())
-//											&& (shour <= eventH.getCalendarItems().get(i).getEhour())
-//											|| (ehour >= eventH.getCalendarItems().get(i).getShour())
-//													&& (ehour <= eventH.getCalendarItems().get(i).getEhour()))
-//									|| ((eventH.getCalendarItems().get(i).getShour() >= shour)
-//											&& (eventH.getCalendarItems().get(i).getShour() <= ehour)
-//											|| (eventH.getCalendarItems().get(i).getEhour() >= shour)
-//													&& (eventH.getCalendarItems().get(i).getEhour() <= ehour)))) {
-//						JOptionPane.showMessageDialog(null, "Conflict arose.");
-//						break;
-//					}
-//				}
-//
-//				if (i == eventH.getCalendarItems().size()) {
-//					eventH.addCalendarItem(year, month, day, "",shour, sminute, ehour, eminute, row);
-//
-//					JOptionPane.showMessageDialog(null, "Done Setting for Appointments!");
-//
-//					refreshAgenda();
-//					refreshDay();
-//				}
+//				refreshAgenda();
+//				refreshDay();
 //			}
 
 //			mainView.getCreateView().getTextFieldDate().setText("");
@@ -620,7 +592,7 @@ public class CalendarProgram {
 //			mainView.getCreateView().getComboBoxTo().setSelectedIndex(0);
 
 		}
-//	}
+	}
 
 //	private class btnDiscard_Action implements ActionListener {
 //		public void actionPerformed(ActionEvent e) {
@@ -632,13 +604,13 @@ public class CalendarProgram {
 //	}
 
 //	private void markAsDone(String event) {
-//		for (CalendarItem cI : eventH.getCalendarItems()) {
+//		for (CalendarItem cI : eventH.getAppointments()) {
 //			if (cI.getEvent().equalsIgnoreCase(event)) {
 //				if (cI instanceof ToDo) {
 //					if (((ToDo) cI).isDone()) {
 //						int decide = JOptionPane.showConfirmDialog(null, "Delete?");
 //						if (decide == JOptionPane.YES_OPTION) {
-//							eventH.getCalendarItems().remove(cI);
+//							eventH.getAppointments().remove(cI);
 //						}
 //					} else {
 //						int decide = JOptionPane.showConfirmDialog(null, "Mark as Done?");
@@ -673,4 +645,4 @@ public class CalendarProgram {
 //		public void mouseReleased(MouseEvent arg0) {}
 //
 //	}
-//}
+}

@@ -1,11 +1,9 @@
 package view;
 
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 
@@ -21,8 +19,8 @@ public class CreateView extends JPanel {
 	private JLabel lblTo;
 	private JCheckBox weeklyCheckBox;
 	private final JLabel viewCB = new JLabel("Repeat:");
-//	private JRadioButton rdbtnEvent;
-//	private JRadioButton rdbtnTask;
+	// private JRadioButton rdbtnEvent;
+	// private JRadioButton rdbtnTask;
 	private JButton btnSave;
 
 	/**
@@ -31,30 +29,30 @@ public class CreateView extends JPanel {
 	public CreateView() {
 		setLayout(null);
 
-//		rdbtnFree = new JRadioButton("Event");
-//		rdbtnFree.setBounds(30, 70, 75, 23);
-//		add(rdbtnFree);
-//
-//		rdbtnReserved = new JRadioButton("Task");
-//		rdbtnReserved.setBounds(138, 70, 75, 23);
-//		add(rdbtnReserved);
-//
-//		ButtonGroup group = new ButtonGroup();
-//		group.add(rdbtnFree);
-//		group.add(rdbtnReserved);
+		// rdbtnFree = new JRadioButton("Event");
+		// rdbtnFree.setBounds(30, 70, 75, 23);
+		// add(rdbtnFree);
+		//
+		// rdbtnReserved = new JRadioButton("Task");
+		// rdbtnReserved.setBounds(138, 70, 75, 23);
+		// add(rdbtnReserved);
+		//
+		// ButtonGroup group = new ButtonGroup();
+		// group.add(rdbtnFree);
+		// group.add(rdbtnReserved);
 
 		setTextFieldDate(new JTextField());
 		setWeeklyCheckBox(new JCheckBox("Weekly"));
 		getTextFieldDate().setToolTipText("mm/dd/yyyy");
 		getTextFieldDate().setBounds(40, 100, 130, 30);
-		
+
 		add(viewCB);
 		add(getWeeklyCheckBox());
 		add(getTextFieldDate());
 		getTextFieldDate().setColumns(10);
-		
-		viewCB.setBounds(130,150,50,30);
-		getWeeklyCheckBox().setBounds(190,150,80,30);
+
+		viewCB.setBounds(130, 150, 50, 30);
+		getWeeklyCheckBox().setBounds(190, 150, 80, 30);
 		setComboBoxFrom(new JComboBox<String>());
 		getComboBoxFrom().setBounds(180, 100, 90, 30);
 		add(getComboBoxFrom());
@@ -90,13 +88,13 @@ public class CreateView extends JPanel {
 		this.comboBoxFrom = comboBoxFrom;
 	}
 
-//	public JRadioButton getrdBtnEvent() {
-//		return rdbtnEvent;
-//	}
-//
-//	public JRadioButton getrdBtnTask() {
-//		return rdbtnTask;
-//	}
+	// public JRadioButton getrdBtnEvent() {
+	// return rdbtnEvent;
+	// }
+	//
+	// public JRadioButton getrdBtnTask() {
+	// return rdbtnTask;
+	// }
 
 	public JLabel getLabelTo() {
 		return lblTo;
@@ -125,5 +123,4 @@ public class CreateView extends JPanel {
 	public void setWeeklyCheckBox(JCheckBox weeklyCheckBox) {
 		this.weeklyCheckBox = weeklyCheckBox;
 	}
-
 }

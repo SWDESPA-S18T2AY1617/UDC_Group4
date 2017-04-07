@@ -140,19 +140,19 @@ public class Secretary extends Person{
         
     	ArrayList<Integer> startRowList = new ArrayList<Integer>();
     	ArrayList<Integer> endRowList = new ArrayList<Integer>();
-    	ArrayList<Color> colorList = new ArrayList<Color>();
+//    	ArrayList<Color> colorList = new ArrayList<Color>();
     	
 //    	System.out.println("Number = " +itemIndex.size());
     	
     	for(int i = 0; i < itemIndex.size();i++){
     	//	startRowList.add(getAppointments().get(itemIndex.get(i)).getStartRow()); idk what to do with these
     	//	endRowList.add(getAppointments().get(itemIndex.get(i)).getEndRow());
-    		colorList.add(getAppointments().get(itemIndex.get(i)).getColor());
+//    		colorList.add(getAppointments().get(itemIndex.get(i)).getColor());
     	}
     	
     	itemIndex.clear();
     	
-    	return new DayTableRenderer(startRowList, endRowList, colorList);
+    	return new DayTableRenderer(startRowList, endRowList);
     }
 
   /*  public void addAppointment(int year, int month, int day, String event, int SHour, int SMinute, int EHour, int EMinute, int row) {

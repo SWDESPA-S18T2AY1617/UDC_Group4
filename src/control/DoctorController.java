@@ -3,7 +3,6 @@ package control;
 import java.util.ArrayList;
 
 import server.DoctorManager;
-import view.CalendarProgram;
 import view.DoctorMainView;
 
 public class DoctorController 
