@@ -19,6 +19,7 @@ import view.CalendarItem;
 import view.DoctorMainView;
 import view.AppointmentHandler;
 import view.MainView;
+import view.SecretaryMainView;
 import view.TableRenderer;
 import view.ToDo;
 import view.Writer;
@@ -89,7 +90,7 @@ public class CalendarProgram {
 		mainView.getHeaderView().getAgendaBtn().addActionListener(new btnAgenda_Action());
 //		mainView.getCreateView().getrdBtnEvent().addActionListener(new rdBtnEvent_Action());
 //		mainView.getCreateView().getrdBtnTask().addActionListener(new rdBtnTask_Action());
-		if(mainView instanceof DoctorMainView)
+		if(mainView instanceof DoctorMainView || mainView instanceof SecretaryMainView)
 			mainView.getCreateView().getBtnSave().addActionListener(new btnSave_Action());
 //		mainView.getCreateView().getBtnDiscard().addActionListener(new btnDiscard_Action());
 //		mainView.getDayView().getDayTable().addMouseListener(new scrollPanelDay_Action());
@@ -433,7 +434,8 @@ public class CalendarProgram {
 
 	private class btnDay_Action implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-//			mainView.getCreateView().setVisible(false);
+			if(mainView instanceof DoctorMainView || mainView instanceof SecretaryMainView)
+				mainView.getCreateView().setVisible(false);
 			mainView.getAgendaView().setVisible(false);
 			mainView.getWeekView().setVisible(false);
 			mainView.getDayView().setVisible(true);
@@ -442,7 +444,8 @@ public class CalendarProgram {
 	
 	private class btnWeek_Action implements ActionListener{
 		public void actionPerformed(ActionEvent e){
-//			mainView.getCreateView().setVisible(false);
+			if(mainView instanceof DoctorMainView || mainView instanceof SecretaryMainView)
+				mainView.getCreateView().setVisible(false);
 			mainView.getDayView().setVisible(false);
 			mainView.getAgendaView().setVisible(false);
 			mainView.getWeekView().setVisible(true);
@@ -451,7 +454,8 @@ public class CalendarProgram {
 
 	private class btnAgenda_Action implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-//			mainView.getCreateView().setVisible(false);
+			if(mainView instanceof DoctorMainView || mainView instanceof SecretaryMainView)
+				mainView.getCreateView().setVisible(false);
 			mainView.getAgendaView().setVisible(true);
 			mainView.getWeekView().setVisible(false);
 			mainView.getDayView().setVisible(false);
