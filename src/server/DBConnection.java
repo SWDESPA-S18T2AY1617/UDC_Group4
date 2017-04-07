@@ -23,7 +23,7 @@ public class DBConnection {
 		String FILE = "";
 		
 		try {
-			reader = new BufferedReader(new FileReader("src/config/db.config"));
+			reader = new BufferedReader(new FileReader("src/config/db.config.txt"));
 			DRIVER_NAME = reader.readLine();
 			URL = reader.readLine();
 			USERNAME = reader.readLine();
