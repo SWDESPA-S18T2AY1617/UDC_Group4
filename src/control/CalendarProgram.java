@@ -7,6 +7,8 @@ import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.*;
+import javax.swing.JOptionPane;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -16,6 +18,7 @@ import view.AppointmentHandler;
 import view.MainView;
 import view.SecretaryMainView;
 import view.TableRenderer;
+import view.UpdateFrameView;
 
 public class CalendarProgram {
 
@@ -83,7 +86,8 @@ public class CalendarProgram {
 		if(mainView instanceof DoctorMainView || mainView instanceof SecretaryMainView)
 			mainView.getCreateView().getBtnSave().addActionListener(new btnSave_Action());
 //		mainView.getCreateView().getBtnDiscard().addActionListener(new btnDiscard_Action());
-//		mainView.getDayView().getDayTable().addMouseListener(new scrollPanelDay_Action());
+		mainView.getDayView().getDayTable().addMouseListener(new scrollPanelDay_Action());
+		mainView.getWeekView().getWeekTable().addMouseListener(new scrollPanelWeek_Action());
 		mainView.getTypeView().getFreeCheckBox().addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if (mainView.getTypeView().getFreeCheckBox().isSelected()) {
@@ -528,29 +532,101 @@ public class CalendarProgram {
 //		}
 //	}
 
-//	private void markAsDone(String event) {
-//		for (CalendarItem cI : eventH.getAppointments()) {
-//			if (cI.getEvent().equalsIgnoreCase(event)) {
-//				if (cI instanceof ToDo) {
-//					if (((ToDo) cI).isDone()) {
-//						int decide = JOptionPane.showConfirmDialog(null, "Delete?");
-//						if (decide == JOptionPane.YES_OPTION) {
-//							eventH.getAppointments().remove(cI);
-//						}
-//					} else {
-//						int decide = JOptionPane.showConfirmDialog(null, "Mark as Done?");
-//						if (decide == JOptionPane.YES_OPTION) {
-//							cI.setColor("GRAY");
-//							((ToDo) cI).setDone(true);
-//						}
-//					}
-//					refreshDay();
-//					refreshAgenda();
-//				}
-//				break;
-//			}
-//		}
-//	}
+	private void modify(String event) {
+		String[] options = {"Free Up Slot","Change Date or Time"};
+		int choice = JOptionPane.showOptionDialog(null, //Component parentComponent
+                "", //Object message,
+                "Choose an option", //String title
+                JOptionPane.YES_NO_OPTION, //int optionType
+                JOptionPane.INFORMATION_MESSAGE, //int messageType
+                null, //Icon icon,
+                options, //Object[] options,
+                "Free Up Slot");//Object initialValue 
+		if(choice == 0 ){
+			for (Appointment cI : eventH.getAppointments()) {
+				if (cI.getAppointmentName().equalsIgnoreCase(event)) {
+					eventH.getAppointments().remove(cI);
+					break;
+				}
+			}
+		}
+		else{
+			for (int ctr= 0 ;ctr< eventH.getAppointments().size(); ctr++) {
+				Appointment cI = eventH.getAppointments().get(ctr);
+				if (cI.getAppointmentName().equalsIgnoreCase(event)) {
+					int value = ctr;
+					UpdateFrameView ufv = new UpdateFrameView();
+					ufv.getUpdateView().getLblNewLabel().setText(cI.getAppointmentDate() + "/" + cI.getLocalTimeIn() + "-" + cI.getLocalTimeOut() + " " + cI.getAppointmentName());
+					ufv.getUpdateView().getBtnSave().addActionListener(new ActionListener(){
+						public void actionPerformed(ActionEvent e){
+							String[] dates = ufv.getUpdateView().getTextFieldDate().getText().split("/");
+							
+							String[] stime = ufv.getUpdateView().getComboBoxFrom().getSelectedItem().toString().split(":");
+							int shour = Integer.parseInt(stime[0]);
+							int sminute = Integer.parseInt(stime[1]);
+							String[] etime = ufv.getUpdateView().getComboBoxTo().getSelectedItem().toString().split(":");
+							int ehour = Integer.parseInt(etime[0]);
+							int eminute = Integer.parseInt(etime[1]);
+							
+							eventH.getAppointments().get(value).setAppointmentDate(LocalDate.of(Integer.parseInt(dates[2]), Integer.parseInt(dates[0]), Integer.parseInt(dates[1])));
+							eventH.getAppointments().get(value).setLocalTimeIn(LocalTime.of(shour, sminute));
+							eventH.getAppointments().get(value).setLocalTimeOut(LocalTime.of(ehour, eminute));
+							eventH.getAppointments().get(value).setStartRowDay();
+							eventH.getAppointments().get(value).setEndRowDay();
+							
+							
+							refreshDay();
+							refreshAgenda();
+							refreshWeek();
+							
+							ufv.dispose();
+						}
+					});
+				}
+			}
+		}
+		
+		
+	}
+
+	private class scrollPanelDay_Action implements MouseListener {
+
+		@Override
+		public void mouseClicked(MouseEvent arg0) {
+			int rowDay = mainView.getDayView().getDayTable().getSelectedRow();
+			modify(mainView.getDayView().getDayTable().getValueAt(rowDay, 1).toString());
+		}
+		
+		@Override
+		public void mouseEntered(MouseEvent arg0) {}
+		@Override
+		public void mouseExited(MouseEvent arg0) {}
+		@Override
+		public void mousePressed(MouseEvent arg0) {}
+		@Override
+		public void mouseReleased(MouseEvent arg0) {}
+
+	}
+	
+	private class scrollPanelWeek_Action implements MouseListener {
+
+		@Override
+		public void mouseClicked(MouseEvent arg0) {
+			int rowDay = mainView.getWeekView().getWeekTable().getSelectedRow();
+			int colDay = mainView.getWeekView().getWeekTable().getSelectedColumn();
+			modify(mainView.getWeekView().getWeekTable().getValueAt(rowDay, colDay).toString());
+		}
+		
+		@Override
+		public void mouseEntered(MouseEvent arg0) {}
+		@Override
+		public void mouseExited(MouseEvent arg0) {}
+		@Override
+		public void mousePressed(MouseEvent arg0) {}
+		@Override
+		public void mouseReleased(MouseEvent arg0) {}
+
+	}
 	
 
 }

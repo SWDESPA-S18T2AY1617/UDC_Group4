@@ -1,7 +1,6 @@
 package model;
 
 import java.awt.Color;
-import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalTime;
 

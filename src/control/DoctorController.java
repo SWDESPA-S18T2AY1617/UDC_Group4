@@ -1,5 +1,7 @@
 package control;
 
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 import server.DoctorManager;
@@ -8,6 +10,8 @@ import view.DoctorMainView;
 public class DoctorController extends CalendarProgram
 {
 	private DoctorManager doctorManager;
+	private int col = -1;
+	private int row = -1;
 //	private ArrayList<CalendarProgram> calendarProgram;
 	
 	public DoctorController()
@@ -20,6 +24,5 @@ public class DoctorController extends CalendarProgram
 //			calendarProgram.add(new CalendarProgram());
 //		}
 	}
-	
 	
 }
