@@ -31,19 +31,21 @@ public class Appointment{
 	public final static String COL_STARTROW = "startRowDay";
 	public final static String COL_ENDROW = "endRowDay";
 	public final static String COL_COLWEEK = "colWeek";
+	public final static String COL_COLOR = "color";
 	
 	public Appointment()
 	{
 		appointmentDate = null;
 	}
 	
-	public Appointment(int appointmentID, String appointmentName, Date appointmentDate, LocalTime LocalTimeIn, LocalTime LocalTimeOut, int DoctorID){
+	public Appointment(int appointmentID, String appointmentName, String color, Date appointmentDate, LocalTime LocalTimeIn, LocalTime LocalTimeOut, int DoctorID){
 		this.appointmentID = appointmentID;
 		this.appointmentName = appointmentName;
 		this.appointmentDate = appointmentDate;
 		this.timeIn = LocalTimeIn;
 		this.timeOut = LocalTimeOut;
 		this.doctorID = DoctorID;
+		this.color = color;
 		this.status = false;
 	}
 	
@@ -67,8 +69,6 @@ public class Appointment{
     public String getColorName(){
     	return color.toUpperCase();
     }
-
-	
     
     public boolean checkSameDate(Date day)
     {

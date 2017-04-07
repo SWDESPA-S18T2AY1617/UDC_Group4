@@ -474,7 +474,7 @@ public class CalendarProgram {
 				dayToday = (Integer) mainView.getCalendarView().getCalendarTable().getValueAt(row, col);
 
 			mainView.getHeaderView().getDateLabel().setText(months[monthToday] + " " + dayToday + ", " + yearToday);
-//			mainView.getCreateView().getTextFieldDate().setText((monthToday+1) + "/" + dayToday + "/" + yearToday);
+			mainView.getCreateView().getTextFieldDate().setText((monthToday+1) + "/" + dayToday + "/" + yearToday);
 			refreshAgenda();
 			refreshDay();
 		}
@@ -555,7 +555,7 @@ public class CalendarProgram {
 			int ehour = Integer.parseInt(etime[0]);
 			int eminute = Integer.parseInt(etime[1]);
 			
-			eventH.addAppointment(day, "Appointment 1", LocalTime.of(shour, sminute), LocalTime.of(ehour, eminute), mainView.getAppID());
+			eventH.addAppointment(day, "Appointment 1", LocalTime.of(shour, sminute), LocalTime.of(ehour, eminute), mainView.getAppID(), "Red");
 			
 			System.out.println("Added");
 			

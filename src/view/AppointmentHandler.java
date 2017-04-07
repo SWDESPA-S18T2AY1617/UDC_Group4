@@ -138,21 +138,23 @@ public class AppointmentHandler {
         
     	ArrayList<Integer> startRowList = new ArrayList<Integer>();
     	ArrayList<Integer> endRowList = new ArrayList<Integer>();
+    	ArrayList<Color> colorList = new ArrayList<Color>();
     	
 //    	System.out.println("Number = " +itemIndex.size());
     	
     	for(int i = 0; i < itemIndex.size();i++){
     		startRowList.add(getAppointments().get(itemIndex.get(i)).getStartRowDay());
     		endRowList.add(getAppointments().get(itemIndex.get(i)).getEndRowDay());
+    		colorList.add(getAppointments().get(itemIndex.get(i)).getColor());
     	}
     	
     	itemIndex.clear();
     	
-    	return new DayTableRenderer(startRowList, endRowList);
+    	return new DayTableRenderer(startRowList, endRowList,colorList);
     }
 
-    public void addAppointment(Date date, String event, LocalTime timeIn, LocalTime timeOut, int doctorID) {
-    	this.getAppointments().add(new Appointment(Appointments.size(),  event, date, timeIn, timeOut, doctorID));
+    public void addAppointment(Date date, String event, LocalTime timeIn, LocalTime timeOut, int doctorID, String color) {
+    	this.getAppointments().add(new Appointment(Appointments.size(), event, color, date, timeIn, timeOut, doctorID));
     }
     
     public DefaultTableModel getCalendarModel(int month, int year) {

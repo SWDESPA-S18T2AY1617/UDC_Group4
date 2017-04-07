@@ -69,7 +69,7 @@ public class Secretary extends Person{
             long left = gc.getTimeInMillis();
         	
         	if (Appointments.get(ctr).checkSameDate(new Date(left))) {
-        	   String Stime =  Appointments.get(ctr).getTimeIn().toString();
+        	   String Stime =  Appointments.get(ctr).getLocalTimeIn().toString();
         	   String delims = ":";
         	   String tokens[] = Stime.split(delims);
         	   
@@ -107,7 +107,7 @@ public class Secretary extends Person{
         	long mili1 = Ttemp.getTimeInMillis();
         	Date tDate = new Date(mili1);
         	if (Appointments.get(ctr).getAppointmentDate().compareTo(tDate) == 0) {
-        		String Stime =  Appointments.get(ctr).getTimeIn().toString();
+        		String Stime =  Appointments.get(ctr).getLocalTimeIn().toString();
         	   	String delims = ":";
          	   	String tokens[] = Stime.split(delims);
          	   
@@ -152,7 +152,7 @@ public class Secretary extends Person{
     	
     	itemIndex.clear();
     	
-    	return new DayTableRenderer(startRowList, endRowList);
+    	return new DayTableRenderer(startRowList, endRowList, colorList);
     }
 
   /*  public void addAppointment(int year, int month, int day, String event, int SHour, int SMinute, int EHour, int EMinute, int row) {
@@ -163,7 +163,8 @@ public class Secretary extends Person{
     }*/
     
     public void addAppointment(Date date, Time TimeIn, Time TimeOut, int clientID, int doctorID){
-    	Appointments.add(new Appointment(Appointments.get(Appointments.size()-1).getAppointmentID()+1, "BLUE", date, TimeIn, TimeOut, clientID, doctorID));
+    	Appointments.add(new Appointment());
+//    			new Appointment(Appointments.get(Appointments.size()-1).getAppointmentID()+1, "BLUE", date, TimeIn, TimeOut, clientID, doctorID));
     }
     
     public DefaultTableModel getCalendarModel(int month, int year) {
@@ -219,11 +220,11 @@ public class Secretary extends Person{
 		
 		for(int i = 0;i<temp1;i++)
 			for(int j = 0;j<temp1-1;j++){
-				String Stime1 =  temp[j].getTimeIn().toString();
+				String Stime1 =  temp[j].getLocalTimeIn().toString();
         	   	String delims = ":";
          	   	String tokens1[] = Stime1.split(delims);
          	   	
-         	   	String Stime2 =  temp[j+1].getTimeIn().toString();
+         	   	String Stime2 =  temp[j+1].getLocalTimeIn().toString();
          	   	String tokens2[] = Stime2.split(delims);
          	   	
          	   	int Shour1 = Integer.parseInt(tokens1[0]);
