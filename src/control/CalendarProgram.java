@@ -374,7 +374,7 @@ public class CalendarProgram {
 				sIndex = mainView.getCalendarView().getCmbYear().getSelectedIndex();
 			}
 			
-			date = LocalDate.of(yearToday, monthToday, dayToday);
+			date = LocalDate.of(yearToday, monthToday + 1, dayToday);
 			
 			refreshCalendar();
 			refreshAgenda();
@@ -397,7 +397,7 @@ public class CalendarProgram {
 				sIndex = mainView.getCalendarView().getCmbYear().getSelectedIndex();
 			}
 
-			date = LocalDate.of(yearToday, monthToday, dayToday);
+			date = LocalDate.of(yearToday, monthToday + 1, dayToday);
 			
 			refreshCalendar();
 			refreshAgenda();
@@ -457,7 +457,7 @@ public class CalendarProgram {
 			if (mainView.getCalendarView().getCalendarTable().getValueAt(row, col) != null)
 				dayToday = (Integer) mainView.getCalendarView().getCalendarTable().getValueAt(row, col);
 			
-			System.out.println("Month: " + monthToday);
+			System.out.println("Month: " + monthToday + 1);
 			date = LocalDate.of(yearToday, monthToday + 1, dayToday);
 			
 			mainView.getHeaderView().getDateLabel().setText(months[monthToday] + " " + dayToday + ", " + yearToday);
@@ -542,8 +542,18 @@ public class CalendarProgram {
 			int ehour = Integer.parseInt(etime[0]);
 			int eminute = Integer.parseInt(etime[1]);
 			
-			eventH.addAppointment(getDate(), "Appointment " + (eventH.getAppointments().size() + 1), LocalTime.of(shour, sminute), LocalTime.of(ehour, eminute), mainView.getAppID(), "Red");
-			System.out.println("DAy of Event" + getDate());
+			if(mainView.getCreateView().getWeeklyCheckBox().isSelected()){
+				for(int ctr=date.getDayOfYear(); ctr<365;ctr++){
+					if(LocalDate.ofYearDay(date.getYear(), ctr).getDayOfWeek().name().equalsIgnoreCase(date.getDayOfWeek().name())){
+						eventH.addAppointment(LocalDate.ofYearDay(date.getYear(), ctr), "Appointment " + (eventH.getAppointments().size() + 1), LocalTime.of(shour, sminute), LocalTime.of(ehour, eminute), mainView.getAppID(), "Red");
+						System.out.println("Day of Event" + LocalDate.ofYearDay(date.getYear(), ctr));
+						System.out.println("Added");
+					}
+				}
+			}
+			else
+				eventH.addAppointment(getDate(), "Appointment " + (eventH.getAppointments().size() + 1), LocalTime.of(shour, sminute), LocalTime.of(ehour, eminute), mainView.getAppID(), "Red");
+			System.out.println("Day of Event" + getDate());
 			System.out.println("Added");
 			refreshDay();
 			refreshAgenda();

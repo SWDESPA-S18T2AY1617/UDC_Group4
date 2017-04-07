@@ -81,18 +81,55 @@ public class AppointmentHandler {
         int index = -1; //index of the event found
         
         for (int j = 0; j < 48; j++) {
-        	if(j%2==0)
+        	if(j%2 == 0)
         		weekModel.setValueAt(j/2+":00", j, 0);
-        	weekModel.setValueAt(null, j, 1);
+        	
+        	for(int i=1; i<=5;i ++){
+        		weekModel.setValueAt(null, j, i);
+        	}
         }
         
         int dayRow = 0;
         int weekCol = 0;
+        int value1 = 0;
+        int value2 = 0;
         String event = "";
         
         for (int ctr = 0; ctr < Appointments.size(); ctr++) { //searches for the events for this month and year
         	
-        	if (Appointments.get(ctr).checkSameDate(date) == 0) {
+        	if(date.getDayOfWeek().name().equalsIgnoreCase("Monday")){
+        		value1 = -2;
+        		value2 = 6;
+        	}
+            else if(date.getDayOfWeek().name().equalsIgnoreCase("Tuesday")){
+        		value1 = -3;
+        		value2 = 5;
+        	}
+            else if(date.getDayOfWeek().name().equalsIgnoreCase("Wednesday")){
+        		value1 = -4;
+        		value2 = 4;
+        	}
+            else if(date.getDayOfWeek().name().equalsIgnoreCase("Thursday")){
+        		value1 = -5;
+        		value2 = 3;
+        	}
+            else if(date.getDayOfWeek().name().equalsIgnoreCase("Friday")){
+        		value1 = -6;
+        		value2 = 2;
+        	}
+            else if(date.getDayOfWeek().name().equalsIgnoreCase("Saturday")){
+        		value1 = -7;
+        		value2 = 1;
+        	}
+            else if(date.getDayOfWeek().name().equalsIgnoreCase("Sunday")){
+        		value1 = -1;
+        		value2 = 7;
+        	}
+        	
+        	LocalDate date1 = LocalDate.ofYearDay(date.getYear(), date.getDayOfYear() + value1);
+        	LocalDate date2 = LocalDate.ofYearDay(date.getYear(), date.getDayOfYear() + value2);
+        	
+        	if (Appointments.get(ctr).getAppointmentDate().isAfter(date1) && Appointments.get(ctr).getAppointmentDate().isBefore(date2)) {
                index = ctr;
                event = Appointments.get(index).getAppointmentName();
                dayRow = Appointments.get(ctr).getLocalTimeIn().getHour() * 2;
@@ -102,18 +139,18 @@ public class AppointmentHandler {
                System.out.println(date);
                System.out.println(date.getDayOfWeek().name());
                
-               if(date.getDayOfWeek().name().equalsIgnoreCase("Monday"))
+               if(Appointments.get(ctr).getAppointmentDate().getDayOfWeek().name().equalsIgnoreCase("Monday"))
             	   weekCol = 1;
-               else if(date.getDayOfWeek().name().equalsIgnoreCase("Tuesday"))
+               else if(Appointments.get(ctr).getAppointmentDate().getDayOfWeek().name().equalsIgnoreCase("Tuesday"))
             	   weekCol = 2;
-               else if(date.getDayOfWeek().name().equalsIgnoreCase("Wednesday"))
+               else if(Appointments.get(ctr).getAppointmentDate().getDayOfWeek().name().equalsIgnoreCase("Wednesday"))
             	   weekCol = 3;
-               else if(date.getDayOfWeek().name().equalsIgnoreCase("Thursday"))
+               else if(Appointments.get(ctr).getAppointmentDate().getDayOfWeek().name().equalsIgnoreCase("Thursday"))
             	   weekCol = 4;
-               else if(date.getDayOfWeek().name().equalsIgnoreCase("Friday"))
+               else if(Appointments.get(ctr).getAppointmentDate().getDayOfWeek().name().equalsIgnoreCase("Friday"))
             	   weekCol = 5;
                
-               System.out.println("Week COlumn" + weekCol);
+               System.out.println("Week Column" + weekCol);
                
                Appointments.get(ctr).setColWeek(weekCol);
                
