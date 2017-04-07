@@ -59,7 +59,7 @@ public class CalendarProgram {
 			mainView.getCalendarView().getCmbYear().addItem(String.valueOf(i)); // adds																			// box
 		}
 
-		if(mainView instanceof DoctorMainView)
+		if(mainView instanceof DoctorMainView || mainView instanceof SecretaryMainView)
 			for (int i = 0; i < 24; i++) {
 				mainView.getCreateView().getComboBoxFrom().addItem(i + ":00");
 				mainView.getCreateView().getComboBoxFrom().addItem(i + ":30");
