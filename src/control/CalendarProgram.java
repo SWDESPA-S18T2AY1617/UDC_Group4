@@ -558,7 +558,8 @@ public class CalendarProgram {
 			eventH.addAppointment(day, "Appointment 1", LocalTime.of(shour, sminute), LocalTime.of(ehour, eminute), mainView.getAppID(), "Red");
 			
 			System.out.println("Added");
-			
+			refreshDay();
+			refreshAgenda();
 		
 //			for (i = 0; i < eventH.getAppointments().size(); i++) {
 //				if (year == eventH.getAppointments().get(i).getYear()

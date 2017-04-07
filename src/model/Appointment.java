@@ -16,6 +16,7 @@ public class Appointment{
     private boolean status;
     private int startRowDay;
     private int endRowDay;
+    private int colDay;
     private int colWeek;
     private String color;
     
@@ -47,6 +48,9 @@ public class Appointment{
 		this.doctorID = DoctorID;
 		this.color = color;
 		this.status = false;
+        this.setStartRowDay();
+        this.setEndRowDay();
+        this.colDay = 1;
 	}
 	
 	public Color getColor() {
@@ -156,18 +160,22 @@ public class Appointment{
 		return startRowDay;
 	}
 
-	public void setStartRowDay(int startRowDay) {
-		this.startRowDay = startRowDay;
+	public void setStartRowDay() {
+		this.startRowDay = timeIn.getHour() * 2;
+		if(timeIn.getMinute() == 30)
+			this.startRowDay++;
 	}
 
 	public int getEndRowDay() {
 		return endRowDay;
 	}
 
-	public void setEndRowDay(int endRowDay) {
-		this.endRowDay = endRowDay;
+	public void setEndRowDay() {
+		this.endRowDay = timeOut.getHour()* 2;
+		if(timeOut.getMinute() == 30)
+			this.endRowDay++;
 	}
-
+	
 	public int getColWeek() {
 		return colWeek;
 	}
