@@ -1,5 +1,6 @@
 package model;
 
+import java.awt.Color;
 import java.sql.Date;
 import java.time.LocalTime;
 
@@ -16,6 +17,7 @@ public class Appointment{
     private int startRowDay;
     private int endRowDay;
     private int colWeek;
+    private String color;
     
     public final static String TABLE_NAME = "appointment";
 	public final static String COL_ID = "appointmentID";
@@ -44,6 +46,28 @@ public class Appointment{
 		this.doctorID = DoctorID;
 		this.status = false;
 	}
+	
+	public Color getColor() {
+        switch (color.toUpperCase()) {
+            case "GREEN":
+                return Color.GREEN;
+            case "RED":
+                return Color.RED;
+            case "BLUE":
+                return Color.BLUE;
+            default:
+                return Color.ORANGE;
+        }
+    }
+    
+    public void setColor(String color){
+    	this.color = color;
+    }
+    
+    public String getColorName(){
+    	return color.toUpperCase();
+    }
+
 	
     
     public boolean checkSameDate(Date day)
