@@ -524,7 +524,9 @@ public class CalendarProgram {
 
 		}
 	}
-
+	public AppointmentHandler getAppointmentHandler(){
+		return eventH;
+	}
 //	protected class btnDiscard_Action implements ActionListener {
 //		public void actionPerformed(ActionEvent e) {
 //			mainView.getCreateView().getTextFieldDate().setText("");

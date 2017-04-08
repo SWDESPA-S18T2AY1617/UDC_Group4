@@ -6,11 +6,10 @@ import javax.swing.JPanel;
 public class SecretaryMainView extends MainView{
 	
 	private static int appIDTracker = 0;
-	private int appID;
 	
 	public SecretaryMainView() {
 
-		appID = ++appIDTracker;
+		super.setAppID(++appIDTracker);
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(650, 530);
@@ -20,7 +19,7 @@ public class SecretaryMainView extends MainView{
 		// initializing the panels
 		JPanel mainPanel = new JPanel(null);
 		getContentPane().add(mainPanel);
-		setTitle("Secretary's Calendar #" + appID);
+		setTitle("Secretary's Calendar #" + super.getAppID());
 		setCalendarView(new CalendarView());
 		getCalendarView().getBtnCreate().setLocation(70, 180);
 		setTypeView(new TypeView());

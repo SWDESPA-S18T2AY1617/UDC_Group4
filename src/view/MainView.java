@@ -15,7 +15,6 @@ public class MainView extends JFrame {
 	private WeekView weekView;
 	private int appID;
 	
-	
 //	public abstract void mainView();
 	
 	public MainView() {

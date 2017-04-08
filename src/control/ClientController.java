@@ -16,6 +16,7 @@ public class ClientController extends CalendarProgram
 	{	
 		super(new ClientMainView());
 		clientManager = new ClientManager();
+		super.getAppointmentHandler().setAppointments(clientManager.getClientAppointments());
 //		calendarProgram = new ArrayList<CalendarProgram>();
 //		int maxCtr = clientManager.getAllClient().size();
 //		for(int ctr = 0; ctr < maxCtr; ctr++){
