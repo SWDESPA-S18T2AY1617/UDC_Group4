@@ -7,18 +7,17 @@ import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.*;
-import javax.swing.JOptionPane;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 import model.Appointment;
+import server.AppointmentManager;
 import view.ClientMainView;
 import view.DoctorMainView;
 import view.MainView;
 import view.SecretaryMainView;
 import view.TableRenderer;
-import view.UpdateFrameView;
 
 public class CalendarProgram {
 
@@ -36,7 +35,7 @@ public class CalendarProgram {
 	protected AppointmentHandler eventH;
 	protected ArrayList<Appointment> sortedDay;
 
-	public CalendarProgram(MainView mainView) {
+	public CalendarProgram(MainView mainView, AppointmentManager apptManager) {
 		monthToday = cal.get(GregorianCalendar.MONTH);
 		yearToday = cal.get(GregorianCalendar.YEAR);
 		yearBound = cal.get(GregorianCalendar.YEAR);
@@ -45,7 +44,7 @@ public class CalendarProgram {
 		this.mainView = mainView;
 		
 		sIndex = 100;
-		this.eventH = new AppointmentHandler();
+		this.eventH = new AppointmentHandler(apptManager);
 		
 		setFrame();
 

@@ -5,6 +5,7 @@ import java.awt.event.MouseListener;
 import javax.swing.JOptionPane;
 
 import model.Appointment;
+import server.AppointmentManager;
 import server.ClientManager;
 import view.ClientMainView;
 
@@ -12,9 +13,9 @@ public class ClientController extends CalendarProgram
 {
 	private ClientManager clientManager;
 	
-	public ClientController()
+	public ClientController(AppointmentManager apptManager)
 	{	
-		super(new ClientMainView());
+		super(new ClientMainView(), apptManager);
 		clientManager = new ClientManager();
 		super.getAppointmentHandler().setAppointments(clientManager.getClientAppointments());
 //		calendarProgram = new ArrayList<CalendarProgram>();

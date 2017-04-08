@@ -14,9 +14,9 @@ public class SecretaryController extends CalendarProgram
 {
 	private SecretaryManager secretaryManager;
 	
-	public SecretaryController()
+	public SecretaryController(AppointmentManager apptManager)
 	{
-		super(new SecretaryMainView());
+		super(new SecretaryMainView(), apptManager);
 		secretaryManager = new SecretaryManager();
 		AppointmentManager am = new AppointmentManager();
         super.getAppointmentHandler().setAppointments(am.getAllAppointments());

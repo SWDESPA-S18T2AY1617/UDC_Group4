@@ -26,9 +26,9 @@ public class AppointmentHandler {
     private WeekModel weekModel = new WeekModel();
     private DayModel dayModel = new DayModel();
 
-    public AppointmentHandler()
+    public AppointmentHandler(AppointmentManager apptManager)
     {
-    	appointmentManager = new AppointmentManager();
+    	appointmentManager = apptManager;
     	Appointments = appointmentManager.getAllAppointments();
     }
     

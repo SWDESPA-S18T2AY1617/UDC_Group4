@@ -10,6 +10,7 @@ import java.time.LocalTime;
 import javax.swing.JOptionPane;
 
 import model.Appointment;
+import server.AppointmentManager;
 import server.DoctorManager;
 import view.DoctorMainView;
 import view.UpdateFrameView;
@@ -21,9 +22,9 @@ public class DoctorController extends CalendarProgram
 	private int row = -1;
 //	private ArrayList<CalendarProgram> calendarProgram;
 	
-	public DoctorController()
+	public DoctorController(AppointmentManager apptManager)
 	{	
-		super(new DoctorMainView());
+		super(new DoctorMainView(), apptManager);
 		doctorManager = new DoctorManager();
 //		calendarProgram = new ArrayList<CalendarProgram>();
 //		int maxCtr = doctorManager.getAllDoctor().size();
