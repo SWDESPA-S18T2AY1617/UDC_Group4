@@ -51,8 +51,9 @@ public class CalendarProgram {
 
 		this.mainView.setVisible(true);
 		this.mainView.getCalendarView().getCalendarTable().setModel(eventH.getCalendarModel(monthToday, yearToday));
-		this.mainView.getDayView().getDayTable().setModel(eventH.getDayModel(getDate()));
-		this.mainView.getWeekView().getWeekTable().setModel(eventH.getWeekModel(getDate()));
+		refreshDay();
+		refreshWeek();
+		refreshdAgenda();
 		refreshCalendar();
 	}
 

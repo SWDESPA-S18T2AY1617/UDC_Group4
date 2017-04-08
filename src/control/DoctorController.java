@@ -52,9 +52,6 @@ public class DoctorController extends CalendarProgram
 					eventH.getAppointments().remove(cI);
 					eventH.getAppointmentManager().deleteAppointment(cI.getAppointmentID());
 					
-					refreshDay();
-					refreshdAgenda();
-					refreshWeek();
 					break;
 				}
 			}
@@ -84,11 +81,6 @@ public class DoctorController extends CalendarProgram
 							eventH.getAppointments().get(value).setEndRowDay();
 							eventH.getAppointments().get(value).setColWeek();
 							eventH.getAppointmentManager().updateAppointment(eventH.getAppointments().get(value));
-							
-							
-							refreshDay();
-							refreshdAgenda();
-							refreshWeek();
 							
 							ufv.dispose();
 						}
