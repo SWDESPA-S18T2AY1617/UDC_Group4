@@ -35,8 +35,10 @@ public class SecretaryController extends CalendarProgram
 				String name = JOptionPane.showInputDialog("Appointment name?");
 				if (name != null) {	
 					eventH.getAppointments().get(ctr).setAppointmentName(name);
+					eventH.getAppointments().get(ctr).setClientID(2);
 					eventH.getAppointments().get(ctr).setColor("Blue");
-					cI.setStatus(true);
+					eventH.getAppointments().get(ctr).setStatus(true);
+					eventH.getAppointmentManager().updateAppointment(eventH.getAppointments().get(ctr));
 				}
 			}
 		}

@@ -54,7 +54,6 @@ public class DoctorController extends CalendarProgram
 					
 					refreshDay();
 					refreshdAgenda();
-					refreshwAgenda();
 					refreshWeek();
 					break;
 				}
@@ -89,7 +88,6 @@ public class DoctorController extends CalendarProgram
 							
 							refreshDay();
 							refreshdAgenda();
-							refreshwAgenda();
 							refreshWeek();
 							
 							ufv.dispose();

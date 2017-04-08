@@ -146,6 +146,9 @@ public class AppointmentManager {
 			statement.setInt(12, appointment.getColWeek());
 			
 			statement.executeUpdate();
+			
+			notifyOthers();
+			
 			System.out.println("[" + getClass().getName() + "] Successful INSERT to " + Appointment.TABLE_NAME);
 		} catch (SQLException e) {
 			System.out.println("[" + getClass().getName() + "] Unable to INSERT to " + Appointment.TABLE_NAME);
@@ -171,6 +174,8 @@ public class AppointmentManager {
 			
 			statement.executeUpdate();
 			
+			notifyOthers();
+			
 			System.out.println("[" + getClass().getName() + "] Successful DELETE in " + Appointment.TABLE_NAME);
 		} catch (SQLException e) {
 			System.out.println("[" + getClass().getName() + "] Unable to DELETE in " + Appointment.TABLE_NAME);
@@ -190,7 +195,7 @@ public class AppointmentManager {
 
 		try
 		{
-			
+			System.out.println("SIZE:" + this.allController.size());
 			 statement = connect.prepareStatement(updateTableSQL);
 
 			statement.setString(1, a.getAppointmentName());
@@ -207,6 +212,9 @@ public class AppointmentManager {
 			
 			// execute update SQL statement
 			statement.executeUpdate();
+			
+			notifyOthers();
+			
 			System.out.println("[" + getClass().getName() + "] Successful UPDATE in " + Appointment.TABLE_NAME);
 		} catch (SQLException e) {
 			System.out.println("[" + getClass().getName() + "] Unable to UPDATE in " + Appointment.TABLE_NAME);
@@ -229,8 +237,16 @@ public class AppointmentManager {
 		appointment.setColor(rs.getString(Appointment.COL_COLOR));
 		appointment.setStartRowDay();
 		appointment.setEndRowDay();
+		appointment.setColWeek();
 		
 		return appointment;
+	}
+	
+	public void notifyOthers()
+	{
+		for(int ctr = 0 ; ctr< this.allController.size(); ctr++){
+			allController.get(ctr).refresh(getAllAppointments());
+		}
 	}
 	
 }

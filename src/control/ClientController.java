@@ -34,8 +34,10 @@ public class ClientController extends CalendarProgram
 				String name = JOptionPane.showInputDialog("Appointment name?");
 				if (name != null){	
 					eventH.getAppointments().get(ctr).setAppointmentName(name);
+					eventH.getAppointments().get(ctr).setClientID(mainView.getAppID());
 					eventH.getAppointments().get(ctr).setColor("Blue");
-					cI.setStatus(true);
+					eventH.getAppointments().get(ctr).setStatus(true);
+					eventH.getAppointmentManager().updateAppointment(eventH.getAppointments().get(ctr));
 				}
 			}
 			else
@@ -43,8 +45,10 @@ public class ClientController extends CalendarProgram
 				int decide = JOptionPane.showConfirmDialog(null, "Cancel?");
 				if (decide == JOptionPane.YES_OPTION) {
 					eventH.getAppointments().get(ctr).setAppointmentName("Free Appointment");
+					eventH.getAppointments().get(ctr).setClientID(1);
 					eventH.getAppointments().get(ctr).setColor("Red");
-					cI.setStatus(false);
+					eventH.getAppointments().get(ctr).setStatus(false);
+					eventH.getAppointmentManager().updateAppointment(eventH.getAppointments().get(ctr));
 				}
 			}
 		}

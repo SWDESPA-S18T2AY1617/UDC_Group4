@@ -175,7 +175,7 @@ public class CalendarProgram {
 				eventH.getDayRenderer());
 	}
 	
-	public void refreshWeek() {
+	protected void refreshWeek() {
 		mainView.getWeekView().getWeekTable().setModel(eventH.getWeekModel(getDate()));
 		mainView.getWeekView().getWeekTable().setDefaultRenderer(mainView.getWeekView().getWeekTable().getColumnClass(0), eventH.getWeekRenderer());
 	}
@@ -464,7 +464,7 @@ public class CalendarProgram {
 			date = LocalDate.of(yearToday, monthToday + 1, dayToday);
 			
 			mainView.getHeaderView().getDateLabel().setText(months[monthToday] + " " + dayToday + ", " + yearToday);
-			if(!(mainView instanceof ClientMainView))
+			if(mainView instanceof DoctorMainView)
 				mainView.getCreateView().getTextFieldDate().setText((monthToday+1) + "/" + dayToday + "/" + yearToday);
 			refreshdAgenda();
 			refreshDay();
@@ -572,6 +572,16 @@ public class CalendarProgram {
 	public AppointmentHandler getAppointmentHandler(){
 		return eventH;
 	}
+	
+	public void refresh(ArrayList<Appointment> appointments)
+	{
+		eventH.setAppointments(appointments);
+		
+		refreshDay();
+		refreshdAgenda();
+		refreshWeek();
+	}
+	
 //	protected class btnDiscard_Action implements ActionListener {
 //		public void actionPerformed(ActionEvent e) {
 //			mainView.getCreateView().getTextFieldDate().setText("");
