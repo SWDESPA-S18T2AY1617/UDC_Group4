@@ -22,14 +22,15 @@ public class AppointmentHandler {
 	private AppointmentManager appointmentManager;
     private ArrayList<Appointment> Appointments = new ArrayList<Appointment>();
     private ArrayList<Integer> itemIndex = new ArrayList<Integer>();
+    private ArrayList<Integer> itemIndexWeek = new ArrayList<Integer>();
     private DTModel calendarModel = new DTModel();
     private WeekModel weekModel = new WeekModel();
     private DayModel dayModel = new DayModel();
 
     public AppointmentHandler(AppointmentManager apptManager)
     {
-    	appointmentManager = apptManager;
-    	Appointments = appointmentManager.getAllAppointments();
+    	setAppointmentManager(apptManager);
+    	Appointments = getAppointmentManager().getAllAppointments();
     }
     
     private void updateTable(int month, int year) {
@@ -146,9 +147,6 @@ public class AppointmentHandler {
                if(Appointments.get(ctr).getLocalTimeIn().getMinute() == 30)
                    dayRow++;
                
-               System.out.println(date);
-               System.out.println(date.getDayOfWeek().name());
-               
                if(Appointments.get(ctr).getAppointmentDate().getDayOfWeek().name().equalsIgnoreCase("Monday"))
             	   weekCol = 1;
                else if(Appointments.get(ctr).getAppointmentDate().getDayOfWeek().name().equalsIgnoreCase("Tuesday"))
@@ -160,12 +158,8 @@ public class AppointmentHandler {
                else if(Appointments.get(ctr).getAppointmentDate().getDayOfWeek().name().equalsIgnoreCase("Friday"))
             	   weekCol = 5;
                
-               System.out.println("Week Column" + weekCol);
-               
-               Appointments.get(ctr).setColWeek(weekCol);
-               
                weekModel.setValueAt(event, dayRow, weekCol);
-               itemIndex.add(ctr);
+               itemIndexWeek.add(ctr);
             }
         	
         }
@@ -230,14 +224,14 @@ public class AppointmentHandler {
     	ArrayList<Integer> columnList = new ArrayList<Integer>();
     	
     	
-    	for(int i = 0; i < itemIndex.size();i++){
-    		startRowList.add(getAppointments().get(itemIndex.get(i)).getStartRowDay());
-    		endRowList.add(getAppointments().get(itemIndex.get(i)).getEndRowDay());
-    		colorList.add(getAppointments().get(itemIndex.get(i)).getColor());
-    		columnList.add(getAppointments().get(itemIndex.get(i)).getColWeek());
+    	for(int i = 0; i < itemIndexWeek.size();i++){
+    		startRowList.add(getAppointments().get(itemIndexWeek.get(i)).getStartRowDay());
+    		endRowList.add(getAppointments().get(itemIndexWeek.get(i)).getEndRowDay());
+    		colorList.add(getAppointments().get(itemIndexWeek.get(i)).getColor());
+    		columnList.add(getAppointments().get(itemIndexWeek.get(i)).getColWeek());
     	}
     	
-    	itemIndex.clear();
+    	itemIndexWeek.clear();
     	
     	return new WeekTableRenderer(startRowList, endRowList,colorList, columnList);
     }
@@ -372,7 +366,15 @@ public class AppointmentHandler {
 	
 	public void sync(int i){
         for(; i < this.getAppointments().size() ; i++){
-            appointmentManager.addAppointment(this.getAppointments().get(i));
+            getAppointmentManager().addAppointment(this.getAppointments().get(i));
         }
     }
+
+	public AppointmentManager getAppointmentManager() {
+		return appointmentManager;
+	}
+
+	public void setAppointmentManager(AppointmentManager appointmentManager) {
+		this.appointmentManager = appointmentManager;
+	}
 }

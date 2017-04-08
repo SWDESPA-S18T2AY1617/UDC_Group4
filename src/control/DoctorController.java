@@ -50,6 +50,8 @@ public class DoctorController extends CalendarProgram
 			for (Appointment cI : eventH.getAppointments()) {
 				if (cI.getAppointmentName().equalsIgnoreCase(event)) {
 					eventH.getAppointments().remove(cI);
+					eventH.getAppointmentManager().deleteAppointment(cI.getAppointmentID());
+					
 					refreshDay();
 					refreshAgenda();
 					refreshWeek();
@@ -61,13 +63,13 @@ public class DoctorController extends CalendarProgram
 			for (int ctr= 0 ;ctr< eventH.getAppointments().size(); ctr++) {
 				Appointment cI = eventH.getAppointments().get(ctr);
 				if (cI.getAppointmentName().equalsIgnoreCase(event)) {
+					
 					int value = ctr;
 					UpdateFrameView ufv = new UpdateFrameView();
 					ufv.getUpdateView().getLblNewLabel().setText(cI.getAppointmentDate() + "/" + cI.getLocalTimeIn() + "-" + cI.getLocalTimeOut() + " " + cI.getAppointmentName());
 					ufv.getUpdateView().getBtnSave().addActionListener(new ActionListener(){
 						public void actionPerformed(ActionEvent e){
 							String[] dates = ufv.getUpdateView().getTextFieldDate().getText().split("/");
-							
 							String[] stime = ufv.getUpdateView().getComboBoxFrom().getSelectedItem().toString().split(":");
 							int shour = Integer.parseInt(stime[0]);
 							int sminute = Integer.parseInt(stime[1]);
@@ -80,6 +82,8 @@ public class DoctorController extends CalendarProgram
 							eventH.getAppointments().get(value).setLocalTimeOut(LocalTime.of(ehour, eminute));
 							eventH.getAppointments().get(value).setStartRowDay();
 							eventH.getAppointments().get(value).setEndRowDay();
+							eventH.getAppointments().get(value).setColWeek();
+							eventH.getAppointmentManager().updateAppointment(eventH.getAppointments().get(value));
 							
 							
 							refreshDay();

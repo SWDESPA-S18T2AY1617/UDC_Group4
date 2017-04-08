@@ -21,31 +21,29 @@ public class DoctorManager {
 		if(connection.openConnection())
 			connect = connection.getActiveConnection();
 	}
-	public ArrayList<Appointment> getDoctorAppointment(){
-        ArrayList<Appointment> apt = new ArrayList<Appointment>();
-        
-        String query = "SELECT * FROM " + Doctor.TABLE_NAME + " d, " + Appointment.TABLE_NAME +" a WHERE d.doctorID = a.doctorID";
-        
-        AppointmentManager am = new AppointmentManager();
-        
-        ResultSet rs;
-        
-        try{
-            statement = connect.prepareStatement(query);
-            rs = statement.executeQuery();
-            
-            while(rs.next()){
-               apt.add(am.toAppointment(rs));
-            }
-            
-        }catch(Exception e){
-            e.printStackTrace();
-            
-        }
-        
-        
-        return apt;
-    }
+	
+//	public ArrayList<Appointment> getDoctorAppointment(){
+//        String query = "SELECT * FROM " + Doctor.TABLE_NAME + " d, " + Appointment.TABLE_NAME +" a WHERE d.doctorID = a.doctorID";
+//        
+//        ResultSet rs;
+//        
+//        try{
+//            statement = connect.prepareStatement(query);
+//            rs = statement.executeQuery();
+//            
+//            while(rs.next()){
+//               apt.add(.toAppointment(rs));
+//            }
+//            
+//        }catch(Exception e){
+//            e.printStackTrace();
+//            
+//        }
+//        
+//        
+//        return apt;
+//    }
+	
 	public ArrayList<Doctor> getAllDoctor ()
 	{
 		ArrayList<Doctor> doctors = new ArrayList<Doctor>();

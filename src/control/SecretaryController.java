@@ -18,8 +18,6 @@ public class SecretaryController extends CalendarProgram
 	{
 		super(new SecretaryMainView(), apptManager);
 		secretaryManager = new SecretaryManager();
-		AppointmentManager am = new AppointmentManager();
-        super.getAppointmentHandler().setAppointments(am.getAllAppointments());
 //		setCalendarProgram(new ArrayList<CalendarProgram>());
 //		int maxCtr = secretaryManager.getAllSecretary().size();
 //		for(int ctr = 0; ctr < maxCtr; ctr++){
@@ -35,7 +33,7 @@ public class SecretaryController extends CalendarProgram
 			Appointment cI = eventH.getAppointments().get(ctr);
 			if (cI.getAppointmentName().equalsIgnoreCase(event) && cI.isStatus() == false) {
 				String name = JOptionPane.showInputDialog("Appointment name?");
-				if (name != null){	
+				if (name != null) {	
 					eventH.getAppointments().get(ctr).setAppointmentName(name);
 					eventH.getAppointments().get(ctr).setColor("Blue");
 					cI.setStatus(true);

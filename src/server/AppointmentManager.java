@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.sql.Time;
 import java.util.ArrayList;
 
+import control.CalendarProgram;
+import model.Appointment;
 import model.Appointment;
 import server.DBConnection;
 
@@ -15,12 +17,14 @@ public class AppointmentManager {
 	
 	private Connection connect;
 	private PreparedStatement statement;
+	private ArrayList<CalendarProgram> allController;
 	
-	public AppointmentManager ()
+	public AppointmentManager (ArrayList<CalendarProgram> ac)
 	{
 		DBConnection connection = new DBConnection ();
 		if(connection.openConnection())
 			connect = connection.getActiveConnection();
+		allController = ac;
 	}
 	
 	public ArrayList <Appointment> getAllAppointments ()
@@ -171,6 +175,43 @@ public class AppointmentManager {
 		} catch (SQLException e) {
 			System.out.println("[" + getClass().getName() + "] Unable to DELETE in " + Appointment.TABLE_NAME);
 			e.printStackTrace();
+		}
+	}
+	
+	public void updateAppointment (Appointment a)
+	{
+		String updateTableSQL = "UPDATE " + Appointment.TABLE_NAME + 
+								" SET " + Appointment.COL_APPOINTMENTNAME + "= ?, " + Appointment.COL_CLIENTID + "= ? ," + 
+								Appointment.COL_COLOR + "= ?, " + Appointment.COL_STARTROW + "= ? ," + 
+								Appointment.COL_ENDROW + "= ?, " + Appointment.COL_DATE + "= ? ," + 
+								Appointment.COL_TIMESTART + "= ?, " + Appointment.COL_TIMEEND + "= ? ," + 
+								Appointment.COL_STATUS + "= ? ," + Appointment.COL_COLWEEK + "= ? " +
+								" WHERE " + Appointment.COL_ID + " = ?;";
+
+		try
+		{
+			
+			 statement = connect.prepareStatement(updateTableSQL);
+
+			statement.setString(1, a.getAppointmentName());
+			statement.setInt(2, a.getClientID());
+			statement.setString(3, a.getColorName());
+			statement.setInt(4, a.getStartRowDay());
+			statement.setInt(5, a.getEndRowDay());
+			statement.setDate(6, Date.valueOf(a.getAppointmentDate()));
+			statement.setTime(7, Time.valueOf(a.getLocalTimeIn()));
+			statement.setTime(8, Time.valueOf(a.getLocalTimeOut()));
+			statement.setBoolean(9, a.isStatus());
+			statement.setInt(10, a.getColWeek());
+			statement.setInt(11, a.getAppointmentID());
+			
+			// execute update SQL statement
+			statement.executeUpdate();
+			System.out.println("[" + getClass().getName() + "] Successful UPDATE in " + Appointment.TABLE_NAME);
+		} catch (SQLException e) {
+			System.out.println("[" + getClass().getName() + "] Unable to UPDATE in " + Appointment.TABLE_NAME);
+			e.printStackTrace();
+
 		}
 	}
 	

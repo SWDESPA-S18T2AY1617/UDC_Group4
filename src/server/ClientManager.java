@@ -21,29 +21,31 @@ public class ClientManager {
 		if(connection.openConnection())
 			connect = connection.getActiveConnection();
 	}
-	public ArrayList<Appointment> getClientAppointments(){
-        ArrayList<Appointment> apts = new ArrayList<Appointment>();
-        
-        String query = "SELECT * FROM " + Client.TABLE_NAME + " c, " + Appointment.TABLE_NAME + " a WHERE c.clientID = a.clientID";
-        
-        AppointmentManager am = new AppointmentManager();
-        
-        ResultSet rs;
-        
-        try{
-            statement = connect.prepareStatement(query);
-            rs = statement.executeQuery();
-            
-            while(rs.next()){
-               apts.add(am.toAppointment(rs));
-            }
-            
-        }catch(Exception e){
-            e.printStackTrace();
-            
-        }
-        return apts;
-    }
+	
+//	public ArrayList<Appointment> getClientAppointments(){
+//        ArrayList<Appointment> apts = new ArrayList<Appointment>();
+//        
+//        String query = "SELECT * FROM " + Client.TABLE_NAME + " c, " + Appointment.TABLE_NAME + " a WHERE c.clientID = a.clientID";
+//        
+//        AppointmentManager am = new AppointmentManager();
+//        
+//        ResultSet rs;
+//        
+//        try{
+//            statement = connect.prepareStatement(query);
+//            rs = statement.executeQuery();
+//            
+//            while(rs.next()){
+//               apts.add(am.toAppointment(rs));
+//            }
+//            
+//        }catch(Exception e){
+//            e.printStackTrace();
+//            
+//        }
+//        return apts;
+//    }
+	
 	public ArrayList<Client> getAllClient ()
 	{
 		ArrayList<Client> clients = new ArrayList<Client>();

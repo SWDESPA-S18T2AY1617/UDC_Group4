@@ -49,6 +49,7 @@ public class Appointment{
 		this.status = false;
         this.setStartRowDay();
         this.setEndRowDay();
+        this.setColWeek();
 	}
 	
 	public Color getColor() {
@@ -193,8 +194,17 @@ public class Appointment{
 		return colWeek;
 	}
 
-	public void setColWeek(int colWeek) {
-		this.colWeek = colWeek;
+	public void setColWeek() {
+		if(appointmentDate.getDayOfWeek().name().equalsIgnoreCase("Monday"))
+     	   colWeek = 1;
+        else if(appointmentDate.getDayOfWeek().name().equalsIgnoreCase("Tuesday"))
+        	colWeek = 2;
+        else if(appointmentDate.getDayOfWeek().name().equalsIgnoreCase("Wednesday"))
+        	colWeek = 3;
+        else if(appointmentDate.getDayOfWeek().name().equalsIgnoreCase("Thursday"))
+        	colWeek = 4;
+        else if(appointmentDate.getDayOfWeek().name().equalsIgnoreCase("Friday"))
+        	colWeek = 5;
 	}
    
 }

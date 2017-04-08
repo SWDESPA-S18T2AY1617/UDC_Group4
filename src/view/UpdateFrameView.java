@@ -8,8 +8,8 @@ public class UpdateFrameView extends JFrame {
 	private UpdateView updateView;
 
 	public UpdateFrameView() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(650, 530);
+
+		setSize(430, 250);
 		getContentPane().setLayout(null);
 
 		JPanel panel = new JPanel(null);

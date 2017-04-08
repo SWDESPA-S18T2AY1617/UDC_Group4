@@ -61,7 +61,7 @@ public class CalendarProgram {
 			mainView.getCalendarView().getCmbYear().addItem(String.valueOf(i)); // adds																			// box
 		}
 
-		if(mainView instanceof DoctorMainView || mainView instanceof SecretaryMainView)
+		if(mainView instanceof DoctorMainView)
 			for (int i = 0; i < 24; i++) {
 				mainView.getCreateView().getComboBoxFrom().addItem(i + ":00");
 				mainView.getCreateView().getComboBoxFrom().addItem(i + ":30");
@@ -82,7 +82,7 @@ public class CalendarProgram {
 		mainView.getHeaderView().getAgendaBtn().addActionListener(new btnAgenda_Action());
 //		mainView.getCreateView().getrdBtnEvent().addActionListener(new rdBtnEvent_Action());
 //		mainView.getCreateView().getrdBtnTask().addActionListener(new rdBtnTask_Action());
-		if(mainView instanceof DoctorMainView || mainView instanceof SecretaryMainView)
+		if(mainView instanceof DoctorMainView)
 			mainView.getCreateView().getBtnSave().addActionListener(new btnSave_Action());
 //		mainView.getCreateView().getBtnDiscard().addActionListener(new btnDiscard_Action());
 		mainView.getTypeView().getFreeCheckBox().addItemListener(new ItemListener() {
@@ -375,7 +375,7 @@ public class CalendarProgram {
 
 	protected class btnDay_Action implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			if(mainView instanceof DoctorMainView || mainView instanceof SecretaryMainView)
+			if(mainView instanceof DoctorMainView)
 				mainView.getCreateView().setVisible(false);
 			mainView.getAgendaView().setVisible(false);
 			mainView.getWeekView().setVisible(false);
@@ -385,7 +385,7 @@ public class CalendarProgram {
 	
 	protected class btnWeek_Action implements ActionListener{
 		public void actionPerformed(ActionEvent e){
-			if(mainView instanceof DoctorMainView || mainView instanceof SecretaryMainView)
+			if(mainView instanceof DoctorMainView)
 				mainView.getCreateView().setVisible(false);
 			mainView.getDayView().setVisible(false);
 			mainView.getAgendaView().setVisible(false);
@@ -395,7 +395,7 @@ public class CalendarProgram {
 
 	protected class btnAgenda_Action implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			if(mainView instanceof DoctorMainView || mainView instanceof SecretaryMainView)
+			if(mainView instanceof DoctorMainView)
 				mainView.getCreateView().setVisible(false);
 			mainView.getAgendaView().setVisible(true);
 			mainView.getWeekView().setVisible(false);
@@ -414,7 +414,6 @@ public class CalendarProgram {
 			if (mainView.getCalendarView().getCalendarTable().getValueAt(row, col) != null)
 				dayToday = (Integer) mainView.getCalendarView().getCalendarTable().getValueAt(row, col);
 			
-			System.out.println("Month: " + monthToday + 1);
 			date = LocalDate.of(yearToday, monthToday + 1, dayToday);
 			
 			mainView.getHeaderView().getDateLabel().setText(months[monthToday] + " " + dayToday + ", " + yearToday);
@@ -481,7 +480,7 @@ public class CalendarProgram {
 				eventH.addAppointment(getDate(), "Appointment " + (eventH.getAppointments().size() + 1), LocalTime.of(shour, sminute), LocalTime.of(ehour, eminute), mainView.getAppID(), "Red");
 			
 
-			//eventH.sync(startIndex);
+			eventH.sync(startIndex);
 			
 			refreshDay();
 			refreshAgenda();
