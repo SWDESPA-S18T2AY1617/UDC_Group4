@@ -13,8 +13,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 import model.Appointment;
+import view.ClientMainView;
 import view.DoctorMainView;
-import view.AppointmentHandler;
 import view.MainView;
 import view.SecretaryMainView;
 import view.TableRenderer;
@@ -22,19 +22,19 @@ import view.UpdateFrameView;
 
 public class CalendarProgram {
 
-	private GregorianCalendar cal = new GregorianCalendar();
-	private int monthToday;
-	private int yearToday;
-	private int dayToday;
-	private int sIndex = 100;
-	private int yearBound;
-	private LocalDate date;
-	private int col = -1;
-	private int row = -1;
+	protected GregorianCalendar cal = new GregorianCalendar();
+	protected int monthToday;
+	protected int yearToday;
+	protected int dayToday;
+	protected int sIndex = 100;
+	protected int yearBound;
+	protected LocalDate date;
+	protected int col = -1;
+	protected int row = -1;
 	
-	private MainView mainView;
-	private AppointmentHandler eventH;
-	private ArrayList<Appointment> sortedDay;
+	protected MainView mainView;
+	protected AppointmentHandler eventH;
+	protected ArrayList<Appointment> sortedDay;
 
 	public CalendarProgram(MainView mainView) {
 		monthToday = cal.get(GregorianCalendar.MONTH);
@@ -56,7 +56,7 @@ public class CalendarProgram {
 		refreshCalendar();
 	}
 
-	private void setFrame() { // sets the values of the buttons in the frame
+	protected void setFrame() { // sets the values of the buttons in the frame
 
 		for (int i = yearBound - 100; i <= yearBound + 100; i++) {
 			mainView.getCalendarView().getCmbYear().addItem(String.valueOf(i)); // adds																			// box
@@ -86,8 +86,6 @@ public class CalendarProgram {
 		if(mainView instanceof DoctorMainView || mainView instanceof SecretaryMainView)
 			mainView.getCreateView().getBtnSave().addActionListener(new btnSave_Action());
 //		mainView.getCreateView().getBtnDiscard().addActionListener(new btnDiscard_Action());
-		mainView.getDayView().getDayTable().addMouseListener(new scrollPanelDay_Action());
-		mainView.getWeekView().getWeekTable().addMouseListener(new scrollPanelWeek_Action());
 		mainView.getTypeView().getFreeCheckBox().addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if (mainView.getTypeView().getFreeCheckBox().isSelected()) {
@@ -140,7 +138,7 @@ public class CalendarProgram {
 		refreshWeek();
 	}
 
-	private void refreshCalendar() { // sets the view based on the current month
+	protected void refreshCalendar() { // sets the view based on the current month
 										// and year
 		String[] months = { "January", "February", "March", "April", "May", "June", "July", "August", "September",
 				"October", "November", "December" };
@@ -162,14 +160,14 @@ public class CalendarProgram {
 				mainView.getCalendarView().getCalendarTable().getColumnClass(0), new TableRenderer()); // updates the renderer used to change the color of a cell 
 	}
 
-	private void refreshDay() {
+	protected void refreshDay() {
 
 		mainView.getDayView().getDayTable().setModel(eventH.getDayModel(getDate()));
 		mainView.getDayView().getDayTable().setDefaultRenderer(mainView.getDayView().getDayTable().getColumnClass(0),
 				eventH.getDayRenderer());
 	}
 
-	private void refreshDaySpecific(String style) {
+	protected void refreshDaySpecific(String style) {
 		mainView.getDayView().getDayTable().setModel(eventH.getEventDayModel(getDate()));
 		mainView.getDayView().getDayTable().setDefaultRenderer(mainView.getDayView().getDayTable().getColumnClass(0),
 				eventH.getDayRenderer());
@@ -180,7 +178,7 @@ public class CalendarProgram {
 		mainView.getWeekView().getWeekTable().setDefaultRenderer(mainView.getWeekView().getWeekTable().getColumnClass(0), eventH.getWeekRenderer());
 	}
 
-	private void refreshAgenda() {
+	protected void refreshAgenda() {
 		mainView.getAgendaView().getLblEventName().setText("No Upcoming Events");
 		mainView.getAgendaView().getLblEventTime().setText("");
 
@@ -205,7 +203,7 @@ public class CalendarProgram {
 		}
 	}
 
-	private void refreshEventAgenda() {
+	protected void refreshEventAgenda() {
 		mainView.getAgendaView().getLblEventName().setText("No Upcoming Events");
 		mainView.getAgendaView().getLblEventTime().setText("");
 
@@ -258,7 +256,7 @@ public class CalendarProgram {
 		}
 	}
 
-	private void refreshTaskAgenda() {
+	protected void refreshTaskAgenda() {
 		mainView.getAgendaView().getLblEventName().setText("No Upcoming Events");
 		mainView.getAgendaView().getLblEventTime().setText("");
 
@@ -320,7 +318,7 @@ public class CalendarProgram {
 	}
 
 	//////////////////////////// ACTION LISTENERS////////////////////////////
-	private class btnPrev_Action implements ActionListener {
+	protected class btnPrev_Action implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
 			dayToday = 1;
@@ -343,7 +341,7 @@ public class CalendarProgram {
 		}
 	}
 
-	private class btnNext_Action implements ActionListener {
+	protected class btnNext_Action implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
 			dayToday = 1;
@@ -366,7 +364,7 @@ public class CalendarProgram {
 		}
 	}
 
-	private class btnCreate_Action implements ActionListener {
+	protected class btnCreate_Action implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			mainView.getDayView().setVisible(false);
 			mainView.getAgendaView().setVisible(false);
@@ -376,7 +374,7 @@ public class CalendarProgram {
 		}
 	}
 
-	private class btnDay_Action implements ActionListener {
+	protected class btnDay_Action implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			if(mainView instanceof DoctorMainView || mainView instanceof SecretaryMainView)
 				mainView.getCreateView().setVisible(false);
@@ -386,7 +384,7 @@ public class CalendarProgram {
 		}
 	}
 	
-	private class btnWeek_Action implements ActionListener{
+	protected class btnWeek_Action implements ActionListener{
 		public void actionPerformed(ActionEvent e){
 			if(mainView instanceof DoctorMainView || mainView instanceof SecretaryMainView)
 				mainView.getCreateView().setVisible(false);
@@ -396,7 +394,7 @@ public class CalendarProgram {
 		}
 	}
 
-	private class btnAgenda_Action implements ActionListener {
+	protected class btnAgenda_Action implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			if(mainView instanceof DoctorMainView || mainView instanceof SecretaryMainView)
 				mainView.getCreateView().setVisible(false);
@@ -406,7 +404,7 @@ public class CalendarProgram {
 		}
 	}
 
-	private class scrollPanelCal_Action implements MouseListener {
+	protected class scrollPanelCal_Action implements MouseListener {
 		@Override
 		public void mouseClicked(MouseEvent arg0) {
 			String[] months = { "January", "February", "March", "April", "May", "June", "July", "August", "September",
@@ -421,7 +419,8 @@ public class CalendarProgram {
 			date = LocalDate.of(yearToday, monthToday + 1, dayToday);
 			
 			mainView.getHeaderView().getDateLabel().setText(months[monthToday] + " " + dayToday + ", " + yearToday);
-			mainView.getCreateView().getTextFieldDate().setText((monthToday+1) + "/" + dayToday + "/" + yearToday);
+			if(!(mainView instanceof ClientMainView))
+				mainView.getCreateView().getTextFieldDate().setText((monthToday+1) + "/" + dayToday + "/" + yearToday);
 			refreshAgenda();
 			refreshDay();
 			refreshWeek();
@@ -438,7 +437,7 @@ public class CalendarProgram {
 
 	}
 	
-	private class cmbYear_Action implements ActionListener {
+	protected class cmbYear_Action implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
 			if (mainView.getCalendarView().getCmbYear().getSelectedItem() != null) {
@@ -452,11 +451,12 @@ public class CalendarProgram {
 		}
 	}
 
-	private class btnSave_Action implements ActionListener {
+	protected class btnSave_Action implements ActionListener {
 		
 		public void actionPerformed(ActionEvent e) {
 
 			int i = 0;
+			int startIndex  = eventH.getAppointments().size();
 			
 			String[] dates = mainView.getCreateView().getTextFieldDate().getText().split("/");
 			
@@ -480,8 +480,10 @@ public class CalendarProgram {
 			}
 			else
 				eventH.addAppointment(getDate(), "Appointment " + (eventH.getAppointments().size() + 1), LocalTime.of(shour, sminute), LocalTime.of(ehour, eminute), mainView.getAppID(), "Red");
-			System.out.println("Day of Event" + getDate());
-			System.out.println("Added");
+			
+
+			eventH.sync(startIndex);
+			
 			refreshDay();
 			refreshAgenda();
 			refreshWeek();
@@ -523,7 +525,7 @@ public class CalendarProgram {
 		}
 	}
 
-//	private class btnDiscard_Action implements ActionListener {
+//	protected class btnDiscard_Action implements ActionListener {
 //		public void actionPerformed(ActionEvent e) {
 //			mainView.getCreateView().getTextFieldDate().setText("");
 //			mainView.getCreateView().getTextFieldEvent().setText("");
@@ -531,102 +533,5 @@ public class CalendarProgram {
 //			mainView.getCreateView().getComboBoxTo().setSelectedIndex(0);
 //		}
 //	}
-
-	private void modify(String event) {
-		String[] options = {"Free Up Slot","Change Date or Time"};
-		int choice = JOptionPane.showOptionDialog(null, //Component parentComponent
-                "", //Object message,
-                "Choose an option", //String title
-                JOptionPane.YES_NO_OPTION, //int optionType
-                JOptionPane.INFORMATION_MESSAGE, //int messageType
-                null, //Icon icon,
-                options, //Object[] options,
-                "Free Up Slot");//Object initialValue 
-		if(choice == 0 ){
-			for (Appointment cI : eventH.getAppointments()) {
-				if (cI.getAppointmentName().equalsIgnoreCase(event)) {
-					eventH.getAppointments().remove(cI);
-					break;
-				}
-			}
-		}
-		else{
-			for (int ctr= 0 ;ctr< eventH.getAppointments().size(); ctr++) {
-				Appointment cI = eventH.getAppointments().get(ctr);
-				if (cI.getAppointmentName().equalsIgnoreCase(event)) {
-					int value = ctr;
-					UpdateFrameView ufv = new UpdateFrameView();
-					ufv.getUpdateView().getLblNewLabel().setText(cI.getAppointmentDate() + "/" + cI.getLocalTimeIn() + "-" + cI.getLocalTimeOut() + " " + cI.getAppointmentName());
-					ufv.getUpdateView().getBtnSave().addActionListener(new ActionListener(){
-						public void actionPerformed(ActionEvent e){
-							String[] dates = ufv.getUpdateView().getTextFieldDate().getText().split("/");
-							
-							String[] stime = ufv.getUpdateView().getComboBoxFrom().getSelectedItem().toString().split(":");
-							int shour = Integer.parseInt(stime[0]);
-							int sminute = Integer.parseInt(stime[1]);
-							String[] etime = ufv.getUpdateView().getComboBoxTo().getSelectedItem().toString().split(":");
-							int ehour = Integer.parseInt(etime[0]);
-							int eminute = Integer.parseInt(etime[1]);
-							
-							eventH.getAppointments().get(value).setAppointmentDate(LocalDate.of(Integer.parseInt(dates[2]), Integer.parseInt(dates[0]), Integer.parseInt(dates[1])));
-							eventH.getAppointments().get(value).setLocalTimeIn(LocalTime.of(shour, sminute));
-							eventH.getAppointments().get(value).setLocalTimeOut(LocalTime.of(ehour, eminute));
-							eventH.getAppointments().get(value).setStartRowDay();
-							eventH.getAppointments().get(value).setEndRowDay();
-							
-							
-							refreshDay();
-							refreshAgenda();
-							refreshWeek();
-							
-							ufv.dispose();
-						}
-					});
-				}
-			}
-		}
-		
-		
-	}
-
-	private class scrollPanelDay_Action implements MouseListener {
-
-		@Override
-		public void mouseClicked(MouseEvent arg0) {
-			int rowDay = mainView.getDayView().getDayTable().getSelectedRow();
-			modify(mainView.getDayView().getDayTable().getValueAt(rowDay, 1).toString());
-		}
-		
-		@Override
-		public void mouseEntered(MouseEvent arg0) {}
-		@Override
-		public void mouseExited(MouseEvent arg0) {}
-		@Override
-		public void mousePressed(MouseEvent arg0) {}
-		@Override
-		public void mouseReleased(MouseEvent arg0) {}
-
-	}
-	
-	private class scrollPanelWeek_Action implements MouseListener {
-
-		@Override
-		public void mouseClicked(MouseEvent arg0) {
-			int rowDay = mainView.getWeekView().getWeekTable().getSelectedRow();
-			int colDay = mainView.getWeekView().getWeekTable().getSelectedColumn();
-			modify(mainView.getWeekView().getWeekTable().getValueAt(rowDay, colDay).toString());
-		}
-		
-		@Override
-		public void mouseEntered(MouseEvent arg0) {}
-		@Override
-		public void mouseExited(MouseEvent arg0) {}
-		@Override
-		public void mousePressed(MouseEvent arg0) {}
-		@Override
-		public void mouseReleased(MouseEvent arg0) {}
-
-	}
-	
 
 }

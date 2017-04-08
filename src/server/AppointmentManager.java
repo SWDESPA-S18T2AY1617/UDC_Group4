@@ -119,8 +119,12 @@ public class AppointmentManager {
 					", " + Appointment.COL_APPOINTMENTNAME +
 					", " + Appointment.COL_CLIENTID +
 					", " + Appointment.COL_DOCTORID + 
-					", " + Appointment.COL_STATUS + ") " +
-					" VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+					", " + Appointment.COL_STATUS + 
+					", " + Appointment.COL_COLOR + 
+					", " + Appointment.COL_STARTROW + 
+					", " + Appointment.COL_ENDROW + 
+					", " + Appointment.COL_COLWEEK + ") " +
+					" VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 			
 			statement = connect.prepareStatement(query);
 			
@@ -129,9 +133,13 @@ public class AppointmentManager {
 			statement.setTime(3, Time.valueOf(appointment.getLocalTimeIn()));
 			statement.setTime(4, Time.valueOf(appointment.getLocalTimeOut()));
 			statement.setString(5, appointment.getAppointmentName());
-			statement.setInt(6, appointment.getClientID());
+			statement.setNull(6, java.sql.Types.INTEGER);
 			statement.setInt(7, appointment.getDoctorID());
 			statement.setBoolean(8, appointment.isStatus());
+			statement.setString(9, appointment.getColorName());
+			statement.setInt(10, appointment.getStartRowDay());
+			statement.setInt(11, appointment.getEndRowDay());
+			statement.setInt(12, appointment.getColWeek());
 			
 			statement.executeUpdate();
 			System.out.println("[" + getClass().getName() + "] Successful INSERT to " + Appointment.TABLE_NAME);
@@ -177,6 +185,9 @@ public class AppointmentManager {
 		appointment.setDoctorID(rs.getInt(Appointment.COL_DOCTORID));
 		appointment.setClientID(rs.getInt(Appointment.COL_CLIENTID));
 		appointment.setStatus(rs.getBoolean(Appointment.COL_STATUS));
+		appointment.setColor(rs.getString(Appointment.COL_COLOR));
+		appointment.setStartRowDay();
+		appointment.setEndRowDay();
 		
 		return appointment;
 	}

@@ -1,11 +1,18 @@
 package control;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.ArrayList;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
+import javax.swing.JOptionPane;
+
+import model.Appointment;
 import server.DoctorManager;
 import view.DoctorMainView;
+import view.UpdateFrameView;
 
 public class DoctorController extends CalendarProgram
 {
@@ -23,6 +30,108 @@ public class DoctorController extends CalendarProgram
 //		for(int ctr = 0; ctr < maxCtr; ctr++){
 //			calendarProgram.add(new CalendarProgram());
 //		}
+		
+		mainView.getDayView().getDayTable().addMouseListener(new scrollPanelDay_Action());
+		mainView.getWeekView().getWeekTable().addMouseListener(new scrollPanelWeek_Action());
+	}
+	
+	protected void modify(String event) {
+		String[] options = {"Free Up Slot","Change Date or Time"};
+		int choice = JOptionPane.showOptionDialog(null, //Component parentComponent
+                "", //Object message,
+                "Choose an option", //String title
+                JOptionPane.YES_NO_OPTION, //int optionType
+                JOptionPane.INFORMATION_MESSAGE, //int messageType
+                null, //Icon icon,
+                options, //Object[] options,
+                "Free Up Slot");//Object initialValue 
+		if(choice == 0 ){
+			for (Appointment cI : eventH.getAppointments()) {
+				if (cI.getAppointmentName().equalsIgnoreCase(event)) {
+					eventH.getAppointments().remove(cI);
+					refreshDay();
+					refreshAgenda();
+					refreshWeek();
+					break;
+				}
+			}
+		}
+		else{
+			for (int ctr= 0 ;ctr< eventH.getAppointments().size(); ctr++) {
+				Appointment cI = eventH.getAppointments().get(ctr);
+				if (cI.getAppointmentName().equalsIgnoreCase(event)) {
+					int value = ctr;
+					UpdateFrameView ufv = new UpdateFrameView();
+					ufv.getUpdateView().getLblNewLabel().setText(cI.getAppointmentDate() + "/" + cI.getLocalTimeIn() + "-" + cI.getLocalTimeOut() + " " + cI.getAppointmentName());
+					ufv.getUpdateView().getBtnSave().addActionListener(new ActionListener(){
+						public void actionPerformed(ActionEvent e){
+							String[] dates = ufv.getUpdateView().getTextFieldDate().getText().split("/");
+							
+							String[] stime = ufv.getUpdateView().getComboBoxFrom().getSelectedItem().toString().split(":");
+							int shour = Integer.parseInt(stime[0]);
+							int sminute = Integer.parseInt(stime[1]);
+							String[] etime = ufv.getUpdateView().getComboBoxTo().getSelectedItem().toString().split(":");
+							int ehour = Integer.parseInt(etime[0]);
+							int eminute = Integer.parseInt(etime[1]);
+							
+							eventH.getAppointments().get(value).setAppointmentDate(LocalDate.of(Integer.parseInt(dates[2]), Integer.parseInt(dates[0]), Integer.parseInt(dates[1])));
+							eventH.getAppointments().get(value).setLocalTimeIn(LocalTime.of(shour, sminute));
+							eventH.getAppointments().get(value).setLocalTimeOut(LocalTime.of(ehour, eminute));
+							eventH.getAppointments().get(value).setStartRowDay();
+							eventH.getAppointments().get(value).setEndRowDay();
+							
+							
+							refreshDay();
+							refreshAgenda();
+							refreshWeek();
+							
+							ufv.dispose();
+						}
+					});
+				}
+			}
+		}
+		
+		
+	}
+
+	protected class scrollPanelDay_Action implements MouseListener {
+
+		@Override
+		public void mouseClicked(MouseEvent arg0) {
+			int rowDay = mainView.getDayView().getDayTable().getSelectedRow();
+			modify(mainView.getDayView().getDayTable().getValueAt(rowDay, 1).toString());
+		}
+		
+		@Override
+		public void mouseEntered(MouseEvent arg0) {}
+		@Override
+		public void mouseExited(MouseEvent arg0) {}
+		@Override
+		public void mousePressed(MouseEvent arg0) {}
+		@Override
+		public void mouseReleased(MouseEvent arg0) {}
+
+	}
+	
+	protected class scrollPanelWeek_Action implements MouseListener {
+
+		@Override
+		public void mouseClicked(MouseEvent arg0) {
+			int rowDay = mainView.getWeekView().getWeekTable().getSelectedRow();
+			int colDay = mainView.getWeekView().getWeekTable().getSelectedColumn();
+			modify(mainView.getWeekView().getWeekTable().getValueAt(rowDay, colDay).toString());
+		}
+		
+		@Override
+		public void mouseEntered(MouseEvent arg0) {}
+		@Override
+		public void mouseExited(MouseEvent arg0) {}
+		@Override
+		public void mousePressed(MouseEvent arg0) {}
+		@Override
+		public void mouseReleased(MouseEvent arg0) {}
+
 	}
 	
 }

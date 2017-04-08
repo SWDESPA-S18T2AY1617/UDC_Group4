@@ -43,7 +43,7 @@ public class DoctorMainView extends MainView{
 		mainPanel.setBounds(0, 0, 650, 500);
 		getHeaderView().setBounds(10, 0, 630, 100);
 		getCalendarView().setBounds(10, 110, 230, 230);
-		getTypeView().setBounds(20, 352, 100, 100);
+		getTypeView().setBounds(20, 352,  120, 150);
 		getCreateView().setBounds(240, 110, 400, 350);
 		getAgendaView().setBounds(240, 110, 400, 350);
 		getDayView().setBounds(240, 110, 400, 350);
@@ -56,6 +56,7 @@ public class DoctorMainView extends MainView{
 		getCreateView().setVisible(false);
 		getWeekView().setVisible(false);
 		getAgendaView().setVisible(false);
+		getTypeView().getComboBox().setVisible(false);
 
 		setResizable(false);
 		setVisible(true);

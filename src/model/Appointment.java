@@ -35,7 +35,7 @@ public class Appointment{
 	
 	public Appointment()
 	{
-		appointmentDate = null;
+		
 	}
 	
 	public Appointment(int appointmentID, String appointmentName, String color, LocalDate appointmentDate, LocalTime LocalTimeIn, LocalTime LocalTimeOut, int DoctorID){
