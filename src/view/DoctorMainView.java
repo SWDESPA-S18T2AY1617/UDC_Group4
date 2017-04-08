@@ -27,6 +27,7 @@ public class DoctorMainView extends MainView{
 		setHeaderView(new HeaderView());
 		setDayView(new DayView());
 		setWeekView(new WeekView());
+		setWeekAgendaView(new WeekAgendaView());
 		setAgendaView(new AgendaView());
 		
 		// adding to the main panel
@@ -37,6 +38,7 @@ public class DoctorMainView extends MainView{
 		mainPanel.add(getAgendaView());
 		mainPanel.add(getWeekView());
 		mainPanel.add(getDayView());
+		mainPanel.add(getWeekAgendaView());
 
 		// setting up the panels
 		mainPanel.setBounds(0, 0, 650, 500);
@@ -47,6 +49,7 @@ public class DoctorMainView extends MainView{
 		getAgendaView().setBounds(240, 110, 400, 350);
 		getDayView().setBounds(240, 110, 400, 350);
 		getWeekView().setBounds(240,110,400,350);
+		getWeekAgendaView().setBounds(240,110,400,350);
 		
 		//Modify necessary objects
 		getTypeView().getFreeCheckBox().setText("Free");
@@ -55,6 +58,7 @@ public class DoctorMainView extends MainView{
 		getCreateView().setVisible(false);
 		getWeekView().setVisible(false);
 		getAgendaView().setVisible(false);
+		getWeekAgendaView().setVisible(false);
 		getTypeView().getComboBox().setVisible(false);
 
 		setResizable(false);

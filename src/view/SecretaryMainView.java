@@ -24,6 +24,7 @@ public class SecretaryMainView extends MainView{
 		getCalendarView().getBtnCreate().setLocation(70, 180);
 		setTypeView(new TypeView());
 		setHeaderView(new HeaderView());
+		setWeekAgendaView(new WeekAgendaView());
 		setDayView(new DayView());
 		setWeekView(new WeekView());
 		setAgendaView(new AgendaView());
@@ -35,7 +36,8 @@ public class SecretaryMainView extends MainView{
 		mainPanel.add(getAgendaView());
 		mainPanel.add(getWeekView());
 		mainPanel.add(getDayView());
-
+		mainPanel.add(getWeekAgendaView());
+		
 		// setting up the panels
 		mainPanel.setBounds(0, 0, 650, 500);
 		getHeaderView().setBounds(10, 0, 630, 100);
@@ -44,6 +46,7 @@ public class SecretaryMainView extends MainView{
 		getAgendaView().setBounds(240, 110, 400, 350);
 		getDayView().setBounds(240, 110, 400, 350);
 		getWeekView().setBounds(240,110,400,350);
+		getWeekAgendaView().setBounds(240,110,400,350);
 		
 		// Hide unnecessary objects
 		getCalendarView().getBtnCreate().setVisible(false);
@@ -55,6 +58,7 @@ public class SecretaryMainView extends MainView{
 		// Panels
 		getWeekView().setVisible(false);
 		getAgendaView().setVisible(false);
+		getWeekAgendaView().setVisible(false);
 
 		setResizable(false);
 		setVisible(true);

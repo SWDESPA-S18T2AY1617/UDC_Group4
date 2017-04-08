@@ -24,6 +24,7 @@ public class ClientMainView extends MainView {
 		setTypeView(new TypeView());
 		setHeaderView(new HeaderView());
 		setDayView(new DayView());
+		setWeekAgendaView(new WeekAgendaView());
 		setWeekView(new WeekView());
 		setAgendaView(new AgendaView());
 
@@ -34,7 +35,8 @@ public class ClientMainView extends MainView {
 		mainPanel.add(getAgendaView());
 		mainPanel.add(getWeekView());
 		mainPanel.add(getDayView());
-
+		mainPanel.add(getWeekAgendaView());
+		
 		// setting up the panels
 		mainPanel.setBounds(0, 0, 650, 500);
 		getHeaderView().setBounds(10, 0, 630, 100);
@@ -43,6 +45,7 @@ public class ClientMainView extends MainView {
 		getAgendaView().setBounds(240, 110, 400, 350);
 		getDayView().setBounds(240, 110, 400, 350);
 		getWeekView().setBounds(240, 110, 400, 350);
+		getWeekAgendaView().setBounds(240,110,400,350);
 
 		// Hide unnecessary objects
 		getCalendarView().getBtnCreate().setVisible(false);
@@ -53,6 +56,7 @@ public class ClientMainView extends MainView {
 		// Panels
 		getWeekView().setVisible(false);
 		getAgendaView().setVisible(false);
+		getWeekAgendaView().setVisible(false);
 
 		setResizable(false);
 		setVisible(true);

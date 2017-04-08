@@ -8,6 +8,7 @@ public class MainView extends JFrame {
 
 	private DayView dayView;
 	private AgendaView agendaView;
+	private WeekAgendaView weekAgendaView;
 	private CalendarView calendarView;
 	private TypeView typeView;
 	private CreateView createView;
@@ -83,6 +84,14 @@ public class MainView extends JFrame {
 
 	public void setAppID(int appID) {
 		this.appID = appID;
+	}
+
+	public WeekAgendaView getWeekAgendaView() {
+		return weekAgendaView;
+	}
+
+	public void setWeekAgendaView(WeekAgendaView weekAgendaView) {
+		this.weekAgendaView = weekAgendaView;
 	}
 
 }

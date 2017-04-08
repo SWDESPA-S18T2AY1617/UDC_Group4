@@ -87,6 +87,54 @@ public class AppointmentHandler {
             
     }
     
+    public ArrayList<Appointment> getWeekEvents(LocalDate date)
+    {
+    	ArrayList<Appointment> weekAppointments = new ArrayList<Appointment>();
+    	int value1 = 0;
+        int value2 = 0;
+        
+    	for (int ctr = 0; ctr < Appointments.size(); ctr++) { //searches for the events for this month and year
+        	
+        	if(date.getDayOfWeek().name().equalsIgnoreCase("Monday")){
+        		value1 = -2;
+        		value2 = 6;
+        	}
+            else if(date.getDayOfWeek().name().equalsIgnoreCase("Tuesday")){
+        		value1 = -3;
+        		value2 = 5;
+        	}
+            else if(date.getDayOfWeek().name().equalsIgnoreCase("Wednesday")){
+        		value1 = -4;
+        		value2 = 4;
+        	}
+            else if(date.getDayOfWeek().name().equalsIgnoreCase("Thursday")){
+        		value1 = -5;
+        		value2 = 3;
+        	}
+            else if(date.getDayOfWeek().name().equalsIgnoreCase("Friday")){
+        		value1 = -6;
+        		value2 = 2;
+        	}
+            else if(date.getDayOfWeek().name().equalsIgnoreCase("Saturday")){
+        		value1 = -7;
+        		value2 = 1;
+        	}
+            else if(date.getDayOfWeek().name().equalsIgnoreCase("Sunday")){
+        		value1 = -1;
+        		value2 = 7;
+        	}
+        	
+        	LocalDate date1 = LocalDate.ofYearDay(date.getYear(), date.getDayOfYear() + value1);
+        	LocalDate date2 = LocalDate.ofYearDay(date.getYear(), date.getDayOfYear() + value2);
+        	
+        	if (Appointments.get(ctr).getAppointmentDate().isAfter(date1) && Appointments.get(ctr).getAppointmentDate().isBefore(date2) && !(Appointments.get(ctr).getAppointmentDate().getDayOfWeek().name().equalsIgnoreCase("Sunday")) && !(Appointments.get(ctr).getAppointmentDate().getDayOfWeek().name().equalsIgnoreCase("Saturday"))){
+               weekAppointments.add(Appointments.get(ctr));
+        	}
+        }       
+    	
+    	return weekAppointments;
+    }
+    
     private void updateWeekTable(LocalDate date)
     {
         int index = -1; //index of the event found

@@ -15,7 +15,8 @@ public class HeaderView extends JPanel {
 	private final JLabel productivityLabel = new JLabel("My Productivity Tool");
 	private JButton dayBtn;
 	private JButton weekBtn;
-	private JButton agendaBtn;
+	private JButton dAgendaBtn;
+	private JButton wAgendaBtn;
 	private Label dateLabel;
 
 	public HeaderView() {
@@ -25,7 +26,8 @@ public class HeaderView extends JPanel {
 		productivityLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		setDayBtn(new JButton("Day"));
 		setWeekBtn(new JButton("Week"));
-		setAgendaBtn(new JButton("Agenda"));
+		setdAgendaBtn(new JButton("Day-Agenda"));
+		setwAgendaBtn(new JButton("Week-Agenda"));
 		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		add(productivityLabel);
 
@@ -34,8 +36,9 @@ public class HeaderView extends JPanel {
 		getDateLabel().setAlignment(Label.CENTER);
 		add(getDateLabel());
 		add(getDayBtn());
+		add(getdAgendaBtn());
 		add(getWeekBtn());
-		add(getAgendaBtn());
+		add(getwAgendaBtn());
 	}
 
 	public Label getDateLabel() {
@@ -54,20 +57,28 @@ public class HeaderView extends JPanel {
 		this.dayBtn = dayBtn;
 	}
 
-	public JButton getAgendaBtn() {
-		return agendaBtn;
-	}
-
-	public void setAgendaBtn(JButton agendaBtn) {
-		this.agendaBtn = agendaBtn;
-	}
-
 	public JButton getWeekBtn() {
 		return weekBtn;
 	}
 
 	public void setWeekBtn(JButton weekBtn) {
 		this.weekBtn = weekBtn;
+	}
+
+	public JButton getdAgendaBtn() {
+		return dAgendaBtn;
+	}
+
+	public void setdAgendaBtn(JButton dAgendaBtn) {
+		this.dAgendaBtn = dAgendaBtn;
+	}
+
+	public JButton getwAgendaBtn() {
+		return wAgendaBtn;
+	}
+
+	public void setwAgendaBtn(JButton wAgendaBtn) {
+		this.wAgendaBtn = wAgendaBtn;
 	}
 
 }

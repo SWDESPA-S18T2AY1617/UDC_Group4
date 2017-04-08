@@ -34,6 +34,7 @@ public class CalendarProgram {
 	protected MainView mainView;
 	protected AppointmentHandler eventH;
 	protected ArrayList<Appointment> sortedDay;
+	protected ArrayList<Appointment> sortedWeek;
 
 	public CalendarProgram(MainView mainView, AppointmentManager apptManager) {
 		monthToday = cal.get(GregorianCalendar.MONTH);
@@ -79,7 +80,8 @@ public class CalendarProgram {
 		mainView.getCalendarView().getCalendarTable().addMouseListener(new scrollPanelCal_Action());
 		mainView.getHeaderView().getDayBtn().addActionListener(new btnDay_Action());
 		mainView.getHeaderView().getWeekBtn().addActionListener(new btnWeek_Action());
-		mainView.getHeaderView().getAgendaBtn().addActionListener(new btnAgenda_Action());
+		mainView.getHeaderView().getdAgendaBtn().addActionListener(new btndAgenda_Action());
+		mainView.getHeaderView().getwAgendaBtn().addActionListener(new btnwAgenda_Action());
 //		mainView.getCreateView().getrdBtnEvent().addActionListener(new rdBtnEvent_Action());
 //		mainView.getCreateView().getrdBtnTask().addActionListener(new rdBtnTask_Action());
 		if(mainView instanceof DoctorMainView)
@@ -89,7 +91,7 @@ public class CalendarProgram {
 			public void itemStateChanged(ItemEvent e) {
 				if (mainView.getTypeView().getFreeCheckBox().isSelected()) {
 					if (mainView.getTypeView().getReservedCheckBox().isSelected()) {
-						refreshAgenda();
+						refreshdAgenda();
 						refreshDay();
 					} else {
 						refreshEventAgenda();
@@ -101,7 +103,7 @@ public class CalendarProgram {
 					refreshDaySpecific("todo");
 				} else if (!(mainView.getTypeView().getFreeCheckBox().isSelected())
 						&& !(mainView.getTypeView().getReservedCheckBox().isSelected())) {
-					refreshAgenda();
+					refreshdAgenda();
 					refreshDay();
 				}
 			}
@@ -112,7 +114,7 @@ public class CalendarProgram {
 				// TODO Auto-generated method stub
 				if (mainView.getTypeView().getReservedCheckBox().isSelected()) {
 					if (mainView.getTypeView().getFreeCheckBox().isSelected()) {
-						refreshAgenda();
+						refreshdAgenda();
 						refreshDay();
 					} else {
 						refreshTaskAgenda();
@@ -124,7 +126,7 @@ public class CalendarProgram {
 					refreshDaySpecific("event");
 				} else if (!(mainView.getTypeView().getFreeCheckBox().isSelected())
 						&& !(mainView.getTypeView().getReservedCheckBox().isSelected())) {
-					refreshAgenda();
+					refreshdAgenda();
 					refreshDay();
 				}
 			}
@@ -132,8 +134,9 @@ public class CalendarProgram {
 
 		mainView.getCalendarView().getCmbYear().addActionListener(new cmbYear_Action());
 
-		refreshAgenda();
+		refreshdAgenda();
 		refreshDay();
+		refreshwAgenda();
 		refreshWeek();
 	}
 
@@ -177,7 +180,7 @@ public class CalendarProgram {
 		mainView.getWeekView().getWeekTable().setDefaultRenderer(mainView.getWeekView().getWeekTable().getColumnClass(0), eventH.getWeekRenderer());
 	}
 
-	protected void refreshAgenda() {
+	protected void refreshdAgenda() {
 		mainView.getAgendaView().getLblEventName().setText("No Upcoming Events");
 		mainView.getAgendaView().getLblEventTime().setText("");
 
@@ -201,7 +204,34 @@ public class CalendarProgram {
 			}
 		}
 	}
+	
+	protected void refreshwAgenda(){
+		mainView.getWeekAgendaView().getLblEventName().setText("No Upcoming Events");
+		mainView.getWeekAgendaView().getLblEventTime().setText("");
 
+		sortedWeek = eventH.getWeekEvents(getDate());
+		
+		for (int ctr = 0; ctr < sortedWeek.size(); ctr++) {
+			System.out.println("My Size" + sortedWeek.size());
+			if (sortedWeek.get(ctr).checkSameDate(getDate()) == 0) {
+				if (mainView.getWeekAgendaView().getLblEventName().getText().equalsIgnoreCase("No Upcoming Events")) {
+					mainView.getWeekAgendaView().getLblEventName().setText("<html><font color='"
+							+ sortedWeek.get(ctr).getColorName() + "'>" + sortedWeek.get(ctr).getAppointmentName() + "</font>");
+					mainView.getWeekAgendaView().getLblEventTime().setText("<html><font color='"
+							+ sortedWeek.get(ctr).getColorName() + "'>" + sortedWeek.get(ctr).getLocalTimeIn() + "-" + sortedWeek.get(ctr).getLocalTimeOut() + "</font>");
+				} else {
+					mainView.getWeekAgendaView().getLblEventName()
+							.setText(mainView.getWeekAgendaView().getLblEventName().getText() + "<br><font color='"
+									+ sortedWeek.get(ctr).getColorName() + "'>" + sortedWeek.get(ctr).getAppointmentName() + "</font>");
+					mainView.getWeekAgendaView().getLblEventTime()
+							.setText(mainView.getWeekAgendaView().getLblEventTime().getText() + "<br><font color='"
+									+ sortedWeek.get(ctr).getColorName() + "'>" + sortedWeek.get(ctr).getLocalTimeIn() + "-" + sortedWeek.get(ctr).getLocalTimeOut() + "</font>");
+	
+				}
+			}
+		}
+	}	
+	
 	protected void refreshEventAgenda() {
 		mainView.getAgendaView().getLblEventName().setText("No Upcoming Events");
 		mainView.getAgendaView().getLblEventTime().setText("");
@@ -334,8 +364,9 @@ public class CalendarProgram {
 			date = LocalDate.of(yearToday, monthToday + 1, dayToday);
 			
 			refreshCalendar();
-			refreshAgenda();
+			refreshdAgenda();
 			refreshDay();
+			refreshwAgenda();
 			refreshWeek();
 		}
 	}
@@ -357,8 +388,9 @@ public class CalendarProgram {
 			date = LocalDate.of(yearToday, monthToday + 1, dayToday);
 			
 			refreshCalendar();
-			refreshAgenda();
+			refreshdAgenda();
 			refreshDay();
+			refreshwAgenda();
 			refreshWeek();
 		}
 	}
@@ -368,6 +400,7 @@ public class CalendarProgram {
 			mainView.getDayView().setVisible(false);
 			mainView.getAgendaView().setVisible(false);
 			mainView.getWeekView().setVisible(false);
+			mainView.getWeekAgendaView().setVisible(false);
 			mainView.getCreateView().setVisible(true);
 			
 		}
@@ -378,6 +411,7 @@ public class CalendarProgram {
 			if(mainView instanceof DoctorMainView)
 				mainView.getCreateView().setVisible(false);
 			mainView.getAgendaView().setVisible(false);
+			mainView.getWeekAgendaView().setVisible(false);
 			mainView.getWeekView().setVisible(false);
 			mainView.getDayView().setVisible(true);
 		}
@@ -388,16 +422,29 @@ public class CalendarProgram {
 			if(mainView instanceof DoctorMainView)
 				mainView.getCreateView().setVisible(false);
 			mainView.getDayView().setVisible(false);
+			mainView.getWeekAgendaView().setVisible(false);
 			mainView.getAgendaView().setVisible(false);
 			mainView.getWeekView().setVisible(true);
 		}
 	}
 
-	protected class btnAgenda_Action implements ActionListener {
+	protected class btndAgenda_Action implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			if(mainView instanceof DoctorMainView)
 				mainView.getCreateView().setVisible(false);
 			mainView.getAgendaView().setVisible(true);
+			mainView.getWeekAgendaView().setVisible(false);
+			mainView.getWeekView().setVisible(false);
+			mainView.getDayView().setVisible(false);
+		}
+	}
+	
+	protected class btnwAgenda_Action implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			if(mainView instanceof DoctorMainView)
+				mainView.getCreateView().setVisible(false);
+			mainView.getAgendaView().setVisible(false);
+			mainView.getWeekAgendaView().setVisible(true);
 			mainView.getWeekView().setVisible(false);
 			mainView.getDayView().setVisible(false);
 		}
@@ -419,7 +466,7 @@ public class CalendarProgram {
 			mainView.getHeaderView().getDateLabel().setText(months[monthToday] + " " + dayToday + ", " + yearToday);
 			if(!(mainView instanceof ClientMainView))
 				mainView.getCreateView().getTextFieldDate().setText((monthToday+1) + "/" + dayToday + "/" + yearToday);
-			refreshAgenda();
+			refreshdAgenda();
 			refreshDay();
 			refreshWeek();
 		}
@@ -443,7 +490,7 @@ public class CalendarProgram {
 				yearToday = Integer.parseInt(selectedYear);
 				sIndex = mainView.getCalendarView().getCmbYear().getSelectedIndex();
 				refreshCalendar();
-				refreshAgenda();
+				refreshdAgenda();
 				refreshDay();
 			}
 		}
@@ -483,7 +530,7 @@ public class CalendarProgram {
 			eventH.sync(startIndex);
 			
 			refreshDay();
-			refreshAgenda();
+			refreshdAgenda();
 			refreshWeek();
 		
 //			for (i = 0; i < eventH.getAppointments().size(); i++) {
