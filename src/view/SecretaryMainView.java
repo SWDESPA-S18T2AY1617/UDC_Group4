@@ -23,7 +23,6 @@ public class SecretaryMainView extends MainView{
 		setCalendarView(new CalendarView());
 		getCalendarView().getBtnCreate().setLocation(70, 180);
 		setTypeView(new TypeView());
-		setCreateView(new CreateView());
 		setHeaderView(new HeaderView());
 		setDayView(new DayView());
 		setWeekView(new WeekView());
@@ -32,7 +31,6 @@ public class SecretaryMainView extends MainView{
 		// adding to the main panel
 		mainPanel.add(getCalendarView());
 		mainPanel.add(getTypeView());
-		mainPanel.add(getCreateView());
 		mainPanel.add(getHeaderView());
 		mainPanel.add(getAgendaView());
 		mainPanel.add(getWeekView());
@@ -43,17 +41,18 @@ public class SecretaryMainView extends MainView{
 		getHeaderView().setBounds(10, 0, 630, 100);
 		getCalendarView().setBounds(10, 110, 230, 230);
 		getTypeView().setBounds(20, 352, 120, 150);
-		getCreateView().setBounds(240, 110, 400, 350);
 		getAgendaView().setBounds(240, 110, 400, 350);
 		getDayView().setBounds(240, 110, 400, 350);
 		getWeekView().setBounds(240,110,400,350);
+		
+		// Hide unnecessary objects
+		getCalendarView().getBtnCreate().setVisible(false);
 		
 		//Modify necessary objects
 		getTypeView().getFreeCheckBox().setText("Free");
 		getTypeView().getReservedCheckBox().setText("Reserved");
 		
 		// Panels
-		getCreateView().setVisible(false);
 		getWeekView().setVisible(false);
 		getAgendaView().setVisible(false);
 
