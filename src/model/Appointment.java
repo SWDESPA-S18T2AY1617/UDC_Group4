@@ -77,6 +77,21 @@ public class Appointment{
     	return this.appointmentDate.compareTo(day);
     }
     
+    public Boolean checkConflictTime(LocalTime timeStart, LocalTime timeEnd) {
+    	
+    	if((timeStart.isAfter(timeIn) && timeStart.isBefore(timeOut)) ||
+    	   (timeEnd.isAfter(timeIn) && timeEnd.isBefore(timeOut)) ||
+    	   (timeIn.isAfter(timeStart) && timeIn.isBefore(timeEnd)) ||
+    	   (timeOut.isAfter(timeStart) && timeOut.isBefore(timeEnd)) ||
+    	    timeStart.equals(timeIn) && timeEnd.equals(timeOut)) {
+    		
+    		return true;
+
+    	}
+    	
+    	return false;
+    }
+    
 //    public boolean checkYearMonth(int year, int month) {
 //        return this.getYear() == year && this.getMonth() == month;
 //    }

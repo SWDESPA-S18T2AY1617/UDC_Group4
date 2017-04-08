@@ -482,7 +482,7 @@ public class CalendarProgram {
 				eventH.addAppointment(getDate(), "Appointment " + (eventH.getAppointments().size() + 1), LocalTime.of(shour, sminute), LocalTime.of(ehour, eminute), mainView.getAppID(), "Red");
 			
 
-			eventH.sync(startIndex);
+			//eventH.sync(startIndex);
 			
 			refreshDay();
 			refreshAgenda();

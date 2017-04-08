@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
+
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 import model.Appointment;
@@ -241,8 +243,57 @@ public class AppointmentHandler {
     }
 
     public void addAppointment(LocalDate date, String event, LocalTime timeIn, LocalTime timeOut, int doctorID, String color) {
-    	this.getAppointments().add(new Appointment(Appointments.size(), event, color, date, timeIn, timeOut, doctorID));
+    	
+    	Appointment wantedAppointment = new Appointment(Appointments.size(), event, color, date, timeIn, timeOut, doctorID);
+
+		if(!checkForConflicts(wantedAppointment)) {
+			System.out.println(checkForConflicts(wantedAppointment));
+			System.out.println("**ADDED!**\n");
+			getAppointments().add(wantedAppointment);
+		}
+		
+		else {
+			System.out.println("**NOT ADDED!**\n");
+			//For viewing tests
+			JOptionPane.showMessageDialog(null, "Not added:: Date: " + date +" | Time: " + timeIn + " -> " + timeOut);
+		}
+    	
+//		--Original Code--    	
+//    	this.getAppointments().add(new Appointment(Appointments.size(), event, color, date, timeIn, timeOut, doctorID));
+//    	
     }
+
+    public boolean checkForConflicts(Appointment wantedAppointment) {
+		int index = 0;
+		
+		Appointment tempAppointment;
+		
+		while(index < Appointments.size()) {
+
+			//Check if same date.
+			tempAppointment = Appointments.get(index);
+			if(tempAppointment.checkSameDate(wantedAppointment.getAppointmentDate()) == 0) {
+				System.out.println("EQUAL DAY");
+				System.out.println("Wanted appointment time: " + wantedAppointment.getLocalTimeIn() + " -> " + wantedAppointment.getLocalTimeOut());
+				System.out.println("Stored appointment: " + tempAppointment.getLocalTimeIn() + " -> " + tempAppointment.getLocalTimeOut());
+				System.out.println("Is it conflicting? : " + tempAppointment.checkConflictTime(wantedAppointment.getLocalTimeIn(), wantedAppointment.getLocalTimeOut()));
+				//Check if the time is conflicting.
+				if(tempAppointment.checkConflictTime(wantedAppointment.getLocalTimeIn(), wantedAppointment.getLocalTimeOut())) {
+					System.out.println("************CONFLICT**********");
+					System.out.println("Date: " + tempAppointment.getAppointmentDate());
+					System.out.println("Start: " + tempAppointment.getLocalTimeIn());
+					System.out.println("End: " + tempAppointment.getLocalTimeOut());
+					System.out.println("*******************************");
+					return true;
+				}
+
+			}
+			
+			index++;
+		}
+		
+		return false;
+	}
     
     public DefaultTableModel getCalendarModel(int month, int year) {
         this.updateTable(month, year);
