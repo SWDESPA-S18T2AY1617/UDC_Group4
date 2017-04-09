@@ -99,7 +99,21 @@ public class CalendarProgram {
 			mainView.getCreateView().getBtnSave().addActionListener(new btnSave_Action());
 //		mainView.getCreateView().getBtnDiscard().addActionListener(new btnDiscard_Action());
 		
-		
+		mainView.getTypeView().getComboBox().addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+			//	   if (e.getStateChange() == 1) {
+					   	//System.out.println(e.getStateChange()+" "+e.getItem());
+	                    System.out.println(mainView.getTypeView().getComboBox().getSelectedIndex());
+	                    theFilter = "FREE";
+	                    refreshDay(theFilter);
+	                    refreshWeek(theFilter);
+	                    refreshwAgenda();
+	                    refreshdAgenda();
+	                       
+	          //      }
+			}
+			//end of new edit
+		});    
 		mainView.getTypeView().getFreeCheckBox().addItemListener(new ItemListener() {
 			
 			public void itemStateChanged(ItemEvent e) {
@@ -337,11 +351,19 @@ public class CalendarProgram {
 			mainView.getDayView().getDayTable().setDefaultRenderer(mainView.getDayView().getDayTable().getColumnClass(0),
 						eventH.getDoctorDayRenderer(mainView.getAppID(), filter));
 		}
-		else if (mainView instanceof ClientMainView) {
+		
+		else if (mainView instanceof ClientMainView && mainView.getTypeView().getReservedCheckBox().isSelected()) {
 			mainView.getDayView().getDayTable().setModel(eventH.getClientDayModel(mainView.getAppID(), getDate(), filter));
 			mainView.getDayView().getDayTable().setDefaultRenderer(mainView.getDayView().getDayTable().getColumnClass(0),
 						eventH.getClientDayRenderer(mainView.getAppID(), filter));
 		}
+		//new edit
+		else if((mainView instanceof SecretaryMainView || mainView instanceof ClientMainView) && (mainView.getTypeView().getComboBox().getSelectedIndex()!=0 )  ){
+				mainView.getDayView().getDayTable().setModel(eventH.getDoctorDayModel(mainView.getTypeView().getComboBox().getSelectedIndex(), getDate(),filter));
+				mainView.getDayView().getDayTable().setDefaultRenderer(mainView.getDayView().getDayTable().getColumnClass(0),
+				eventH.getDoctorDayRenderer(mainView.getTypeView().getComboBox().getSelectedIndex(),filter));
+		}          
+		 		//new edit
 		else{
 			mainView.getDayView().getDayTable().setModel(eventH.getDayModel(getDate(), filter));
 			mainView.getDayView().getDayTable().setDefaultRenderer(mainView.getDayView().getDayTable().getColumnClass(0),
@@ -354,16 +376,22 @@ public class CalendarProgram {
 		if(mainView instanceof DoctorMainView){
 			mainView.getWeekView().getWeekTable().setModel(eventH.getDoctorWeekModel(mainView.getAppID(), getDate(), filter));
 			mainView.getWeekView().getWeekTable().setDefaultRenderer(mainView.getWeekView().getWeekTable().getColumnClass(0), eventH.getDoctorWeekRenderer(mainView.getAppID(), filter));
-		}else if (mainView instanceof ClientMainView) {
+		}else if (mainView instanceof ClientMainView && mainView.getTypeView().getReservedCheckBox().isSelected()) {
 			mainView.getWeekView().getWeekTable().setModel(eventH.getClientWeekModel(mainView.getAppID(), getDate(), filter));
 			mainView.getWeekView().getWeekTable().setDefaultRenderer(mainView.getWeekView().getWeekTable().getColumnClass(0),
 						eventH.getClientWeekRenderer(mainView.getAppID(), filter));
-		}else{
+		}
+//		new edit
+		else if(mainView instanceof SecretaryMainView || mainView instanceof ClientMainView && mainView.getTypeView().getComboBox().getSelectedIndex()==1 || mainView.getTypeView().getComboBox().getSelectedIndex() == 2  ){
+				mainView.getWeekView().getWeekTable().setModel(eventH.getDoctorWeekModel(mainView.getTypeView().getComboBox().getSelectedIndex(), getDate(), filter));
+				mainView.getWeekView().getWeekTable().setDefaultRenderer(mainView.getWeekView().getWeekTable().getColumnClass(0), eventH.getDoctorWeekRenderer(mainView.getTypeView().getComboBox().getSelectedIndex(), filter));
+		}	
+		// new edit	
+		else{
 			mainView.getWeekView().getWeekTable().setModel(eventH.getWeekModel(getDate(), filter));
 			mainView.getWeekView().getWeekTable().setDefaultRenderer(mainView.getWeekView().getWeekTable().getColumnClass(0), eventH.getWeekRenderer(filter));
 		}
 	}
-
 	protected void showOpen () {
 		mainView.getAgendaView().getLblEventName().setText("No Upcoming Events");
 		mainView.getAgendaView().getLblEventTime().setText("");
@@ -447,6 +475,9 @@ public class CalendarProgram {
 		
 		if(mainView instanceof DoctorMainView){
 			sortedDay = eventH.getDoctorDayAppointments(mainView.getAppID(), getDate());
+		}
+		else if(mainView instanceof SecretaryMainView || mainView instanceof ClientMainView && mainView.getTypeView().getComboBox().getSelectedIndex()==1 || mainView.getTypeView().getComboBox().getSelectedIndex() == 2){
+			sortedDay = eventH.getDoctorDayAppointments(mainView.getTypeView().getComboBox().getSelectedIndex(), getDate());
 		}
 		else
 			sortedDay = eventH.getDayEvents(getDate());
