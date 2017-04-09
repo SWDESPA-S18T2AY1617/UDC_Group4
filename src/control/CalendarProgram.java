@@ -130,18 +130,12 @@ public class CalendarProgram {
 					} 
 					
 					//if free is deselected, but reserved is selected. Display reserved.
-					else if (!(mainView.getTypeView().getFreeCheckBox().isSelected())
-							&& mainView.getTypeView().getReservedCheckBox().isSelected()) {
-			
-						theFilter = "RESERVED";
-    					System.out.println(theFilter);
-						refreshWeek(theFilter);
-						refreshDay(theFilter);
-						
-//						for (int ctr = 0; ctr < closedSlots.size(); ctr++) {
-//							System.out.println("--" + closedSlots.get(ctr).getAppointmentName());
-//						}
-//						
+					else if (mainView.getTypeView().getReservedCheckBox().isSelected()) {
+						if (mainView.getTypeView().getFreeCheckBox().isSelected())
+							theFilter = "NONE" ;
+						else
+							theFilter = "RESERVED";
+   
 						showClosed();
 						
 					} 
@@ -200,6 +194,8 @@ public class CalendarProgram {
 					
 					refreshWeek(theFilter);
 					refreshDay(theFilter);
+					refreshdAgenda(theFilter);
+					refreshwAgenda();
 					
 				}
 			}
@@ -266,6 +262,7 @@ public class CalendarProgram {
 						System.out.println("--" + closedSlots.get(ctr).getAppointmentName());
 					}
 				}
+				
 				refreshWeek(theFilter);
 				refreshDay(theFilter);
 				refreshdAgenda(theFilter);
