@@ -13,7 +13,6 @@ import java.time.LocalTime;
 
 import model.Appointment;
 import server.AppointmentManager;
-import server.DoctorManager;
 import view.ClientMainView;
 import view.DoctorMainView;
 import view.MainView;
@@ -35,11 +34,7 @@ public class CalendarProgram {
 	protected String theFilter;
 	protected MainView mainView;
 	protected AppointmentHandler eventH;
-	protected ArrayList<Appointment> openSlots;
-	protected ArrayList<Appointment> closedSlots;
 	protected Person person;
-	
-	protected DoctorManager DManager = new DoctorManager();
 	
 	public CalendarProgram(MainView mainView, AppointmentManager apptManager, Person person) {
 		monthToday = cal.get(GregorianCalendar.MONTH);
@@ -47,21 +42,22 @@ public class CalendarProgram {
 		yearBound = cal.get(GregorianCalendar.YEAR);
 		dayToday = cal.get(GregorianCalendar.DAY_OF_MONTH);
 		date = LocalDate.of(yearToday, monthToday + 1, dayToday);
+		this.theFilter = "NONE";
 		this.mainView = mainView;
 		this.person = person;
 		sIndex = 100;
 		this.eventH = new AppointmentHandler(apptManager);
-		theFilter = "NONE";
 		setFrame();
-
+		
 		this.mainView.setVisible(true);
 		this.mainView.getCalendarView().getCalendarTable().setModel(eventH.getCalendarModel(monthToday, yearToday));
 		
-		refreshDay(theFilter);
-		refreshWeek(theFilter);
-		refreshdAgenda(theFilter);
+        refreshDay(theFilter);
+        refreshdAgenda(theFilter);
 		refreshwAgenda(theFilter);
+		refreshWeek(theFilter);
 		refreshCalendar();
+		
 	}
 
 	protected void setFrame() { // sets the values of the buttons in the frame
@@ -100,10 +96,6 @@ public class CalendarProgram {
 		mainView.getTypeView().getFreeCheckBox().addItemListener(new ItemListener() {
 			
 			public void itemStateChanged(ItemEvent e) {
-				
-				openSlots = eventH.getOpenSlots();
-				closedSlots = eventH.getClosedSlots();
-				
 				if(mainView instanceof DoctorMainView || mainView instanceof SecretaryMainView) {
 					
 					//if free is clicked.
@@ -113,11 +105,8 @@ public class CalendarProgram {
 						if (mainView.getTypeView().getReservedCheckBox().isSelected())
 							theFilter = "NONE";
 						//if not, just print free.
-						else {
+						else
 	    					theFilter = "FREE";
-							
-							showOpen();
-						}
 						
 						refreshWeek(theFilter);
 						refreshDay(theFilter);
@@ -133,7 +122,6 @@ public class CalendarProgram {
 						else
 							theFilter = "RESERVED";
    
-						showClosed();
 						
 					} 
 					
@@ -186,10 +174,6 @@ public class CalendarProgram {
 		mainView.getTypeView().getReservedCheckBox().addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
-				
-				openSlots = eventH.getOpenSlots();
-				closedSlots = eventH.getClosedSlots();
-
 				//if reserved is selected
 				if (mainView.getTypeView().getReservedCheckBox().isSelected()) {
 					
@@ -203,13 +187,7 @@ public class CalendarProgram {
 					else {
 						theFilter = "RESERVED";
 						
-						showClosed();
 					}
-					
-					refreshWeek(theFilter);
-					refreshDay(theFilter);
-					refreshdAgenda(theFilter);
-					refreshwAgenda(theFilter);
 					
 				} 
 				
@@ -217,8 +195,6 @@ public class CalendarProgram {
 				else if (!(mainView.getTypeView().getReservedCheckBox().isSelected())
 						&& mainView.getTypeView().getFreeCheckBox().isSelected()) {
 					theFilter = "FREE";
-					
-					showOpen();
 					
 				} 
 				
@@ -237,11 +213,6 @@ public class CalendarProgram {
 		});
         mainView.getTypeView().getComboBox().addActionListener(new cmbView_Action());
 		mainView.getCalendarView().getCmbYear().addActionListener(new cmbYear_Action());
-		
-		refreshDay(theFilter);
-		refreshWeek(theFilter);
-		refreshdAgenda(theFilter);
-		refreshwAgenda(theFilter);
 	}
 
 	protected void refreshCalendar() { // sets the view based on the current month
@@ -298,67 +269,6 @@ public class CalendarProgram {
 			mainView.getWeekView().getWeekTable().setDefaultRenderer(mainView.getWeekView().getWeekTable().getColumnClass(0), eventH.getWeekRenderer(filter));
 		}
 	}
-
-	protected void showOpen () {
-		mainView.getAgendaView().getLblEventName().setText("No Upcoming Events");
-		mainView.getAgendaView().getLblEventTime().setText("");
-
-		if(mainView instanceof DoctorMainView){
-			openSlots = eventH.getDoctorDayAppointments(mainView.getAppID(), getDate());
-		}
-		else
-			openSlots = eventH.getDayEvents(getDate());
-		
-		for (int ctr = 0; ctr < openSlots.size(); ctr++) {
-			if (openSlots.get(ctr).checkSameDate(getDate()) == 0 && openSlots.get(ctr).isStatus() == false) {
-				if (mainView.getAgendaView().getLblEventName().getText().equalsIgnoreCase("No Upcoming Events")) {
-					mainView.getAgendaView().getLblEventName().setText("<html><font color='"
-							+ openSlots.get(ctr).getColorName() + "'>" + openSlots.get(ctr).getAppointmentName() + "</font>");
-					mainView.getAgendaView().getLblEventTime().setText("<html><font color='"
-							+ openSlots.get(ctr).getColorName() + "'>" + openSlots.get(ctr).getLocalTimeIn() + "-" + openSlots.get(ctr).getLocalTimeOut() + "</font>");
-				} else {
-					mainView.getAgendaView().getLblEventName()
-							.setText(mainView.getAgendaView().getLblEventName().getText() + "<br><font color='"
-									+ openSlots.get(ctr).getColorName() + "'>" + openSlots.get(ctr).getAppointmentName() + "</font>");
-					mainView.getAgendaView().getLblEventTime()
-							.setText(mainView.getAgendaView().getLblEventTime().getText() + "<br><font color='"
-									+ openSlots.get(ctr).getColorName() + "'>" + openSlots.get(ctr).getLocalTimeIn() + "-" + openSlots.get(ctr).getLocalTimeOut() + "</font>");
-				}
-			}
-		}
-	}
-	
-	protected void showClosed () {
-		mainView.getAgendaView().getLblEventName().setText("No Upcoming Events");
-		mainView.getAgendaView().getLblEventTime().setText("");
-		
-
-		if(mainView instanceof DoctorMainView){
-			closedSlots = eventH.getDoctorDayAppointments(mainView.getAppID(), getDate());
-		}
-		else
-			closedSlots = eventH.getDayEvents(getDate());
-		
-		for (int ctr = 0; ctr < closedSlots.size(); ctr++) {
-			if (closedSlots.get(ctr).checkSameDate(getDate()) == 0 && closedSlots.get(ctr).isStatus() == true) {
-				if (mainView.getAgendaView().getLblEventName().getText().equalsIgnoreCase("No Upcoming Events")) {
-					mainView.getAgendaView().getLblEventName().setText("<html><font color='"
-							+ closedSlots.get(ctr).getColorName() + "'>" + closedSlots.get(ctr).getAppointmentName() + "</font>");
-					mainView.getAgendaView().getLblEventTime().setText("<html><font color='"
-							+ closedSlots.get(ctr).getColorName() + "'>" + closedSlots.get(ctr).getLocalTimeIn() + "-" + closedSlots.get(ctr).getLocalTimeOut() + "</font>");
-				} else {
-					mainView.getAgendaView().getLblEventName()
-							.setText(mainView.getAgendaView().getLblEventName().getText() + "<br><font color='"
-									+ closedSlots.get(ctr).getColorName() + "'>" + closedSlots.get(ctr).getAppointmentName() + "</font>");
-					mainView.getAgendaView().getLblEventTime()
-							.setText(mainView.getAgendaView().getLblEventTime().getText() + "<br><font color='"
-									+ closedSlots.get(ctr).getColorName() + "'>" + closedSlots.get(ctr).getLocalTimeIn() + "-" + closedSlots.get(ctr).getLocalTimeOut() + "</font>");
-				}
-			}
-		}
-	}
-	
-	
 	
 	protected void refreshdAgenda(String filter) {
 		

@@ -823,6 +823,7 @@ public class AppointmentHandler {
         	dayModel.setValueAt(null, j, 1);
         }
         
+        
         int dayRow = 0;
         String event = "";
         
