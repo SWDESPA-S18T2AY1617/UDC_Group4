@@ -214,21 +214,20 @@ public class CalendarProgram {
 		
 		for (int ctr = 0; ctr < sortedWeek.size(); ctr++) {
 			System.out.println("My Size" + sortedWeek.size());
-			if (sortedWeek.get(ctr).checkSameDate(getDate()) == 0) {
-				if (mainView.getWeekAgendaView().getLblEventName().getText().equalsIgnoreCase("No Upcoming Events")) {
-					mainView.getWeekAgendaView().getLblEventName().setText("<html><font color='"
-							+ sortedWeek.get(ctr).getColorName() + "'>" + sortedWeek.get(ctr).getAppointmentName() + "</font>");
-					mainView.getWeekAgendaView().getLblEventTime().setText("<html><font color='"
-							+ sortedWeek.get(ctr).getColorName() + "'>" + sortedWeek.get(ctr).getLocalTimeIn() + "-" + sortedWeek.get(ctr).getLocalTimeOut() + "</font>");
-				} else {
-					mainView.getWeekAgendaView().getLblEventName()
-							.setText(mainView.getWeekAgendaView().getLblEventName().getText() + "<br><font color='"
-									+ sortedWeek.get(ctr).getColorName() + "'>" + sortedWeek.get(ctr).getAppointmentName() + "</font>");
-					mainView.getWeekAgendaView().getLblEventTime()
-							.setText(mainView.getWeekAgendaView().getLblEventTime().getText() + "<br><font color='"
-									+ sortedWeek.get(ctr).getColorName() + "'>" + sortedWeek.get(ctr).getLocalTimeIn() + "-" + sortedWeek.get(ctr).getLocalTimeOut() + "</font>");
-	
-				}
+			
+			if (mainView.getWeekAgendaView().getLblEventName().getText().equalsIgnoreCase("No Upcoming Events")) {
+				mainView.getWeekAgendaView().getLblEventName().setText("<html><font color='"
+						+ sortedWeek.get(ctr).getColorName() + "'>" + sortedWeek.get(ctr).getAppointmentDate() + " " + sortedWeek.get(ctr).getAppointmentName() + "</font>");
+				mainView.getWeekAgendaView().getLblEventTime().setText("<html><font color='"
+						+ sortedWeek.get(ctr).getColorName() + "'>" + sortedWeek.get(ctr).getLocalTimeIn() + "-" + sortedWeek.get(ctr).getLocalTimeOut() + "</font>");
+			} else {
+				mainView.getWeekAgendaView().getLblEventName()
+						.setText(mainView.getWeekAgendaView().getLblEventName().getText() + "<br><font color='"
+								+ sortedWeek.get(ctr).getColorName() + "'>" + sortedWeek.get(ctr).getAppointmentDate() + " " + sortedWeek.get(ctr).getAppointmentName() + "</font>");
+				mainView.getWeekAgendaView().getLblEventTime()
+						.setText(mainView.getWeekAgendaView().getLblEventTime().getText() + "<br><font color='"
+								+ sortedWeek.get(ctr).getColorName() + "'>" + sortedWeek.get(ctr).getLocalTimeIn() + "-" + sortedWeek.get(ctr).getLocalTimeOut() + "</font>");
+
 			}
 		}
 	}	
@@ -467,7 +466,9 @@ public class CalendarProgram {
 			mainView.getHeaderView().getDateLabel().setText(months[monthToday] + " " + dayToday + ", " + yearToday);
 			if(mainView instanceof DoctorMainView)
 				mainView.getCreateView().getTextFieldDate().setText((monthToday+1) + "/" + dayToday + "/" + yearToday);
+			
 			refreshdAgenda();
+			refreshwAgenda();
 			refreshDay();
 			refreshWeek();
 		}
@@ -490,9 +491,12 @@ public class CalendarProgram {
 				String selectedYear = mainView.getCalendarView().getCmbYear().getSelectedItem().toString();
 				yearToday = Integer.parseInt(selectedYear);
 				sIndex = mainView.getCalendarView().getCmbYear().getSelectedIndex();
+				
 				refreshCalendar();
 				refreshdAgenda();
+				refreshwAgenda();
 				refreshDay();
+				refreshWeek();
 			}
 		}
 	}
@@ -533,6 +537,7 @@ public class CalendarProgram {
 			refreshDay();
 			refreshdAgenda();
 			refreshWeek();
+			refreshwAgenda();
 		
 //			for (i = 0; i < eventH.getAppointments().size(); i++) {
 //				if (year == eventH.getAppointments().get(i).getYear()
@@ -581,6 +586,7 @@ public class CalendarProgram {
 		refreshDay();
 		refreshdAgenda();
 		refreshWeek();
+		refreshwAgenda();
 	}
 	
 //	protected class btnDiscard_Action implements ActionListener {

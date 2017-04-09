@@ -124,8 +124,18 @@ public class AppointmentHandler {
         		value2 = 7;
         	}
         	
-        	LocalDate date1 = LocalDate.ofYearDay(date.getYear(), date.getDayOfYear() + value1);
-        	LocalDate date2 = LocalDate.ofYearDay(date.getYear(), date.getDayOfYear() + value2);
+        	LocalDate date1;
+        	LocalDate date2;
+        	
+        	if(date.getDayOfYear() > 7){
+        		date1 = LocalDate.ofYearDay(date.getYear(), date.getDayOfYear() + value1);
+	        	date2 = LocalDate.ofYearDay(date.getYear(), date.getDayOfYear() + value2);
+        	}
+	        else{
+	        	date1 = LocalDate.ofYearDay(date.getYear() - 1, 365 + 1 + value1);
+        		date2 = LocalDate.ofYearDay(date.getYear(), date.getDayOfYear() + value2);
+	        }
+	        	
         	
         	if (Appointments.get(ctr).getAppointmentDate().isAfter(date1) && Appointments.get(ctr).getAppointmentDate().isBefore(date2) && !(Appointments.get(ctr).getAppointmentDate().getDayOfWeek().name().equalsIgnoreCase("Sunday")) && !(Appointments.get(ctr).getAppointmentDate().getDayOfWeek().name().equalsIgnoreCase("Saturday"))){
                weekAppointments.add(Appointments.get(ctr));
@@ -185,8 +195,17 @@ public class AppointmentHandler {
         		value2 = 7;
         	}
         	
-        	LocalDate date1 = LocalDate.ofYearDay(date.getYear(), date.getDayOfYear() + value1);
-        	LocalDate date2 = LocalDate.ofYearDay(date.getYear(), date.getDayOfYear() + value2);
+        	LocalDate date1;
+        	LocalDate date2;
+        	
+        	if(date.getDayOfYear() > 7){
+        		date1 = LocalDate.ofYearDay(date.getYear(), date.getDayOfYear() + value1);
+	        	date2 = LocalDate.ofYearDay(date.getYear(), date.getDayOfYear() + value2);
+        	}
+	        else{
+	        	date1 = LocalDate.ofYearDay(date.getYear() - 1, 365 + 1 + value1);
+        		date2 = LocalDate.ofYearDay(date.getYear(), date.getDayOfYear() + value2);
+	        }
         	
         	if (Appointments.get(ctr).getAppointmentDate().isAfter(date1) && Appointments.get(ctr).getAppointmentDate().isBefore(date2) && !(Appointments.get(ctr).getAppointmentDate().getDayOfWeek().name().equalsIgnoreCase("Sunday")) && !(Appointments.get(ctr).getAppointmentDate().getDayOfWeek().name().equalsIgnoreCase("Saturday"))){
                index = ctr;
