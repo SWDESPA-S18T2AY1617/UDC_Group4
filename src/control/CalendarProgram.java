@@ -211,8 +211,7 @@ public class CalendarProgram {
 				refreshwAgenda(theFilter);
 			}
 		});
-//        mainView.getTypeView().getComboBox().addActionListener(new cmbView_Action());
-		mainView.getCalendarView().getCmbYear().addActionListener(new cmbYear_Action());
+        mainView.getCalendarView().getCmbYear().addActionListener(new cmbYear_Action());
 	}
 
 	protected void refreshCalendar() { // sets the view based on the current month
@@ -693,48 +692,7 @@ public class CalendarProgram {
 
 	}
 	
-//	protected class cmbView_Action implements ActionListener {
-//		public void actionPerformed(ActionEvent e) {
-//			if (mainView.getTypeView().getComboBox().getSelectedItem() != null) {
-//				ArrayList<Appointment> holdAllAppointments = getAppointmentHandler().getAppointments();
-//				String selectedDoctor = mainView.getTypeView().getComboBox().getSelectedItem().toString();
-//
-//				if(selectedDoctor.equalsIgnoreCase("all")){
-//					refreshCalendar();
-//					refreshdAgenda("FREE");
-//					refreshwAgenda("FREE");
-//					refreshDay("FREE");
-//					refreshWeek("FREE");
-//				}else if(selectedDoctor.equalsIgnoreCase("Doctor 1 1")){
-//					ArrayList<Appointment> doctor1 = new ArrayList<Appointment>();
-//					for(int i=0;i<getAppointmentHandler().getAppointments().size();i++){
-//						if(getAppointmentHandler().getAppointments().get(i).getDoctorID() == 1)
-//							doctor1.add(getAppointmentHandler().getAppointments().get(i));
-//					}
-//					refresh(doctor1);
-//					refreshCalendar();
-//					refreshdAgenda("FREE");
-//					refreshwAgenda("FREE");
-//					refreshDay("FREE");
-//					refreshWeek("FREE");
-//				}else{
-//					ArrayList<Appointment> doctor2 = new ArrayList<Appointment>();
-//					for(int i=0;i<getAppointmentHandler().getAppointments().size();i++){
-//						if(getAppointmentHandler().getAppointments().get(i).getDoctorID() == 2)
-//							doctor2.add(getAppointmentHandler().getAppointments().get(i));
-//					}
-//					refresh(doctor2);
-//					refreshCalendar();
-//					refreshdAgenda("FREE");
-//					refreshwAgenda("FREE");
-//					refreshDay("FREE");
-//					refreshWeek("FREE");
-//				}
-//				getAppointmentHandler().setAppointments(holdAllAppointments);
-//			}	
-//		}
-//	}
-
+	
 	protected class cmbYear_Action implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {

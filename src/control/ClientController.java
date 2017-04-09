@@ -1,7 +1,11 @@
 package control;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
+
 import javax.swing.JOptionPane;
 
 import model.Appointment;
@@ -28,13 +32,15 @@ public class ClientController extends CalendarProgram
 //		for(int ctr = 0; ctr < maxCtr; ctr++){
 //			calendarProgram.add(new CalendarProgram(new ClientMainView()));
 //		}
-        	mainView.getTypeView().getComboBox().addItem("all");
-    		for(int ctr=0;ctr < apptManager.getAllController().size(); ctr++)
-    			if(apptManager.getAllController().get(ctr) instanceof DoctorController)	{
-    				mainView.getTypeView().getComboBox().addItem(apptManager.getAllController().get(ctr).getPerson().getName()+" "+apptManager.getAllController().get(ctr).getPerson().getID());
-    			}
-    		mainView.getTypeView().getComboBox().setSelectedIndex(-1);
-    			
+        	
+		mainView.getTypeView().getComboBox().addItem("All Doctors");
+		for(int ctr=0;ctr < apptManager.getAllController().size(); ctr++)
+			if(apptManager.getAllController().get(ctr) instanceof DoctorController)	{
+				mainView.getTypeView().getComboBox().addItem(apptManager.getAllController().get(ctr).getPerson().getName()+" "+apptManager.getAllController().get(ctr).getPerson().getID());
+			}
+		mainView.getTypeView().getComboBox().setSelectedIndex(-1);
+    		
+    	mainView.getTypeView().getComboBox().addActionListener(new cmbView_Action());		
 		mainView.getDayView().getDayTable().addMouseListener(new scrollPanelDay_Action());
 		mainView.getWeekView().getWeekTable().addMouseListener(new scrollPanelWeek_Action());
 	}
@@ -115,5 +121,42 @@ public class ClientController extends CalendarProgram
 
 	}
 	
+	protected class cmbView_Action implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			if (mainView.getTypeView().getComboBox().getSelectedItem() != null) {
+				ArrayList<Appointment> holdAllAppointments = getAppointmentHandler().getAppointments();
+				String selectedDoctor = mainView.getTypeView().getComboBox().getSelectedItem().toString();
+
+				if(selectedDoctor.equalsIgnoreCase("all")){
+					eventH.setAppointments(eventH.getAppointmentManager().getAllAppointments());
+					refreshCalendar();
+					refreshdAgenda("FREE");
+					refreshwAgenda("FREE");
+					refreshDay("FREE");
+					refreshWeek("FREE");
+				}else if(selectedDoctor.equalsIgnoreCase("Doctor 1 1")){
+					ArrayList<Appointment> doctor1 = new ArrayList<Appointment>();
+					eventH.setAppointments(eventH.getAppointmentManager().getAllAppointments());
+					
+					for(int i=0;i<getAppointmentHandler().getAppointments().size();i++){
+						if(getAppointmentHandler().getAppointments().get(i).getDoctorID() == 1 && getAppointmentHandler().getAppointments().get(i).isStatus() == false)
+							doctor1.add(getAppointmentHandler().getAppointments().get(i));
+					}
+					refresh(doctor1);
+				}else{
+					ArrayList<Appointment> doctor2 = new ArrayList<Appointment>();
+					eventH.setAppointments(eventH.getAppointmentManager().getAllAppointments());
+					
+					for(int i=0;i<getAppointmentHandler().getAppointments().size();i++){
+						if(getAppointmentHandler().getAppointments().get(i).getDoctorID() == 2 && getAppointmentHandler().getAppointments().get(i).isStatus() == false)
+							doctor2.add(getAppointmentHandler().getAppointments().get(i));
+					}
+					refresh(doctor2);
+				}
+				getAppointmentHandler().setAppointments(holdAllAppointments);
+			}	
+		}
+	}
+
 
 }
