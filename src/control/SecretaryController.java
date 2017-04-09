@@ -57,7 +57,7 @@ public class SecretaryController extends CalendarProgram
 		refreshDay(theFilter);
 		refreshWeek(theFilter);
 		refreshdAgenda(theFilter);
-		refreshwAgenda();
+		refreshwAgenda(theFilter);
 		
 	}
 

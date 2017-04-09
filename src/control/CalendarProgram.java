@@ -35,9 +35,6 @@ public class CalendarProgram {
 	protected String theFilter;
 	protected MainView mainView;
 	protected AppointmentHandler eventH;
-	protected ArrayList<Appointment> sortedDay;
-	protected ArrayList<Appointment> sortedWeek;
-	protected ArrayList<Appointment> sortedDoctor;
 	protected ArrayList<Appointment> openSlots;
 	protected ArrayList<Appointment> closedSlots;
 	protected Person person;
@@ -63,7 +60,7 @@ public class CalendarProgram {
 		refreshDay(theFilter);
 		refreshWeek(theFilter);
 		refreshdAgenda(theFilter);
-		refreshwAgenda();
+		refreshwAgenda(theFilter);
 		refreshCalendar();
 	}
 
@@ -125,7 +122,7 @@ public class CalendarProgram {
 						refreshWeek(theFilter);
 						refreshDay(theFilter);
 						refreshdAgenda(theFilter);
-						refreshwAgenda();
+						refreshwAgenda(theFilter);
 						
 					} 
 					
@@ -161,7 +158,7 @@ public class CalendarProgram {
 					refreshWeek(theFilter);
 					refreshDay(theFilter);
 					refreshdAgenda(theFilter);
-					refreshwAgenda();
+					refreshwAgenda(theFilter);
 				}
 				
 				//Else, its the "All" check box.
@@ -195,7 +192,7 @@ public class CalendarProgram {
 					refreshWeek(theFilter);
 					refreshDay(theFilter);
 					refreshdAgenda(theFilter);
-					refreshwAgenda();
+					refreshwAgenda(theFilter);
 					
 				}
 			}
@@ -227,7 +224,7 @@ public class CalendarProgram {
 					refreshWeek(theFilter);
 					refreshDay(theFilter);
 					refreshdAgenda(theFilter);
-					refreshwAgenda();
+					refreshwAgenda(theFilter);
 					
 				} 
 				
@@ -266,7 +263,7 @@ public class CalendarProgram {
 				refreshWeek(theFilter);
 				refreshDay(theFilter);
 				refreshdAgenda(theFilter);
-				refreshwAgenda();
+				refreshwAgenda(theFilter);
 			}
 		});
         
@@ -275,7 +272,7 @@ public class CalendarProgram {
 		refreshDay(theFilter);
 		refreshWeek(theFilter);
 		refreshdAgenda(theFilter);
-		refreshwAgenda();
+		refreshwAgenda(theFilter);
 	}
 
 	protected void refreshCalendar() { // sets the view based on the current month
@@ -438,6 +435,9 @@ public class CalendarProgram {
     	//	System.out.println("ERROR, FILTER NOT FOUND. (getDoctorDayRenderer)");
     		appCopy = eventH.getAppointments();
     	}
+    	
+    	mainView.getAgendaView().getLblEventName().setText("No Upcoming Events");
+		mainView.getAgendaView().getLblEventTime().setText("");
 		
 		if(mainView instanceof DoctorMainView){
 			
@@ -446,9 +446,6 @@ public class CalendarProgram {
 					tempDT.add(appCopy.get(i));
 				}
 			}
-			
-			mainView.getAgendaView().getLblEventName().setText("No Upcoming Events");
-			mainView.getAgendaView().getLblEventTime().setText("");
 
 			for (int ctr = 0; ctr < tempDT.size(); ctr++) {
 				if (tempDT.get(ctr).checkSameDate(getDate()) == 0) {
@@ -476,8 +473,6 @@ public class CalendarProgram {
 				}
 			}
 			
-			mainView.getAgendaView().getLblEventName().setText("No Upcoming Events");
-			mainView.getAgendaView().getLblEventTime().setText("");
 
 			for (int ctr = 0; ctr < tempDT.size(); ctr++) {
 				if (tempDT.get(ctr).checkSameDate(getDate()) == 0) {
@@ -499,58 +494,181 @@ public class CalendarProgram {
 			
 		}
 		else{
-			mainView.getAgendaView().getLblEventName().setText("No Upcoming Events");
-			mainView.getAgendaView().getLblEventTime().setText("");
-			
-			sortedDay = eventH.getDayEvents(getDate());
-
-			for (int ctr = 0; ctr < sortedDay.size(); ctr++) {
-				if (sortedDay.get(ctr).checkSameDate(getDate()) == 0) {
+			for (int ctr = 0; ctr < appCopy.size(); ctr++) {
+				if (appCopy.get(ctr).checkSameDate(getDate()) == 0) {
 					if (mainView.getAgendaView().getLblEventName().getText().equalsIgnoreCase("No Upcoming Events")) {
 						mainView.getAgendaView().getLblEventName().setText("<html><font color='"
-								+ sortedDay.get(ctr).getColorName() + "'>" + sortedDay.get(ctr).getAppointmentName() + "</font>");
+								+ appCopy.get(ctr).getColorName() + "'>" + appCopy.get(ctr).getAppointmentName() + "</font>");
 						mainView.getAgendaView().getLblEventTime().setText("<html><font color='"
-								+ sortedDay.get(ctr).getColorName() + "'>" + sortedDay.get(ctr).getLocalTimeIn() + "-" + sortedDay.get(ctr).getLocalTimeOut() + "</font>");
+								+ appCopy.get(ctr).getColorName() + "'>" + appCopy.get(ctr).getLocalTimeIn() + "-" + appCopy.get(ctr).getLocalTimeOut() + "</font>");
 					} else {
 						mainView.getAgendaView().getLblEventName()
 								.setText(mainView.getAgendaView().getLblEventName().getText() + "<br><font color='"
-										+ sortedDay.get(ctr).getColorName() + "'>" + sortedDay.get(ctr).getAppointmentName() + "</font>");
+										+ appCopy.get(ctr).getColorName() + "'>" + appCopy.get(ctr).getAppointmentName() + "</font>");
 						mainView.getAgendaView().getLblEventTime()
 								.setText(mainView.getAgendaView().getLblEventTime().getText() + "<br><font color='"
-										+ sortedDay.get(ctr).getColorName() + "'>" + sortedDay.get(ctr).getLocalTimeIn() + "-" + sortedDay.get(ctr).getLocalTimeOut() + "</font>");
+										+ appCopy.get(ctr).getColorName() + "'>" + appCopy.get(ctr).getLocalTimeIn() + "-" + appCopy.get(ctr).getLocalTimeOut() + "</font>");
 					}
 				}
 			}
 		}
 	}
 	
-	protected void refreshwAgenda(){
-		mainView.getWeekAgendaView().getLblEventName().setText("No Upcoming Events");
+	protected void refreshwAgenda(String filter){
+		
+		ArrayList<Appointment> tempW = new ArrayList<Appointment>();
+		ArrayList<Appointment> appCopy;
+		
+		//Filter that states all appointment to be used.
+    	if(filter.equalsIgnoreCase("NONE")) {
+    	//	System.out.println("NONE, FILTER FOUND. (getDoctorDayRenderer)");
+    		appCopy = eventH.getAppointments();
+    	}
+    	
+    	//Appointments that are only free/open are given.
+    	else if(filter.equalsIgnoreCase("FREE")) {
+    	//	System.out.println("FREE, FILTER FOUND. (getDoctorDayRenderer)");
+    		appCopy = eventH.getOpenSlots();
+    	}
+    	
+    	//appointments that are only closed/reserved are given.
+    	else if(filter.equalsIgnoreCase("RESERVED")) {
+    	//	System.out.println("RESERVED, FILTER FOUND. (getDoctorDayRenderer)");
+    		appCopy = eventH.getClosedSlots();
+    	}
+    	
+    	//error.
+    	else {
+    	//	System.out.println("ERROR, FILTER NOT FOUND. (getDoctorDayRenderer)");
+    		appCopy = eventH.getAppointments();
+    	}
+    	
+    	int value1 = 0;
+		int value2 = 0;
+		
+		if(date.getDayOfWeek().name().equalsIgnoreCase("Monday")){
+    		value1 = -2;
+    		value2 = 6;
+    	}
+        else if(date.getDayOfWeek().name().equalsIgnoreCase("Tuesday")){
+    		value1 = -3;
+    		value2 = 5;
+    	}
+        else if(date.getDayOfWeek().name().equalsIgnoreCase("Wednesday")){
+    		value1 = -4;
+    		value2 = 4;
+    	}
+        else if(date.getDayOfWeek().name().equalsIgnoreCase("Thursday")){
+    		value1 = -5;
+    		value2 = 3;
+    	}
+        else if(date.getDayOfWeek().name().equalsIgnoreCase("Friday")){
+    		value1 = -6;
+    		value2 = 2;
+    	}
+        else if(date.getDayOfWeek().name().equalsIgnoreCase("Saturday")){
+    		value1 = -7;
+    		value2 = 1;
+    	}
+        else if(date.getDayOfWeek().name().equalsIgnoreCase("Sunday")){
+    		value1 = -1;
+    		value2 = 7;
+    	}
+		
+		LocalDate date1;
+    	LocalDate date2;
+    	
+    	if(date.getDayOfYear() > 7){
+    		date1 = LocalDate.ofYearDay(date.getYear(), date.getDayOfYear() + value1);
+        	date2 = LocalDate.ofYearDay(date.getYear(), date.getDayOfYear() + value2);
+    	}
+        else{
+        	date1 = LocalDate.ofYearDay(date.getYear() - 1, 365 + 1 + value1);
+    		date2 = LocalDate.ofYearDay(date.getYear(), date.getDayOfYear() + value2);
+        }
+    	
+    	mainView.getWeekAgendaView().getLblEventName().setText("No Upcoming Events");
 		mainView.getWeekAgendaView().getLblEventTime().setText("");
-		
-		if(mainView instanceof DoctorMainView){
-			sortedWeek = eventH.getDoctorWeekAppointments(mainView.getAppID(), getDate());
-		}
-		else
-			sortedWeek = eventH.getWeekEvents(getDate());
-		
-		for (int ctr = 0; ctr < sortedWeek.size(); ctr++) {
-			
-			if (mainView.getWeekAgendaView().getLblEventName().getText().equalsIgnoreCase("No Upcoming Events")) {
-				mainView.getWeekAgendaView().getLblEventName().setText("<html><font color='"
-						+ sortedWeek.get(ctr).getColorName() + "'>" + sortedWeek.get(ctr).getAppointmentDate() + " " + sortedWeek.get(ctr).getAppointmentName() + "</font>");
-				mainView.getWeekAgendaView().getLblEventTime().setText("<html><font color='"
-						+ sortedWeek.get(ctr).getColorName() + "'>" + sortedWeek.get(ctr).getLocalTimeIn() + "-" + sortedWeek.get(ctr).getLocalTimeOut() + "</font>");
-			} else {
-				mainView.getWeekAgendaView().getLblEventName()
-						.setText(mainView.getWeekAgendaView().getLblEventName().getText() + "<br><font color='"
-								+ sortedWeek.get(ctr).getColorName() + "'>" + sortedWeek.get(ctr).getAppointmentDate() + " " + sortedWeek.get(ctr).getAppointmentName() + "</font>");
-				mainView.getWeekAgendaView().getLblEventTime()
-						.setText(mainView.getWeekAgendaView().getLblEventTime().getText() + "<br><font color='"
-								+ sortedWeek.get(ctr).getColorName() + "'>" + sortedWeek.get(ctr).getLocalTimeIn() + "-" + sortedWeek.get(ctr).getLocalTimeOut() + "</font>");
+    	
+    	if (mainView instanceof DoctorMainView){
+    		for(int i = 0; i < appCopy.size(); i++){
+    			if(appCopy.get(i).getDoctorID() == mainView.getAppID()){
+    				tempW.add(appCopy.get(i));
+    			}
+    		}
+    		
+    		for (int ctr = 0; ctr < tempW.size(); ctr++) { //searches for the events for this month and year
+            	
+            	if (tempW.get(ctr).getAppointmentDate().isAfter(date1) && tempW.get(ctr).getAppointmentDate().isBefore(date2) && !(tempW.get(ctr).getAppointmentDate().getDayOfWeek().name().equalsIgnoreCase("Sunday")) && !(tempW.get(ctr).getAppointmentDate().getDayOfWeek().name().equalsIgnoreCase("Saturday"))){
+            		System.out.println(ctr);
+            		
+            		if (mainView.getWeekAgendaView().getLblEventName().getText().equalsIgnoreCase("No Upcoming Events")) {
+        				mainView.getWeekAgendaView().getLblEventName().setText("<html><font color='"
+        						+ tempW.get(ctr).getColorName() + "'>" + tempW.get(ctr).getAppointmentDate() + " " + tempW.get(ctr).getAppointmentName() + "</font>");
+        				mainView.getWeekAgendaView().getLblEventTime().setText("<html><font color='"
+        						+ tempW.get(ctr).getColorName() + "'>" + tempW.get(ctr).getLocalTimeIn() + "-" + tempW.get(ctr).getLocalTimeOut() + "</font>");
+        			} else {
+        				mainView.getWeekAgendaView().getLblEventName()
+        						.setText(mainView.getWeekAgendaView().getLblEventName().getText() + "<br><font color='"
+        								+ tempW.get(ctr).getColorName() + "'>" + tempW.get(ctr).getAppointmentDate() + " " + tempW.get(ctr).getAppointmentName() + "</font>");
+        				mainView.getWeekAgendaView().getLblEventTime()
+        						.setText(mainView.getWeekAgendaView().getLblEventTime().getText() + "<br><font color='"
+        								+ tempW.get(ctr).getColorName() + "'>" + tempW.get(ctr).getLocalTimeIn() + "-" + tempW.get(ctr).getLocalTimeOut() + "</font>");
 
-			}
-		}
+        			}
+            	}
+    		}
+    	}
+    	else if(mainView instanceof ClientMainView) {
+    		for(int i = 0; i < appCopy.size(); i++){
+    			if(appCopy.get(i).getClientID() == mainView.getAppID() || appCopy.get(i).isStatus() == false){
+    				tempW.add(appCopy.get(i));
+    			}
+    		}
+
+    		for (int ctr = 0; ctr < tempW.size(); ctr++) { //searches for the events for this month and year
+            	
+            	if (tempW.get(ctr).getAppointmentDate().isAfter(date1) && tempW.get(ctr).getAppointmentDate().isBefore(date2) && !(tempW.get(ctr).getAppointmentDate().getDayOfWeek().name().equalsIgnoreCase("Sunday")) && !(tempW.get(ctr).getAppointmentDate().getDayOfWeek().name().equalsIgnoreCase("Saturday"))){
+            		if (mainView.getWeekAgendaView().getLblEventName().getText().equalsIgnoreCase("No Upcoming Events")) {
+        				mainView.getWeekAgendaView().getLblEventName().setText("<html><font color='"
+        						+ tempW.get(ctr).getColorName() + "'>" + tempW.get(ctr).getAppointmentDate() + " " + tempW.get(ctr).getAppointmentName() + "</font>");
+        				mainView.getWeekAgendaView().getLblEventTime().setText("<html><font color='"
+        						+ tempW.get(ctr).getColorName() + "'>" + tempW.get(ctr).getLocalTimeIn() + "-" + tempW.get(ctr).getLocalTimeOut() + "</font>");
+        			} else {
+        				mainView.getWeekAgendaView().getLblEventName()
+        						.setText(mainView.getWeekAgendaView().getLblEventName().getText() + "<br><font color='"
+        								+ tempW.get(ctr).getColorName() + "'>" + tempW.get(ctr).getAppointmentDate() + " " + tempW.get(ctr).getAppointmentName() + "</font>");
+        				mainView.getWeekAgendaView().getLblEventTime()
+        						.setText(mainView.getWeekAgendaView().getLblEventTime().getText() + "<br><font color='"
+        								+ tempW.get(ctr).getColorName() + "'>" + tempW.get(ctr).getLocalTimeIn() + "-" + tempW.get(ctr).getLocalTimeOut() + "</font>");
+
+        			}
+            	}
+    		}
+    	}
+    	else{
+    		for (int ctr = 0; ctr < appCopy.size(); ctr++) { //searches for the events for this month and year
+            	
+            	if (appCopy.get(ctr).getAppointmentDate().isAfter(date1) && appCopy.get(ctr).getAppointmentDate().isBefore(date2) && !(appCopy.get(ctr).getAppointmentDate().getDayOfWeek().name().equalsIgnoreCase("Sunday")) && !(appCopy.get(ctr).getAppointmentDate().getDayOfWeek().name().equalsIgnoreCase("Saturday"))){
+    			
+	    			if (mainView.getWeekAgendaView().getLblEventName().getText().equalsIgnoreCase("No Upcoming Events")) {
+	    				mainView.getWeekAgendaView().getLblEventName().setText("<html><font color='"
+	    						+ appCopy.get(ctr).getColorName() + "'>" + appCopy.get(ctr).getAppointmentDate() + " " + appCopy.get(ctr).getAppointmentName() + "</font>");
+	    				mainView.getWeekAgendaView().getLblEventTime().setText("<html><font color='"
+	    						+ appCopy.get(ctr).getColorName() + "'>" + appCopy.get(ctr).getLocalTimeIn() + "-" + appCopy.get(ctr).getLocalTimeOut() + "</font>");
+	    			} else {
+	    				mainView.getWeekAgendaView().getLblEventName()
+	    						.setText(mainView.getWeekAgendaView().getLblEventName().getText() + "<br><font color='"
+	    								+ appCopy.get(ctr).getColorName() + "'>" + appCopy.get(ctr).getAppointmentDate() + " " + appCopy.get(ctr).getAppointmentName() + "</font>");
+	    				mainView.getWeekAgendaView().getLblEventTime()
+	    						.setText(mainView.getWeekAgendaView().getLblEventTime().getText() + "<br><font color='"
+	    								+ appCopy.get(ctr).getColorName() + "'>" + appCopy.get(ctr).getLocalTimeIn() + "-" + appCopy.get(ctr).getLocalTimeOut() + "</font>");
+	    			}
+
+    			}
+    		}
+    	}
+		
 	}
 	
 	public void refresh(ArrayList<Appointment> appointments)
@@ -560,7 +678,7 @@ public class CalendarProgram {
 		refreshDay(theFilter);
 		refreshdAgenda(theFilter);
 		refreshWeek(theFilter);
-		refreshwAgenda();
+		refreshwAgenda(theFilter);
 	}
 	
 	public AppointmentHandler getAppointmentHandler(){
@@ -603,7 +721,7 @@ public class CalendarProgram {
 			refreshCalendar();
 			refreshdAgenda(theFilter);
 			refreshDay(theFilter);
-			refreshwAgenda();
+			refreshwAgenda(theFilter);
 			refreshWeek(theFilter);
 		}
 	}
@@ -627,7 +745,7 @@ public class CalendarProgram {
 			refreshCalendar();
 			refreshdAgenda(theFilter);
 			refreshDay(theFilter);
-			refreshwAgenda();
+			refreshwAgenda(theFilter);
 			refreshWeek(theFilter);
 		}
 	}
@@ -705,7 +823,7 @@ public class CalendarProgram {
 				mainView.getCreateView().getTextFieldDate().setText((monthToday+1) + "/" + dayToday + "/" + yearToday);
 			
 			refreshdAgenda(theFilter);
-			refreshwAgenda();
+			refreshwAgenda(theFilter);
 			refreshDay(theFilter);
 			refreshWeek(theFilter);
 		}
@@ -731,7 +849,7 @@ public class CalendarProgram {
 				
 				refreshCalendar();
 				refreshdAgenda(theFilter);
-				refreshwAgenda();
+				refreshwAgenda(theFilter);
 				refreshDay(theFilter);
 				refreshWeek(theFilter);
 			}
@@ -768,7 +886,7 @@ public class CalendarProgram {
 			refreshDay(theFilter);
 			refreshdAgenda(theFilter);
 			refreshWeek(theFilter);
-			refreshwAgenda();
+			refreshwAgenda(theFilter);
 		
 			mainView.getCreateView().getTextFieldDate().setText("");
 			mainView.getCreateView().getComboBoxFrom().setSelectedIndex(0);
