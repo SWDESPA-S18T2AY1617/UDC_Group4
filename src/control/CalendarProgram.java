@@ -51,9 +51,11 @@ public class CalendarProgram {
 
 		this.mainView.setVisible(true);
 		this.mainView.getCalendarView().getCalendarTable().setModel(eventH.getCalendarModel(monthToday, yearToday));
+		
 		refreshDay();
 		refreshWeek();
 		refreshdAgenda();
+		refreshwAgenda();
 		refreshCalendar();
 	}
 
@@ -213,7 +215,6 @@ public class CalendarProgram {
 		sortedWeek = eventH.getWeekEvents(getDate());
 		
 		for (int ctr = 0; ctr < sortedWeek.size(); ctr++) {
-			System.out.println("My Size" + sortedWeek.size());
 			
 			if (mainView.getWeekAgendaView().getLblEventName().getText().equalsIgnoreCase("No Upcoming Events")) {
 				mainView.getWeekAgendaView().getLblEventName().setText("<html><font color='"
@@ -504,9 +505,6 @@ public class CalendarProgram {
 	protected class btnSave_Action implements ActionListener {
 		
 		public void actionPerformed(ActionEvent e) {
-
-			int i = 0;
-			int startIndex  = eventH.getAppointments().size();
 			
 			String[] dates = mainView.getCreateView().getTextFieldDate().getText().split("/");
 			
@@ -530,9 +528,6 @@ public class CalendarProgram {
 			}
 			else
 				eventH.addAppointment(getDate(), "Appointment " + (eventH.getAppointments().size() + 1), LocalTime.of(shour, sminute), LocalTime.of(ehour, eminute), mainView.getAppID(), "Red");
-			
-
-			
 			
 			refreshDay();
 			refreshdAgenda();
