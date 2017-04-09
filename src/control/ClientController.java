@@ -9,14 +9,20 @@ import server.AppointmentManager;
 import server.ClientManager;
 import view.ClientMainView;
 
+import model.Client;
 public class ClientController extends CalendarProgram
 {
 	private ClientManager clientManager;
 	
 	public ClientController(AppointmentManager apptManager)
 	{	
-		super(new ClientMainView(), apptManager);
+		super(new ClientMainView(), apptManager, new Client());
+                
 		clientManager = new ClientManager();
+		Client c = clientManager.getClient(super.getMainView().getAppID());
+		super.getPerson().setID(c.getID());
+        	super.getPerson().setName(c.getName());
+		
 //		calendarProgram = new ArrayList<CalendarProgram>();
 //		int maxCtr = clientManager.getAllClient().size();
 //		for(int ctr = 0; ctr < maxCtr; ctr++){
