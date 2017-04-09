@@ -52,10 +52,14 @@ public class DoctorController extends CalendarProgram
 		if(choice == 0 ){
 			for (Appointment cI : eventH.getAppointments()) {
 				if (cI.getAppointmentName().equalsIgnoreCase(event)) {
-					eventH.getAppointments().remove(cI);
-					eventH.getAppointmentManager().deleteAppointment(cI.getAppointmentID());
-					
-					break;
+					if(cI.isStatus() == false){
+						eventH.getAppointmentManager().deleteAppointment(cI.getAppointmentID());
+						break;
+					}
+					else{
+						JOptionPane.showMessageDialog(null, "Cannot Delete Reserved Appointmnet");
+						break;
+					}
 				}
 			}
 		}

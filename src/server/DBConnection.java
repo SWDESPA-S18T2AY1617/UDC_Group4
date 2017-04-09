@@ -15,7 +15,7 @@ public class DBConnection {
 	private static String URL;
 	private static String USERNAME;
 	private static String PASSWORD;
-	private static String DATABASE;
+	private static String DATABASE = "clinic";
 	
 	public DBConnection () {
 		open = false;
