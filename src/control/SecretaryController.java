@@ -10,14 +10,19 @@ import server.AppointmentManager;
 import server.SecretaryManager;
 import view.SecretaryMainView;
 
+import model.Secretary;
 public class SecretaryController extends CalendarProgram
 {
 	private SecretaryManager secretaryManager;
 	
 	public SecretaryController(AppointmentManager apptManager)
 	{
-		super(new SecretaryMainView(), apptManager);
+		super(new SecretaryMainView(), apptManager, new Secretary());
+		
 		secretaryManager = new SecretaryManager();
+		Secretary s = secretaryManager.getSecretary(super.getMainView().getAppID());
+		super.getPerson().setID(s.getID());
+		super.getPerson().setName(s.getName());
 //		setCalendarProgram(new ArrayList<CalendarProgram>());
 //		int maxCtr = secretaryManager.getAllSecretary().size();
 //		for(int ctr = 0; ctr < maxCtr; ctr++){
