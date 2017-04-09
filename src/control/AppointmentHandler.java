@@ -197,6 +197,65 @@ public class AppointmentHandler {
         }     
     }
     
+    private void updateClientDayTable(int ID, LocalDate date, String filter)
+    {	
+		ArrayList<Appointment> tempDT = new ArrayList<Appointment>();
+		ArrayList<Appointment> appCopy = new ArrayList<Appointment>(); //copy of the appointment list needed based on filter.
+		
+		//use normal appointment list stored in the application/db.
+        if(filter.equalsIgnoreCase("NONE")) {
+        //	System.out.println("NONE FILTER (updateDoctorDayTable)");
+        	appCopy = Appointments;
+        }
+        
+        //Use appointmint list that only contains RESERVED appointments
+        else if(filter.equalsIgnoreCase("RESERVED")) {
+        //	System.out.println("RESERVED FILTER (updateDoctorDayTable)");
+        	appCopy = this.getClosedSlots();
+        }
+        else if(filter.equalsIgnoreCase("FREE")) {
+            //	System.out.println("RESERVED FILTER (updateDoctorDayTable)");
+            	appCopy = this.getOpenSlots();
+        }
+
+        else {
+        	System.out.println("ERROR, FILTER NOT FOUND (updateClientDayTable)");
+        	appCopy = Appointments;
+        }
+		
+		for(int i = 0; i < appCopy.size(); i++){
+			if(appCopy.get(i).getClientID() == ID || appCopy.get(i).isStatus() == false){
+				tempDT.add(appCopy.get(i));
+			}
+		}   	
+    	
+        int index = -1; //index of the event found
+        
+        for (int j = 0; j < 48; j++) {
+        	if(j%2==0)
+        		dayModel.setValueAt(j/2+":00", j, 0);
+        	dayModel.setValueAt(null, j, 1);
+        }
+        
+        int dayRow = 0;
+        String event = "";
+        
+        
+        
+        for (int ctr = 0; ctr < tempDT.size(); ctr++) { //searches for the events for this month and year
+        	if (tempDT.get(ctr).checkSameDate(date) == 0) {
+               index = ctr;
+               event = tempDT.get(index).getAppointmentName();
+               dayRow = tempDT.get(ctr).getLocalTimeIn().getHour() * 2;
+               if(tempDT.get(ctr).getLocalTimeIn().getMinute() == 30)
+                   dayRow++;
+               
+               dayModel.setValueAt(event, dayRow, 1);
+               itemIndex.add(ctr);
+            }
+        }     
+    }
+    
     public ArrayList<Appointment> getWeekEvents(LocalDate date)
     {
     	ArrayList<Appointment> weekAppointments = new ArrayList<Appointment>();
@@ -273,6 +332,84 @@ public class AppointmentHandler {
 		
 		for(int i = 0; i < Appointments.size(); i++){
 			if(Appointments.get(i).getDoctorID() == ID){
+				tempW.add(Appointments.get(i));
+			}
+		}
+    	
+    	ArrayList<Appointment> weekAppointments = new ArrayList<Appointment>();
+    	ArrayList<Appointment> temp = new ArrayList<Appointment>();
+    	int value1 = 0;
+        int value2 = 0;
+        
+        LocalDate date1 = null;
+    	LocalDate date2;
+        
+    	for (int ctr = 0; ctr < tempW.size(); ctr++) { //searches for the events for this month and year
+        	
+        	if(date.getDayOfWeek().name().equalsIgnoreCase("Monday")){
+        		value1 = -2;
+        		value2 = 6;
+        	}
+            else if(date.getDayOfWeek().name().equalsIgnoreCase("Tuesday")){
+        		value1 = -3;
+        		value2 = 5;
+        	}
+            else if(date.getDayOfWeek().name().equalsIgnoreCase("Wednesday")){
+        		value1 = -4;
+        		value2 = 4;
+        	}
+            else if(date.getDayOfWeek().name().equalsIgnoreCase("Thursday")){
+        		value1 = -5;
+        		value2 = 3;
+        	}
+            else if(date.getDayOfWeek().name().equalsIgnoreCase("Friday")){
+        		value1 = -6;
+        		value2 = 2;
+        	}
+            else if(date.getDayOfWeek().name().equalsIgnoreCase("Saturday")){
+        		value1 = -7;
+        		value2 = 1;
+        	}
+            else if(date.getDayOfWeek().name().equalsIgnoreCase("Sunday")){
+        		value1 = -1;
+        		value2 = 7;
+        	}
+        	
+        	
+        	if(date.getDayOfYear() > 7){
+        		date1 = LocalDate.ofYearDay(date.getYear(), date.getDayOfYear() + value1);
+	        	date2 = LocalDate.ofYearDay(date.getYear(), date.getDayOfYear() + value2);
+        	}
+	        else{
+	        	date1 = LocalDate.ofYearDay(date.getYear() - 1, 365 + 1 + value1);
+        		date2 = LocalDate.ofYearDay(date.getYear(), date.getDayOfYear() + value2);
+	        }
+	        	
+        	
+        	if (tempW.get(ctr).getAppointmentDate().isAfter(date1) && tempW.get(ctr).getAppointmentDate().isBefore(date2) && !(tempW.get(ctr).getAppointmentDate().getDayOfWeek().name().equalsIgnoreCase("Sunday")) && !(tempW.get(ctr).getAppointmentDate().getDayOfWeek().name().equalsIgnoreCase("Saturday"))){
+               
+               weekAppointments.add(tempW.get(ctr));
+        	}
+        }       
+    	
+    	for(int ctr2 = 1 ; ctr2 < 7 ; ctr2 ++){
+    		for(int ctr3 = 0 ; ctr3 < weekAppointments.size(); ctr3++){
+    			if(date1.plusDays(ctr2).compareTo(weekAppointments.get(ctr3).getAppointmentDate()) == 0){
+    				temp.add(weekAppointments.get(ctr3));
+    			}
+    		}
+    			
+    	}
+    	
+    	return temp;
+    }
+    
+    public ArrayList<Appointment> getClientWeekAppointments(int ID, LocalDate date)
+    {
+		ArrayList<Appointment> tempW = new ArrayList<Appointment>();
+		
+		for(int i = 0; i < Appointments.size(); i++){
+			if(Appointments.get(i).getClientID() == ID || Appointments.get(i).isStatus() == false){
 				tempW.add(Appointments.get(i));
 			}
 		}
@@ -573,6 +710,127 @@ public class AppointmentHandler {
             
     }
     
+    private void updateClientWeekTable(int ID, LocalDate date, String filter)
+    {
+		ArrayList<Appointment> tempW = new ArrayList<Appointment>();
+		//Determine what list to use.
+        ArrayList<Appointment> appCopy;
+        
+      //use normal appointment list stored in the application/db.
+        if(filter.equalsIgnoreCase("NONE")) {
+        //	System.out.println("NONE FILTER (updateDoctorDayTable)");
+        	appCopy = Appointments;
+        }
+        
+        //Use appointmint list that only contains RESERVED appointments
+        else if(filter.equalsIgnoreCase("RESERVED")) {
+        //	System.out.println("RESERVED FILTER (updateDoctorDayTable)");
+        	appCopy = this.getClosedSlots();
+        }
+        
+        else if(filter.equalsIgnoreCase("FREE")) {
+            //	System.out.println("RESERVED FILTER (updateDoctorDayTable)");
+            	appCopy = this.getOpenSlots();
+        }
+
+        else {
+        	System.out.println("ERROR, FILTER NOT FOUND (updateClientDayTable)");
+        	appCopy = Appointments;
+        }
+		
+        //Doctor seeing their own appointment filter
+		for(int i = 0; i < appCopy.size(); i++){
+			if(appCopy.get(i).getClientID() == ID || appCopy.get(i).isStatus() == false){
+				tempW.add(appCopy.get(i));
+			}
+		}
+    	
+        int index = -1; //index of the event found
+        
+        for (int j = 0; j < 48; j++) {
+        	if(j%2 == 0)
+        		weekModel.setValueAt(j/2+":00", j, 0);
+        	
+        	for(int i=1; i<=5;i ++){
+        		weekModel.setValueAt(null, j, i);
+        	}
+        }
+        
+        int dayRow = 0;
+        int weekCol = 0;
+        int value1 = 0;
+        int value2 = 0;
+        String event = "";
+        
+        for (int ctr = 0; ctr < tempW.size(); ctr++) { //searches for the events for this month and year
+        	
+        	if(date.getDayOfWeek().name().equalsIgnoreCase("Monday")){
+        		value1 = -2;
+        		value2 = 6;
+        	}
+            else if(date.getDayOfWeek().name().equalsIgnoreCase("Tuesday")){
+        		value1 = -3;
+        		value2 = 5;
+        	}
+            else if(date.getDayOfWeek().name().equalsIgnoreCase("Wednesday")){
+        		value1 = -4;
+        		value2 = 4;
+        	}
+            else if(date.getDayOfWeek().name().equalsIgnoreCase("Thursday")){
+        		value1 = -5;
+        		value2 = 3;
+        	}
+            else if(date.getDayOfWeek().name().equalsIgnoreCase("Friday")){
+        		value1 = -6;
+        		value2 = 2;
+        	}
+            else if(date.getDayOfWeek().name().equalsIgnoreCase("Saturday")){
+        		value1 = -7;
+        		value2 = 1;
+        	}
+            else if(date.getDayOfWeek().name().equalsIgnoreCase("Sunday")){
+        		value1 = -1;
+        		value2 = 7;
+        	}
+        	
+        	LocalDate date1;
+        	LocalDate date2;
+        	
+        	if(date.getDayOfYear() > 7){
+        		date1 = LocalDate.ofYearDay(date.getYear(), date.getDayOfYear() + value1);
+	        	date2 = LocalDate.ofYearDay(date.getYear(), date.getDayOfYear() + value2);
+        	}
+	        else{
+	        	date1 = LocalDate.ofYearDay(date.getYear() - 1, 365 + 1 + value1);
+        		date2 = LocalDate.ofYearDay(date.getYear(), date.getDayOfYear() + value2);
+	        }
+        	
+        	if (tempW.get(ctr).getAppointmentDate().isAfter(date1) && tempW.get(ctr).getAppointmentDate().isBefore(date2) && !(tempW.get(ctr).getAppointmentDate().getDayOfWeek().name().equalsIgnoreCase("Sunday")) && !(tempW.get(ctr).getAppointmentDate().getDayOfWeek().name().equalsIgnoreCase("Saturday"))){
+               index = ctr;
+               event = tempW.get(index).getAppointmentName();
+               dayRow = tempW.get(ctr).getLocalTimeIn().getHour() * 2;
+               if(tempW.get(ctr).getLocalTimeIn().getMinute() == 30)
+                   dayRow++;
+               
+               if(tempW.get(ctr).getAppointmentDate().getDayOfWeek().name().equalsIgnoreCase("Monday"))
+            	   weekCol = 1;
+               else if(tempW.get(ctr).getAppointmentDate().getDayOfWeek().name().equalsIgnoreCase("Tuesday"))
+            	   weekCol = 2;
+               else if(tempW.get(ctr).getAppointmentDate().getDayOfWeek().name().equalsIgnoreCase("Wednesday"))
+            	   weekCol = 3;
+               else if(tempW.get(ctr).getAppointmentDate().getDayOfWeek().name().equalsIgnoreCase("Thursday"))
+            	   weekCol = 4;
+               else if(tempW.get(ctr).getAppointmentDate().getDayOfWeek().name().equalsIgnoreCase("Friday"))
+            	   weekCol = 5;
+               
+               weekModel.setValueAt(event, dayRow, weekCol);
+               itemIndexWeek.add(ctr);
+            }
+        	
+        }
+            
+    }
+    
     private void updateDayTableSpecific(LocalDate date)
     {
         int index = -1; //index of the event found
@@ -610,6 +868,45 @@ public class AppointmentHandler {
 		
 		for(int i = 0; i < Appointments.size(); i++){
 			if(Appointments.get(i).getDoctorID() == ID){
+				tempDT.add(Appointments.get(i));
+			}
+		} 
+    	
+        int index = -1; //index of the event found
+        
+        for (int j = 0; j < 48; j++) {
+        	if(j%2==0)
+        		dayModel.setValueAt(j/2+":00", j, 0);
+        	dayModel.setValueAt(null, j, 1);
+        }
+        
+        int dayRow = 0;
+        String event = "";
+        
+        for (int ctr = 0; ctr < tempDT.size(); ctr++) { //searches for the events for this month and year
+        	
+        	if (tempDT.get(ctr).checkSameDate(date) == 0) {
+               index = ctr;
+               event = tempDT.get(index).getAppointmentName();
+               dayRow = tempDT.get(ctr).getLocalTimeIn().getHour() * 2;
+               if(tempDT.get(ctr).getLocalTimeIn().getMinute() == 30)
+                   dayRow++;
+               
+        	   dayModel.setValueAt(event, dayRow, 1);
+        	   itemIndex.add(ctr);
+             	   
+            }
+        	
+        }
+            
+    }
+    
+    private void updateClientDayTableSpecific(int ID, LocalDate date)
+    {
+		ArrayList<Appointment> tempDT = new ArrayList<Appointment>();
+		
+		for(int i = 0; i < Appointments.size(); i++){
+			if(Appointments.get(i).getClientID() == ID || Appointments.get(i).isStatus() == false){
 				tempDT.add(Appointments.get(i));
 			}
 		} 
@@ -839,6 +1136,114 @@ public class AppointmentHandler {
     	
     	return new WeekTableRenderer(startRowList, endRowList,colorList, columnList);
     }
+    
+    /**This is the client day table renderer**/
+    public DayTableRenderer getClientDayRenderer(int ID, String filter){
+		ArrayList<Appointment> tempDT = new ArrayList<Appointment>();
+		
+		//Choose what list to use.
+    	ArrayList<Appointment> appCopy;
+    	
+    	//use normal appointment list stored in the application/db.
+        if(filter.equalsIgnoreCase("NONE")) {
+        //	System.out.println("NONE FILTER (updateDoctorDayTable)");
+        	appCopy = Appointments;
+        }
+        
+        //Use appointmint list that only contains RESERVED appointments
+        else if(filter.equalsIgnoreCase("RESERVED")) {
+        //	System.out.println("RESERVED FILTER (updateDoctorDayTable)");
+        	appCopy = this.getClosedSlots();
+        }
+        else if(filter.equalsIgnoreCase("FREE")) {
+            //	System.out.println("RESERVED FILTER (updateDoctorDayTable)");
+            	appCopy = this.getOpenSlots();
+        }
+
+        else {
+        	System.out.println("ERROR, FILTER NOT FOUND (updateClientDayTable)");
+        	appCopy = Appointments;
+        }
+		
+		for(int i = 0; i < appCopy.size(); i++){
+			
+			//If the filter is "RESERVED, then only display the reserved appointment by THAT client."
+			if(appCopy.get(i).getClientID() == ID || appCopy.get(i).isStatus() == false){
+				tempDT.add(appCopy.get(i));
+			}
+		}     
+    	
+    	ArrayList<Integer> startRowList = new ArrayList<Integer>();
+    	ArrayList<Integer> endRowList = new ArrayList<Integer>();
+    	ArrayList<Color> colorList = new ArrayList<Color>();
+    	
+//    	System.out.println("Number = " +itemIndex.size());
+    	
+    	for(int i = 0; i < itemIndex.size();i++){
+    		startRowList.add(tempDT.get(itemIndex.get(i)).getStartRowDay());
+    		endRowList.add(tempDT.get(itemIndex.get(i)).getEndRowDay());
+    		colorList.add(tempDT.get(itemIndex.get(i)).getColor());
+    	}
+    	
+    	itemIndex.clear();
+    	
+    	return new DayTableRenderer(startRowList, endRowList,colorList);
+    }
+    
+    /**This is the week table renderer for the client.**/
+    public WeekTableRenderer getClientWeekRenderer(int ID, String filter){
+        
+		ArrayList<Appointment> tempW = new ArrayList<Appointment>();
+		
+		//Choose what list to use.
+    	ArrayList<Appointment> appCopy;
+    	
+    	//use normal appointment list stored in the application/db.
+        if(filter.equalsIgnoreCase("NONE")) {
+        //	System.out.println("NONE FILTER (updateDoctorDayTable)");
+        	appCopy = Appointments;
+        }
+        
+        //Use appointmint list that only contains RESERVED appointments
+        else if(filter.equalsIgnoreCase("RESERVED")) {
+        //	System.out.println("RESERVED FILTER (updateDoctorDayTable)");
+        	appCopy = this.getClosedSlots();
+        }
+        else if(filter.equalsIgnoreCase("FREE")) {
+            //	System.out.println("RESERVED FILTER (updateDoctorDayTable)");
+            	appCopy = this.getOpenSlots();
+        }
+
+        else {
+        	System.out.println("ERROR, FILTER NOT FOUND (updateClientDayTable)");
+        	appCopy = Appointments;
+        }
+		
+		for(int i = 0; i < appCopy.size(); i++){
+			
+			//If the filter is "RESERVED, then only display the reserved appointment by THAT client."	
+			if(appCopy.get(i).getClientID() == ID || appCopy.get(i).isStatus() == false){
+				tempW.add(appCopy.get(i));
+			}
+		}     
+    	
+    	ArrayList<Integer> startRowList = new ArrayList<Integer>();
+    	ArrayList<Integer> endRowList = new ArrayList<Integer>();
+    	ArrayList<Color> colorList = new ArrayList<Color>();
+    	ArrayList<Integer> columnList = new ArrayList<Integer>();
+    	
+    	
+    	for(int i = 0; i < itemIndexWeek.size();i++){
+    		startRowList.add(tempW.get(itemIndexWeek.get(i)).getStartRowDay());
+    		endRowList.add(tempW.get(itemIndexWeek.get(i)).getEndRowDay());
+    		colorList.add(tempW.get(itemIndexWeek.get(i)).getColor());
+    		columnList.add(tempW.get(itemIndexWeek.get(i)).getColWeek());
+    	}
+    	
+    	itemIndexWeek.clear();
+    	
+    	return new WeekTableRenderer(startRowList, endRowList,colorList, columnList);
+    }
 
     public void addAppointment(LocalDate date, String event, LocalTime timeIn, LocalTime timeOut, int doctorID, String color) {
     	
@@ -892,55 +1297,6 @@ public class AppointmentHandler {
 		}
 		
 		return false;
-	}
-    
-    public DefaultTableModel getCalendarModel(int month, int year) {
-        this.updateTable(month, year);
-        return calendarModel;
-    }
-    
-    public DefaultTableModel getDayModel(LocalDate date, String filter){
-    	this.updateDayTable(date, filter);
-    	return dayModel;
-    }
-    
-    public DefaultTableModel getDoctorDayModel(int ID, LocalDate date, String filter){
-    	this.updateDoctorDayTable(ID, date, filter);
-    	return dayModel;
-    }
-    
-	public DefaultTableModel getWeekModel(LocalDate date, String filter) {
-		this.updateWeekTable(date, filter);
-		return weekModel;
-	}
-
-	public DefaultTableModel getDoctorWeekModel(int ID, LocalDate date, String filter){
-		this.updateDoctorWeekTable(ID, date, filter);
-		return weekModel;
-	}
-	
-	public void setWeekModel(WeekModel weekModel) {
-		this.weekModel = weekModel;
-	}
-	
-    public DefaultTableModel getEventDayModel(LocalDate date)
-    {
-    	this.updateDayTableSpecific(date);
-    	return dayModel;
-    }
-
-    public DefaultTableModel getDoctorEventDayModel(int ID, LocalDate date)
-    {
-    	this.updateDoctorDayTableSpecific(ID, date);
-    	return dayModel;
-    }
-    
-	public ArrayList<Appointment> getAppointments() {
-		return Appointments;
-	}
-
-	public void setAppointments(ArrayList<Appointment> Appointments) {
-		this.Appointments = Appointments;
 	}
 	
 	public ArrayList<Appointment> getDayEvents(LocalDate date){
@@ -1033,18 +1389,6 @@ public class AppointmentHandler {
 		return filtered;
 	}
 	
-	public void sync(Appointment a){
-		getAppointmentManager().addAppointment(a);
-    }
-
-	public AppointmentManager getAppointmentManager() {
-		return appointmentManager;
-	}
-
-	public void setAppointmentManager(AppointmentManager appointmentManager) {
-		this.appointmentManager = appointmentManager;
-	}
-	
 	public ArrayList<Appointment> getOpenSlots () {
     	ArrayList<Appointment> open = new ArrayList<Appointment>();
     	
@@ -1066,4 +1410,81 @@ public class AppointmentHandler {
     	
     	return closed;
     }
+    
+    public void sync(Appointment a){
+		getAppointmentManager().addAppointment(a);
+    }
+
+	public AppointmentManager getAppointmentManager() {
+		return appointmentManager;
+	}
+
+	public void setAppointmentManager(AppointmentManager appointmentManager) {
+		this.appointmentManager = appointmentManager;
+	}
+    
+    public DefaultTableModel getCalendarModel(int month, int year) {
+        this.updateTable(month, year);
+        return calendarModel;
+    }
+    
+    public DefaultTableModel getDayModel(LocalDate date, String filter){
+    	this.updateDayTable(date, filter);
+    	return dayModel;
+    }
+    
+    public DefaultTableModel getDoctorDayModel(int ID, LocalDate date, String filter){
+    	this.updateDoctorDayTable(ID, date, filter);
+    	return dayModel;
+    }
+    
+    public DefaultTableModel getClientDayModel(int ID, LocalDate date, String filter){
+    	this.updateClientDayTable(ID, date, filter);
+    	return dayModel;
+    }
+    
+	public DefaultTableModel getWeekModel(LocalDate date, String filter) {
+		this.updateWeekTable(date, filter);
+		return weekModel;
+	}
+
+	public DefaultTableModel getDoctorWeekModel(int ID, LocalDate date, String filter){
+		this.updateDoctorWeekTable(ID, date, filter);
+		return weekModel;
+	}
+	
+	public DefaultTableModel getClientWeekModel(int ID, LocalDate date, String filter){
+		this.updateClientWeekTable(ID, date, filter);
+		return weekModel;
+	}
+	
+	public DefaultTableModel getDoctorModel(int ID, LocalDate date, String filter){
+		this.updateDoctorWeekTable(ID, date, filter);
+		return weekModel;
+	}
+	
+	public void setWeekModel(WeekModel weekModel) {
+		this.weekModel = weekModel;
+	}
+	
+    public DefaultTableModel getEventDayModel(LocalDate date)
+    {
+    	this.updateDayTableSpecific(date);
+    	return dayModel;
+    }
+
+    public DefaultTableModel getDoctorEventDayModel(int ID, LocalDate date)
+    {
+    	this.updateDoctorDayTableSpecific(ID, date);
+    	return dayModel;
+    }
+    
+	public ArrayList<Appointment> getAppointments() {
+		return Appointments;
+	}
+
+	public void setAppointments(ArrayList<Appointment> Appointments) {
+		this.Appointments = Appointments;
+	}
+    
 }

@@ -52,7 +52,7 @@ public class ClientMainView extends MainView {
 
 		// Modify objects
 		getTypeView().getReservedCheckBox().setText("Reservation");
-		getTypeView().getFreeCheckBox().setText("All");
+		getTypeView().getFreeCheckBox().setText("Free Appointments");
 		// Panels
 		getWeekView().setVisible(false);
 		getAgendaView().setVisible(false);
