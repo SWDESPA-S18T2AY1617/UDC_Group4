@@ -33,6 +33,7 @@ public class ClientController extends CalendarProgram
     			if(apptManager.getAllController().get(ctr) instanceof DoctorController)	{
     				mainView.getTypeView().getComboBox().addItem(apptManager.getAllController().get(ctr).getPerson().getName()+" "+apptManager.getAllController().get(ctr).getPerson().getID());
     			}
+    		mainView.getTypeView().getComboBox().setSelectedIndex(-1);
     			
 		mainView.getDayView().getDayTable().addMouseListener(new scrollPanelDay_Action());
 		mainView.getWeekView().getWeekTable().addMouseListener(new scrollPanelWeek_Action());
