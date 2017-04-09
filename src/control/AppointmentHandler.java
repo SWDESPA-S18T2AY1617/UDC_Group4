@@ -59,7 +59,7 @@ public class AppointmentHandler {
         }
     }
     
-    private void updateDayTable(LocalDate date)
+    private void updateDayTable(LocalDate date, String filter)
     {	
         int index = -1; //index of the event found
         
@@ -72,29 +72,101 @@ public class AppointmentHandler {
         int dayRow = 0;
         String event = "";
         
+        //All appointments will be displayed.
+        if(filter.equalsIgnoreCase("NONE")) {
+        	System.out.println("NO FILTER (updateDayTable)");
+	        for (int ctr = 0; ctr < Appointments.size(); ctr++) { //searches for the events for this month and year
+	        	if (Appointments.get(ctr).checkSameDate(date) == 0) {
+	               index = ctr;
+	               event = Appointments.get(index).getAppointmentName();
+	               dayRow = Appointments.get(ctr).getLocalTimeIn().getHour() * 2;
+	               if(Appointments.get(ctr).getLocalTimeIn().getMinute() == 30)
+	                   dayRow++;
+	               
+	               dayModel.setValueAt(event, dayRow, 1);
+	               itemIndex.add(ctr);
+	            }
+	        }
+        }
         
+        //View free ONLY.
+        else if(filter.equalsIgnoreCase("FREE")) {
+        	System.out.println("FREE FILTER (updateDayTable)");
+        	//Temporary arrayList
+        	ArrayList<Appointment> open = getOpenSlots ();
+        	
+	        for (int ctr = 0; ctr < open.size(); ctr++) { //searches for the events for this month and year
+	        	if (open.get(ctr).checkSameDate(date) == 0) {
+	               index = ctr;
+	               event = open.get(index).getAppointmentName();
+	               dayRow = open.get(ctr).getLocalTimeIn().getHour() * 2;
+	               if(open.get(ctr).getLocalTimeIn().getMinute() == 30)
+	                   dayRow++;
+	               
+	               dayModel.setValueAt(event, dayRow, 1);
+	               itemIndex.add(ctr);
+	            }
+	        }
+        }
         
-        for (int ctr = 0; ctr < Appointments.size(); ctr++) { //searches for the events for this month and year
-        	if (Appointments.get(ctr).checkSameDate(date) == 0) {
-               index = ctr;
-               event = Appointments.get(index).getAppointmentName();
-               dayRow = Appointments.get(ctr).getLocalTimeIn().getHour() * 2;
-               if(Appointments.get(ctr).getLocalTimeIn().getMinute() == 30)
-                   dayRow++;
-               
-               dayModel.setValueAt(event, dayRow, 1);
-               itemIndex.add(ctr);
-            }
-        }     
+        //View reserved ONLY.
+        else if (filter.equalsIgnoreCase("RESERVED")){
+        	System.out.println("RESERVED FILTER (updateDayTable)");
+        	//Temporary arrayList
+        	ArrayList<Appointment> closed = getClosedSlots();
+        	
+	        for (int ctr = 0; ctr < closed.size(); ctr++) { //searches for the events for this month and year
+	        	if (closed.get(ctr).checkSameDate(date) == 0) {
+	               index = ctr;
+	               event = closed.get(index).getAppointmentName();
+	               dayRow = closed.get(ctr).getLocalTimeIn().getHour() * 2;
+	               if(closed.get(ctr).getLocalTimeIn().getMinute() == 30)
+	                   dayRow++;
+	               
+	               dayModel.setValueAt(event, dayRow, 1);
+	               itemIndex.add(ctr);
+	            }
+	        }
+        }
+        
+        else {
+        	System.out.println("ERROR IN PUTTNG VALUES INSIDE TABLE (appointment handler, updateDayTable) FILTER NOT FOUND.");
+        }
+            
     }
     
-    private void updateDoctorDayTable(int ID, LocalDate date)
+    private void updateDoctorDayTable(int ID, LocalDate date, String filter)
     {	
 		ArrayList<Appointment> tempDT = new ArrayList<Appointment>();
+		ArrayList<Appointment> appCopy = new ArrayList<Appointment>(); //copy of the appointment list needed based on filter.
 		
-		for(int i = 0; i < Appointments.size(); i++){
-			if(Appointments.get(i).getDoctorID() == ID){
-				tempDT.add(Appointments.get(i));
+		//use normal appointment list stored in the application/db.
+        if(filter.equalsIgnoreCase("NONE")) {
+        	System.out.println("NONE FILTER (updateDoctorDayTable)");
+        	appCopy = Appointments;
+        }
+        
+        //Use appointmint list that only contains RESERVED appointments
+        else if(filter.equalsIgnoreCase("RESERVED")) {
+        	System.out.println("RESERVED FILTER (updateDoctorDayTable)");
+        	appCopy = this.getClosedSlots();
+        }
+        
+        //Use appointmint list that only contains FREE appointments
+        else if(filter.equalsIgnoreCase("FREE")) {
+        	System.out.println("FREE FILTER (updateDoctorDayTable)");
+        	appCopy = this.getOpenSlots();
+        }
+        
+        
+        else {
+        	System.out.println("ERROR, FILTER NOT FOUND (updateDoctorDayTable)");
+        	appCopy = Appointments;
+        }
+		
+		for(int i = 0; i < appCopy.size(); i++){
+			if(appCopy.get(i).getDoctorID() == ID){
+				tempDT.add(appCopy.get(i));
 			}
 		}   	
     	
@@ -273,7 +345,7 @@ public class AppointmentHandler {
     	return temp;
     }
     
-    private void updateWeekTable(LocalDate date)
+    private void updateWeekTable(LocalDate date, String filter)
     {
         int index = -1; //index of the event found
         
@@ -292,7 +364,33 @@ public class AppointmentHandler {
         int value2 = 0;
         String event = "";
         
-        for (int ctr = 0; ctr < Appointments.size(); ctr++) { //searches for the events for this month and year
+        //Determine what list to use.
+        ArrayList<Appointment> appointmentToUse;
+        
+        //use normal appointment list stored in the application/db.
+        if(filter.equalsIgnoreCase("NONE")) {
+        	System.out.println("NONE FILTER (UPDATEWEEKTABLE)");
+        	appointmentToUse = Appointments;
+        }
+        
+        //Use appointmint list that only contains RESERVED appointments
+        else if(filter.equalsIgnoreCase("RESERVED")) {
+        	System.out.println("RESERVED FILTER (UPDATEWEEKTABLE)");
+        	appointmentToUse = this.getClosedSlots();
+        }
+        
+        //Use appointmint list that only contains FREE appointments
+        else if(filter.equalsIgnoreCase("FREE")) {
+        	System.out.println("FREE FILTER (UPDATEWEEKTABLE)");
+        	appointmentToUse = this.getOpenSlots();
+        }
+        
+        else {
+        	System.out.println("ERROR, FILTER NOT FOUND (updateWeekTable)");
+        	appointmentToUse = Appointments;
+        }
+        
+        for (int ctr = 0; ctr < appointmentToUse.size(); ctr++) { //searches for the events for this month and year
         	
         	if(date.getDayOfWeek().name().equalsIgnoreCase("Monday")){
         		value1 = -2;
@@ -323,34 +421,25 @@ public class AppointmentHandler {
         		value2 = 7;
         	}
         	
-        	LocalDate date1;
-        	LocalDate date2;
+        	LocalDate date1 = LocalDate.ofYearDay(date.getYear(), date.getDayOfYear() + value1);
+        	LocalDate date2 = LocalDate.ofYearDay(date.getYear(), date.getDayOfYear() + value2);
         	
-        	if(date.getDayOfYear() > 7){
-        		date1 = LocalDate.ofYearDay(date.getYear(), date.getDayOfYear() + value1);
-	        	date2 = LocalDate.ofYearDay(date.getYear(), date.getDayOfYear() + value2);
-        	}
-	        else{
-	        	date1 = LocalDate.ofYearDay(date.getYear() - 1, 365 + 1 + value1);
-        		date2 = LocalDate.ofYearDay(date.getYear(), date.getDayOfYear() + value2);
-	        }
-        	
-        	if (Appointments.get(ctr).getAppointmentDate().isAfter(date1) && Appointments.get(ctr).getAppointmentDate().isBefore(date2) && !(Appointments.get(ctr).getAppointmentDate().getDayOfWeek().name().equalsIgnoreCase("Sunday")) && !(Appointments.get(ctr).getAppointmentDate().getDayOfWeek().name().equalsIgnoreCase("Saturday"))){
+        	if (appointmentToUse.get(ctr).getAppointmentDate().isAfter(date1) && appointmentToUse.get(ctr).getAppointmentDate().isBefore(date2) && !(Appointments.get(ctr).getAppointmentDate().getDayOfWeek().name().equalsIgnoreCase("Sunday")) && !(Appointments.get(ctr).getAppointmentDate().getDayOfWeek().name().equalsIgnoreCase("Saturday"))){
                index = ctr;
-               event = Appointments.get(index).getAppointmentName();
-               dayRow = Appointments.get(ctr).getLocalTimeIn().getHour() * 2;
-               if(Appointments.get(ctr).getLocalTimeIn().getMinute() == 30)
+               event = appointmentToUse.get(index).getAppointmentName();
+               dayRow = appointmentToUse.get(ctr).getLocalTimeIn().getHour() * 2;
+               if(appointmentToUse.get(ctr).getLocalTimeIn().getMinute() == 30)
                    dayRow++;
                
-               if(Appointments.get(ctr).getAppointmentDate().getDayOfWeek().name().equalsIgnoreCase("Monday"))
+               if(appointmentToUse.get(ctr).getAppointmentDate().getDayOfWeek().name().equalsIgnoreCase("Monday"))
             	   weekCol = 1;
-               else if(Appointments.get(ctr).getAppointmentDate().getDayOfWeek().name().equalsIgnoreCase("Tuesday"))
+               else if(appointmentToUse.get(ctr).getAppointmentDate().getDayOfWeek().name().equalsIgnoreCase("Tuesday"))
             	   weekCol = 2;
-               else if(Appointments.get(ctr).getAppointmentDate().getDayOfWeek().name().equalsIgnoreCase("Wednesday"))
+               else if(appointmentToUse.get(ctr).getAppointmentDate().getDayOfWeek().name().equalsIgnoreCase("Wednesday"))
             	   weekCol = 3;
-               else if(Appointments.get(ctr).getAppointmentDate().getDayOfWeek().name().equalsIgnoreCase("Thursday"))
+               else if(appointmentToUse.get(ctr).getAppointmentDate().getDayOfWeek().name().equalsIgnoreCase("Thursday"))
             	   weekCol = 4;
-               else if(Appointments.get(ctr).getAppointmentDate().getDayOfWeek().name().equalsIgnoreCase("Friday"))
+               else if(appointmentToUse.get(ctr).getAppointmentDate().getDayOfWeek().name().equalsIgnoreCase("Friday"))
             	   weekCol = 5;
                
                weekModel.setValueAt(event, dayRow, weekCol);
@@ -361,13 +450,40 @@ public class AppointmentHandler {
             
     }
     
-    private void updateDoctorWeekTable(int ID, LocalDate date)
+    private void updateDoctorWeekTable(int ID, LocalDate date, String filter)
     {
 		ArrayList<Appointment> tempW = new ArrayList<Appointment>();
+		//Determine what list to use.
+        ArrayList<Appointment> appCopy;
+        
+        //use normal appointment list stored in the application/db.
+        if(filter.equalsIgnoreCase("NONE")) {
+        	System.out.println("NONE FILTER (updateDoctorWeekTable)");
+        	appCopy = Appointments;
+        }
+        
+        //Use appointmint list that only contains RESERVED appointments
+        else if(filter.equalsIgnoreCase("RESERVED")) {
+        	System.out.println("RESERVED FILTER (updateDoctorWeekTable)");
+        	appCopy = this.getClosedSlots();
+        }
+        
+        //Use appointmint list that only contains FREE appointments
+        else if(filter.equalsIgnoreCase("FREE")) {
+        	System.out.println("FREE FILTER (updateDoctorWeekTable)");
+        	appCopy = this.getOpenSlots();
+        }
+        
+        //error, use the original list.
+        else {
+        	System.out.println("ERROR, FILTER NOT FOUND (updateDoctorWeekTable)");
+        	appCopy = Appointments;
+        }
 		
-		for(int i = 0; i < Appointments.size(); i++){
-			if(Appointments.get(i).getDoctorID() == ID){
-				tempW.add(Appointments.get(i));
+        //Doctor seeing their own appointment filter
+		for(int i = 0; i < appCopy.size(); i++){
+			if(appCopy.get(i).getDoctorID() == ID){
+				tempW.add(appCopy.get(i));
 			}
 		}
     	
@@ -528,7 +644,7 @@ public class AppointmentHandler {
     }
 
     
-    public DayTableRenderer getDayRenderer(){
+    public DayTableRenderer getDayRenderer(String filter){
         
     	ArrayList<Integer> startRowList = new ArrayList<Integer>();
     	ArrayList<Integer> endRowList = new ArrayList<Integer>();
@@ -536,23 +652,77 @@ public class AppointmentHandler {
     	
 //    	System.out.println("Number = " +itemIndex.size());
     	
-    	for(int i = 0; i < itemIndex.size();i++){
-    		startRowList.add(getAppointments().get(itemIndex.get(i)).getStartRowDay());
-    		endRowList.add(getAppointments().get(itemIndex.get(i)).getEndRowDay());
-    		colorList.add(getAppointments().get(itemIndex.get(i)).getColor());
+    	if(filter.equalsIgnoreCase("NONE")) {
+    		System.out.println("NO FILTER, (getDayRenderer)");
+	    	for(int i = 0; i < itemIndex.size();i++){
+	    		startRowList.add(getAppointments().get(itemIndex.get(i)).getStartRowDay());
+	    		endRowList.add(getAppointments().get(itemIndex.get(i)).getEndRowDay());
+	    		colorList.add(getAppointments().get(itemIndex.get(i)).getColor());
+	    	}
+	    	
     	}
+    	
+    	else if(filter.equalsIgnoreCase("FREE")) {
+    		System.out.println("FREE FILTER, (getDayRenderer)");
+    		//temp arraylist again.
+    		ArrayList<Appointment> open = this.getOpenSlots();
+	    	for(int i = 0; i < itemIndex.size();i++){
+	    		startRowList.add(open.get(itemIndex.get(i)).getStartRowDay());
+	    		endRowList.add(open.get(itemIndex.get(i)).getEndRowDay());
+	    		colorList.add(open.get(itemIndex.get(i)).getColor());
+	    	}
+    	}
+    	
+    	else if(filter.equalsIgnoreCase("RESERVED")) {
+    		System.out.println("RESERVED FILTER, (getDayRenderer)");
+    		ArrayList<Appointment> closed = this.getClosedSlots();
+	    	for(int i = 0; i < itemIndex.size();i++){
+	    		startRowList.add(closed.get(itemIndex.get(i)).getStartRowDay());
+	    		endRowList.add(closed.get(itemIndex.get(i)).getEndRowDay());
+	    		colorList.add(closed.get(itemIndex.get(i)).getColor());
+	    	}
+    	}
+    	
+    	else System.out.println("ERROR, FILTER NOT FOUND. (getDayRenderer)");
     	
     	itemIndex.clear();
     	
     	return new DayTableRenderer(startRowList, endRowList,colorList);
     }
     
-    public DayTableRenderer getDoctorDayRenderer(int ID){
+    public DayTableRenderer getDoctorDayRenderer(int ID, String filter){
 		ArrayList<Appointment> tempDT = new ArrayList<Appointment>();
 		
-		for(int i = 0; i < Appointments.size(); i++){
-			if(Appointments.get(i).getDoctorID() == ID){
-				tempDT.add(Appointments.get(i));
+		//Choose what list to use.
+    	ArrayList<Appointment> appCopy;
+    	
+    	//Filter that states all appointment to be used.
+    	if(filter.equalsIgnoreCase("NONE")) {
+    		System.out.println("NONE, FILTER FOUND. (getDoctorDayRenderer)");
+    		appCopy = getAppointments();
+    	}
+    	
+    	//Appointments that are only free/open are given.
+    	else if(filter.equalsIgnoreCase("FREE")) {
+    		System.out.println("FREE, FILTER FOUND. (getDoctorDayRenderer)");
+    		appCopy = this.getOpenSlots();
+    	}
+    	
+    	//appointments that are only closed/reserved are given.
+    	else if(filter.equalsIgnoreCase("RESERVED")) {
+    		System.out.println("RESERVED, FILTER FOUND. (getDoctorDayRenderer)");
+    		appCopy = this.getClosedSlots();
+    	}
+    	
+    	//error.
+    	else {
+    		System.out.println("ERROR, FILTER NOT FOUND. (getDoctorDayRenderer)");
+    		appCopy = getAppointments();
+    	}
+		
+		for(int i = 0; i < appCopy.size(); i++){
+			if(appCopy.get(i).getDoctorID() == ID){
+				tempDT.add(appCopy.get(i));
 			}
 		}   
     	
@@ -573,19 +743,41 @@ public class AppointmentHandler {
     	return new DayTableRenderer(startRowList, endRowList,colorList);
     }
     
-    public WeekTableRenderer getWeekRenderer(){
+    public WeekTableRenderer getWeekRenderer(String filter){
         
     	ArrayList<Integer> startRowList = new ArrayList<Integer>();
     	ArrayList<Integer> endRowList = new ArrayList<Integer>();
     	ArrayList<Color> colorList = new ArrayList<Color>();
     	ArrayList<Integer> columnList = new ArrayList<Integer>();
     	
+    	//Choose what list to use.
+    	ArrayList<Appointment> appointmentList;
+    	if(filter.equalsIgnoreCase("NONE")) {
+    		System.out.println("NONE, FILTER FOUND. (getWeekRenderer)");
+    		appointmentList = getAppointments();
+    	}
+    	
+    	else if(filter.equalsIgnoreCase("FREE")) {
+    		System.out.println("FREE, FILTER FOUND. (getWeekRenderer)");
+    		appointmentList = this.getOpenSlots();
+    	}
+    	
+    	else if(filter.equalsIgnoreCase("RESERVED")) {
+    		System.out.println("RESERVED, FILTER FOUND. (getWeekRenderer)");
+    		appointmentList = this.getClosedSlots();
+    	}
+    	
+    	else {
+    		System.out.println("ERROR, FILTER NOT FOUND. (getWeekRenderer)");
+       		appointmentList = getAppointments();
+    	}
+    	
     	
     	for(int i = 0; i < itemIndexWeek.size();i++){
-    		startRowList.add(getAppointments().get(itemIndexWeek.get(i)).getStartRowDay());
-    		endRowList.add(getAppointments().get(itemIndexWeek.get(i)).getEndRowDay());
-    		colorList.add(getAppointments().get(itemIndexWeek.get(i)).getColor());
-    		columnList.add(getAppointments().get(itemIndexWeek.get(i)).getColWeek());
+    		startRowList.add(appointmentList.get(itemIndexWeek.get(i)).getStartRowDay());
+    		endRowList.add(appointmentList.get(itemIndexWeek.get(i)).getEndRowDay());
+    		colorList.add(appointmentList.get(itemIndexWeek.get(i)).getColor());
+    		columnList.add(appointmentList.get(itemIndexWeek.get(i)).getColWeek());
     	}
     	
     	itemIndexWeek.clear();
@@ -593,13 +785,40 @@ public class AppointmentHandler {
     	return new WeekTableRenderer(startRowList, endRowList,colorList, columnList);
     }
     
-    public WeekTableRenderer getDoctorWeekRenderer(int ID){
+    public WeekTableRenderer getDoctorWeekRenderer(int ID, String filter){
         
 		ArrayList<Appointment> tempW = new ArrayList<Appointment>();
 		
-		for(int i = 0; i < Appointments.size(); i++){
-			if(Appointments.get(i).getDoctorID() == ID){
-				tempW.add(Appointments.get(i));
+		//Choose what list to use.
+    	ArrayList<Appointment> appCopy;
+    	
+    	//Filter that states all appointment to be used.
+    	if(filter.equalsIgnoreCase("NONE")) {
+    		System.out.println("NONE, FILTER FOUND. (getDoctorWeekRenderer)");
+    		appCopy = getAppointments();
+    	}
+    	
+    	//Appointments that are only free/open are given.
+    	else if(filter.equalsIgnoreCase("FREE")) {
+    		System.out.println("FREE, FILTER FOUND. (getDoctorWeekRenderer)");
+    		appCopy = this.getOpenSlots();
+    	}
+    	
+    	//appointments that are only closed/reserved are given.
+    	else if(filter.equalsIgnoreCase("RESERVED")) {
+    		System.out.println("RESERVED, FILTER FOUND. (getDoctorWeekRenderer)");
+    		appCopy = this.getClosedSlots();
+    	}
+    	
+    	//error.
+    	else {
+    		System.out.println("ERROR, FILTER NOT FOUND. (getDoctorWeekRenderer)");
+    		appCopy = getAppointments();
+    	}
+		
+		for(int i = 0; i < appCopy.size(); i++){
+			if(appCopy.get(i).getDoctorID() == ID){
+				tempW.add(appCopy.get(i));
 			}
 		}  
     	
@@ -680,23 +899,23 @@ public class AppointmentHandler {
         return calendarModel;
     }
     
-    public DefaultTableModel getDayModel(LocalDate date){
-    	this.updateDayTable(date);
+    public DefaultTableModel getDayModel(LocalDate date, String filter){
+    	this.updateDayTable(date, filter);
     	return dayModel;
     }
     
-    public DefaultTableModel getDoctorDayModel(int ID, LocalDate date){
-    	this.updateDoctorDayTable(ID, date);
+    public DefaultTableModel getDoctorDayModel(int ID, LocalDate date, String filter){
+    	this.updateDoctorDayTable(ID, date, filter);
     	return dayModel;
     }
     
-	public DefaultTableModel getWeekModel(LocalDate date) {
-		this.updateWeekTable(date);
+	public DefaultTableModel getWeekModel(LocalDate date, String filter) {
+		this.updateWeekTable(date, filter);
 		return weekModel;
 	}
 
-	public DefaultTableModel getDoctorWeekModel(int ID, LocalDate date){
-		this.updateDoctorWeekTable(ID, date);
+	public DefaultTableModel getDoctorWeekModel(int ID, LocalDate date, String filter){
+		this.updateDoctorWeekTable(ID, date, filter);
 		return weekModel;
 	}
 	
@@ -825,4 +1044,26 @@ public class AppointmentHandler {
 	public void setAppointmentManager(AppointmentManager appointmentManager) {
 		this.appointmentManager = appointmentManager;
 	}
+	
+	public ArrayList<Appointment> getOpenSlots () {
+    	ArrayList<Appointment> open = new ArrayList<Appointment>();
+    	
+    	for (int ctr = 0; ctr < Appointments.size(); ctr++) {
+    		if (Appointments.get(ctr).isStatus() == false) 
+    			open.add(Appointments.get(ctr));
+    	}
+  
+    	return open;
+    }
+    
+    public ArrayList<Appointment> getClosedSlots () {
+    	ArrayList<Appointment> closed = new ArrayList<Appointment>();
+    	
+    	for (int ctr = 0; ctr < Appointments.size(); ctr++) {
+    		if (Appointments.get(ctr).isStatus() == true) 
+    			closed.add(Appointments.get(ctr));
+    	}
+    	
+    	return closed;
+    }
 }

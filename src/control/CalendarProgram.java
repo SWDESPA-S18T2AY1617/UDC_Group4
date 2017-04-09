@@ -16,6 +16,7 @@ import server.AppointmentManager;
 import server.DoctorManager;
 import view.DoctorMainView;
 import view.MainView;
+import view.SecretaryMainView;
 import view.TableRenderer;
 import model.Person;
 
@@ -30,6 +31,7 @@ public class CalendarProgram {
 	protected LocalDate date;
 	protected int col = -1;
 	protected int row = -1;
+	protected String theFilter;
 	
 	protected MainView mainView;
 	protected AppointmentHandler eventH;
@@ -50,14 +52,14 @@ public class CalendarProgram {
 		this.person = person;
 		sIndex = 100;
 		this.eventH = new AppointmentHandler(apptManager);
-		
+		theFilter = "NONE";
 		setFrame();
 
 		this.mainView.setVisible(true);
 		this.mainView.getCalendarView().getCalendarTable().setModel(eventH.getCalendarModel(monthToday, yearToday));
 		
-		refreshDay();
-		refreshWeek();
+		refreshDay(theFilter);
+		refreshWeek(theFilter);
 		refreshdAgenda();
 		refreshwAgenda();
 		refreshCalendar();
@@ -94,57 +96,144 @@ public class CalendarProgram {
 		if(mainView instanceof DoctorMainView)
 			mainView.getCreateView().getBtnSave().addActionListener(new btnSave_Action());
 //		mainView.getCreateView().getBtnDiscard().addActionListener(new btnDiscard_Action());
+		
+		
 		mainView.getTypeView().getFreeCheckBox().addItemListener(new ItemListener() {
+			
 			public void itemStateChanged(ItemEvent e) {
-				if (mainView.getTypeView().getFreeCheckBox().isSelected()) {
-					if (mainView.getTypeView().getReservedCheckBox().isSelected()) {
-						refreshdAgenda();
-						refreshDay();
-					} else {
-						refreshEventAgenda();
-						refreshDaySpecific("event");
+				
+				if(mainView instanceof DoctorMainView || mainView instanceof SecretaryMainView) {
+					
+					//if free is clicked.
+					if (mainView.getTypeView().getFreeCheckBox().isSelected()) {
+						
+						//if reserved is also clicked, print both.
+						if (mainView.getTypeView().getReservedCheckBox().isSelected()) {
+							theFilter = "NONE";
+							System.out.println(theFilter);
+							refreshWeek(theFilter);
+							refreshDay(theFilter);
+						} 
+						
+						//if not, just print free.
+						else {
+	    					System.out.println("-FREE CLICKED-");
+	    					theFilter = "FREE";
+	    					System.out.println(theFilter);
+							refreshWeek(theFilter);
+							refreshDay(theFilter);
+						}
+						
+					} 
+					
+					//if free is deselected, but reserved is selected. Display reserved.
+					else if (!(mainView.getTypeView().getFreeCheckBox().isSelected())
+							&& mainView.getTypeView().getReservedCheckBox().isSelected()) {
+    					theFilter = "RESERVED";
+    					System.out.println(theFilter);
+						refreshWeek(theFilter);
+						refreshDay(theFilter);
+					} 
+					
+					//If none are selected... just print both.. again
+					else if (!(mainView.getTypeView().getFreeCheckBox().isSelected())
+							&& !(mainView.getTypeView().getReservedCheckBox().isSelected())) {
+						theFilter = "NONE";
+						System.out.println(theFilter);
+						refreshWeek(theFilter);
+						refreshDay(theFilter);
 					}
-				} else if (!(mainView.getTypeView().getFreeCheckBox().isSelected())
-						&& mainView.getTypeView().getReservedCheckBox().isSelected()) {
-					refreshTaskAgenda();
-					refreshDaySpecific("todo");
-				} else if (!(mainView.getTypeView().getFreeCheckBox().isSelected())
-						&& !(mainView.getTypeView().getReservedCheckBox().isSelected())) {
-					refreshdAgenda();
-					refreshDay();
 				}
+				
+				//Else, its the "All" check box.
+				else {
+					//if All is clicked, just print all appointments.
+					if (mainView.getTypeView().getFreeCheckBox().isSelected()) {
+						theFilter = "NONE";
+						System.out.println(theFilter);
+						refreshWeek(theFilter);
+						refreshDay(theFilter);
+					} 
+					
+					//if All is deselected, but reserved is selected. Display reserved FOR THAT CLIENT ONLY (STILL NEED TO FIX).
+					else if (!(mainView.getTypeView().getFreeCheckBox().isSelected())
+							&& mainView.getTypeView().getReservedCheckBox().isSelected()) {
+    					theFilter = "RESERVED";
+    					System.out.println(theFilter);
+						refreshWeek(theFilter);
+						refreshDay(theFilter);
+					} 
+					
+					//If none are selected... just print both.. again
+					else if (!(mainView.getTypeView().getFreeCheckBox().isSelected())
+							&& !(mainView.getTypeView().getReservedCheckBox().isSelected())) {
+						theFilter = "NONE";
+						System.out.println(theFilter);
+						refreshWeek(theFilter);
+						refreshDay(theFilter);
+					}
+					
+
+				}
+
+
 			}
 		});
 		mainView.getTypeView().getReservedCheckBox().addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
-				// TODO Auto-generated method stub
+				
+				System.out.println("-RESERVED CLICKED-");
+				//if reserved is selected
 				if (mainView.getTypeView().getReservedCheckBox().isSelected()) {
+					
+					//if free is also selected, print both.
 					if (mainView.getTypeView().getFreeCheckBox().isSelected()) {
-						refreshdAgenda();
-						refreshDay();
-					} else {
-						refreshTaskAgenda();
-						refreshDaySpecific("todo");
+						theFilter = "NONE";
+						System.out.println(theFilter);
+						refreshWeek(theFilter);
+						refreshDay(theFilter);
+						
+					} 
+					
+					//If not, then just display the reserved.
+					else {
+						theFilter = "RESERVED";
+    					System.out.println(theFilter);
+						refreshWeek(theFilter);
+						refreshDay(theFilter);
 					}
-				} else if (!(mainView.getTypeView().getReservedCheckBox().isSelected())
+					
+				} 
+				
+				//if reserved is deselected, but free is still checked. Display free.
+				else if (!(mainView.getTypeView().getReservedCheckBox().isSelected())
 						&& mainView.getTypeView().getFreeCheckBox().isSelected()) {
-					refreshEventAgenda();
-					refreshDaySpecific("event");
-				} else if (!(mainView.getTypeView().getFreeCheckBox().isSelected())
+					theFilter = "FREE";
+					System.out.println(theFilter);
+					refreshWeek(theFilter);
+					refreshDay(theFilter);
+					
+				} 
+				
+				//if both are deselected.. just print both
+				else if (!(mainView.getTypeView().getFreeCheckBox().isSelected())
 						&& !(mainView.getTypeView().getReservedCheckBox().isSelected())) {
-					refreshdAgenda();
-					refreshDay();
+					theFilter = "NONE";
+					System.out.println(theFilter);
+					refreshWeek(theFilter);
+					refreshDay(theFilter);
 				}
+
 			}
 		});
 
 		mainView.getCalendarView().getCmbYear().addActionListener(new cmbYear_Action());
 
 		refreshdAgenda();
-		refreshDay();
+		refreshDay(theFilter);
 		refreshwAgenda();
-		refreshWeek();
+		refreshWeek(theFilter);
 	}
 
 	protected void refreshCalendar() { // sets the view based on the current month
@@ -169,38 +258,39 @@ public class CalendarProgram {
 				mainView.getCalendarView().getCalendarTable().getColumnClass(0), new TableRenderer()); // updates the renderer used to change the color of a cell 
 	}
 
-	protected void refreshDay() {
+	protected void refreshDay(String filter) {
 		if(mainView instanceof DoctorMainView){
-			mainView.getDayView().getDayTable().setModel(eventH.getDoctorDayModel(mainView.getAppID(), getDate()));
+			mainView.getDayView().getDayTable().setModel(eventH.getDoctorDayModel(mainView.getAppID(), getDate(), filter));
 			mainView.getDayView().getDayTable().setDefaultRenderer(mainView.getDayView().getDayTable().getColumnClass(0),
-						eventH.getDoctorDayRenderer(mainView.getAppID()));
+						eventH.getDoctorDayRenderer(mainView.getAppID(), filter));
 		}else{
-			mainView.getDayView().getDayTable().setModel(eventH.getDayModel(getDate()));
+			mainView.getDayView().getDayTable().setModel(eventH.getDayModel(getDate(), filter));
 			mainView.getDayView().getDayTable().setDefaultRenderer(mainView.getDayView().getDayTable().getColumnClass(0),
-						eventH.getDayRenderer());
+					eventH.getDayRenderer(filter));
 		}
 	}
 
-	protected void refreshDaySpecific(String style) {
-		
-		if(mainView instanceof DoctorMainView){
-			mainView.getDayView().getDayTable().setModel(eventH.getDoctorEventDayModel(mainView.getAppID(), getDate()));
-			mainView.getDayView().getDayTable().setDefaultRenderer(mainView.getDayView().getDayTable().getColumnClass(0),
-						eventH.getDoctorDayRenderer(mainView.getAppID()));
-		}else{
-			mainView.getDayView().getDayTable().setModel(eventH.getEventDayModel(getDate()));
-			mainView.getDayView().getDayTable().setDefaultRenderer(mainView.getDayView().getDayTable().getColumnClass(0),
-					eventH.getDayRenderer());
-		}
-	}
+//	protected void refreshDaySpecific(String style) {
+//
+//		
+//		if(mainView instanceof DoctorMainView){
+//			mainView.getDayView().getDayTable().setModel(eventH.getDoctorEventDayModel(mainView.getAppID(), getDate()));
+//			mainView.getDayView().getDayTable().setDefaultRenderer(mainView.getDayView().getDayTable().getColumnClass(0),
+//						eventH.getDoctorDayRenderer(mainView.getAppID()));
+//		}else{
+//			mainView.getDayView().getDayTable().setModel(eventH.getEventDayModel(getDate()));
+//			mainView.getDayView().getDayTable().setDefaultRenderer(mainView.getDayView().getDayTable().getColumnClass(0),
+//					eventH.getDayRenderer());
+//		}
+//	}
 	
-	protected void refreshWeek() {
+	protected void refreshWeek(String filter) {
 		if(mainView instanceof DoctorMainView){
-			mainView.getWeekView().getWeekTable().setModel(eventH.getDoctorWeekModel(mainView.getAppID(), getDate()));
-			mainView.getWeekView().getWeekTable().setDefaultRenderer(mainView.getWeekView().getWeekTable().getColumnClass(0), eventH.getDoctorWeekRenderer(mainView.getAppID()));
+			mainView.getWeekView().getWeekTable().setModel(eventH.getDoctorWeekModel(mainView.getAppID(), getDate(), filter));
+			mainView.getWeekView().getWeekTable().setDefaultRenderer(mainView.getWeekView().getWeekTable().getColumnClass(0), eventH.getDoctorWeekRenderer(mainView.getAppID(), filter));
 		}else{
-			mainView.getWeekView().getWeekTable().setModel(eventH.getWeekModel(getDate()));
-			mainView.getWeekView().getWeekTable().setDefaultRenderer(mainView.getWeekView().getWeekTable().getColumnClass(0), eventH.getWeekRenderer());
+			mainView.getWeekView().getWeekTable().setModel(eventH.getWeekModel(getDate(), filter));
+			mainView.getWeekView().getWeekTable().setDefaultRenderer(mainView.getWeekView().getWeekTable().getColumnClass(0), eventH.getWeekRenderer(filter));
 		}
 	}
 
@@ -395,9 +485,9 @@ public class CalendarProgram {
 			
 			refreshCalendar();
 			refreshdAgenda();
-			refreshDay();
+			refreshDay(theFilter);
 			refreshwAgenda();
-			refreshWeek();
+			refreshWeek(theFilter);
 		}
 	}
 
@@ -419,9 +509,9 @@ public class CalendarProgram {
 			
 			refreshCalendar();
 			refreshdAgenda();
-			refreshDay();
+			refreshDay(theFilter);
 			refreshwAgenda();
-			refreshWeek();
+			refreshWeek(theFilter);
 		}
 	}
 
@@ -499,8 +589,8 @@ public class CalendarProgram {
 			
 			refreshdAgenda();
 			refreshwAgenda();
-			refreshDay();
-			refreshWeek();
+			refreshDay(theFilter);
+			refreshWeek(theFilter);
 		}
 
 		@Override
@@ -525,8 +615,8 @@ public class CalendarProgram {
 				refreshCalendar();
 				refreshdAgenda();
 				refreshwAgenda();
-				refreshDay();
-				refreshWeek();
+				refreshDay(theFilter);
+				refreshWeek(theFilter);
 			}
 		}
 	}
@@ -558,9 +648,9 @@ public class CalendarProgram {
 			else
 				eventH.addAppointment(getDate(), "Appointment " + (eventH.getAppointments().size() + 1), LocalTime.of(shour, sminute), LocalTime.of(ehour, eminute), mainView.getAppID(), "Red");
 			
-			refreshDay();
+			refreshDay(theFilter);
 			refreshdAgenda();
-			refreshWeek();
+			refreshWeek(theFilter);
 			refreshwAgenda();
 		
 //			for (i = 0; i < eventH.getAppointments().size(); i++) {
@@ -607,9 +697,9 @@ public class CalendarProgram {
 	{
 		eventH.setAppointments(appointments);
 		
-		refreshDay();
+		refreshDay(theFilter);
 		refreshdAgenda();
-		refreshWeek();
+		refreshWeek(theFilter);
 		refreshwAgenda();
 	}
 	

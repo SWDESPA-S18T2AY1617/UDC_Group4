@@ -62,8 +62,8 @@ public class ClientController extends CalendarProgram
 			
 		}
 		
-		refreshDay();
-		refreshWeek();
+		refreshDay(theFilter);
+		refreshWeek(theFilter);
 		refreshdAgenda();
 		refreshwAgenda();
 		
