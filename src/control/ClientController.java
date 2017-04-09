@@ -49,7 +49,7 @@ public class ClientController extends CalendarProgram
 						eventH.getAppointments().get(ctr).setClientID(1);
 						eventH.getAppointments().get(ctr).setColor("Red");
 						eventH.getAppointments().get(ctr).setStatus(false);
-						eventH.getAppointmentManager().updateAppointment(eventH.getAppointments().get(ctr));
+						eventH.getAppointmentManager().cancelAppointment(eventH.getAppointments().get(ctr));
 					}
 				}
 			}

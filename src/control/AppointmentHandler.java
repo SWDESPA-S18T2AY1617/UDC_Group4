@@ -90,8 +90,12 @@ public class AppointmentHandler {
     public ArrayList<Appointment> getWeekEvents(LocalDate date)
     {
     	ArrayList<Appointment> weekAppointments = new ArrayList<Appointment>();
+    	ArrayList<Appointment> temp = new ArrayList<Appointment>();
     	int value1 = 0;
         int value2 = 0;
+        
+        LocalDate date1 = null;
+    	LocalDate date2;
         
     	for (int ctr = 0; ctr < Appointments.size(); ctr++) { //searches for the events for this month and year
         	
@@ -124,8 +128,6 @@ public class AppointmentHandler {
         		value2 = 7;
         	}
         	
-        	LocalDate date1;
-        	LocalDate date2;
         	
         	if(date.getDayOfYear() > 7){
         		date1 = LocalDate.ofYearDay(date.getYear(), date.getDayOfYear() + value1);
@@ -138,11 +140,21 @@ public class AppointmentHandler {
 	        	
         	
         	if (Appointments.get(ctr).getAppointmentDate().isAfter(date1) && Appointments.get(ctr).getAppointmentDate().isBefore(date2) && !(Appointments.get(ctr).getAppointmentDate().getDayOfWeek().name().equalsIgnoreCase("Sunday")) && !(Appointments.get(ctr).getAppointmentDate().getDayOfWeek().name().equalsIgnoreCase("Saturday"))){
+               
                weekAppointments.add(Appointments.get(ctr));
         	}
         }       
     	
-    	return weekAppointments;
+    	for(int ctr2 = 1 ; ctr2 < 7 ; ctr2 ++){
+    		for(int ctr3 = 0 ; ctr3 < weekAppointments.size(); ctr3++){
+    			if(date1.plusDays(ctr2).compareTo(weekAppointments.get(ctr3).getAppointmentDate()) == 0){
+    				temp.add(weekAppointments.get(ctr3));
+    			}
+    		}
+    			
+    	}
+    	
+    	return temp;
     }
     
     private void updateWeekTable(LocalDate date)
