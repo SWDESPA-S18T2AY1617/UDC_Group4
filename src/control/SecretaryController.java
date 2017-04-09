@@ -27,7 +27,13 @@ public class SecretaryController extends CalendarProgram
 //		int maxCtr = secretaryManager.getAllSecretary().size();
 //		for(int ctr = 0; ctr < maxCtr; ctr++){
 //			getCalendarProgram().add(new CalendarProgram(new SecretaryMainView()));
-//		}	
+//		}
+		mainView.getTypeView().getComboBox().addItem("all");
+		for(int ctr=0;ctr < apptManager.getAllController().size(); ctr++)
+			if(apptManager.getAllController().get(ctr) instanceof DoctorController)	{
+				mainView.getTypeView().getComboBox().addItem(apptManager.getAllController().get(ctr).getPerson().getName()+" "+apptManager.getAllController().get(ctr).getPerson().getID());
+			}
+			
 		mainView.getDayView().getDayTable().addMouseListener(new scrollPanelDay_Action());
 		mainView.getWeekView().getWeekTable().addMouseListener(new scrollPanelWeek_Action());
 	}

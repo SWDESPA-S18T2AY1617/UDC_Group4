@@ -18,6 +18,10 @@ public class AppointmentManager {
 	private PreparedStatement statement;
 	private ArrayList<CalendarProgram> allController;
 	
+	
+	public ArrayList<CalendarProgram> getAllController(){
+		return allController;
+	}
 	public AppointmentManager (ArrayList<CalendarProgram> ac)
 	{
 		DBConnection connection = new DBConnection ();

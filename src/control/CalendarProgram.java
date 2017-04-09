@@ -298,7 +298,7 @@ public class CalendarProgram {
 
 			}
 		});
-
+        
 		mainView.getCalendarView().getCmbYear().addActionListener(new cmbYear_Action());
 
 		refreshdAgenda();

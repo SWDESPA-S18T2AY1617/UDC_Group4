@@ -13,9 +13,9 @@ public class MainController
 	{
 		apptManager = new AppointmentManager(AllController);
 		AllController.add(new DoctorController(apptManager));
-		AllController.add(new ClientController(apptManager));
-		AllController.add(new ClientController(apptManager));
 		AllController.add(new DoctorController(apptManager));
+		AllController.add(new ClientController(apptManager));
+		AllController.add(new ClientController(apptManager));
 		AllController.add(new SecretaryController(apptManager));
 		
 //		for(int ctr=0;ctr<AllController.size();ctr++){
