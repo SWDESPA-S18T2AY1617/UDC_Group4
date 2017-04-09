@@ -519,6 +519,7 @@ public class CalendarProgram {
 				for(int ctr=date.getDayOfYear(); ctr<365;ctr++){
 					if(LocalDate.ofYearDay(date.getYear(), ctr).getDayOfWeek().name().equalsIgnoreCase(date.getDayOfWeek().name())){
 						eventH.addAppointment(LocalDate.ofYearDay(date.getYear(), ctr), "Appointment " + (eventH.getAppointments().size() + 1), LocalTime.of(shour, sminute), LocalTime.of(ehour, eminute), mainView.getAppID(), "Red");
+						eventH.sync(eventH.getAppointments().get(eventH.getAppointments().size()-1));
 						System.out.println("Day of Event" + LocalDate.ofYearDay(date.getYear(), ctr));
 						System.out.println("Added");
 					}
@@ -528,7 +529,7 @@ public class CalendarProgram {
 				eventH.addAppointment(getDate(), "Appointment " + (eventH.getAppointments().size() + 1), LocalTime.of(shour, sminute), LocalTime.of(ehour, eminute), mainView.getAppID(), "Red");
 			
 
-			eventH.sync(startIndex);
+			
 			
 			refreshDay();
 			refreshdAgenda();

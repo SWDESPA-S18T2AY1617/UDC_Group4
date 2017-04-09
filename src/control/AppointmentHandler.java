@@ -412,10 +412,8 @@ public class AppointmentHandler {
 		return filtered;	
 	}
 	
-	public void sync(int i){
-        for(; i < this.getAppointments().size() ; i++){
-            getAppointmentManager().addAppointment(this.getAppointments().get(i));
-        }
+	public void sync(Appointment a){
+		getAppointmentManager().addAppointment(a);
     }
 
 	public AppointmentManager getAppointmentManager() {
