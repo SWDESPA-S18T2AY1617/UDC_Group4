@@ -30,27 +30,30 @@ public class ClientController extends CalendarProgram
 		
 		for (int ctr= 0 ;ctr< eventH.getAppointments().size(); ctr++) {
 			Appointment cI = eventH.getAppointments().get(ctr);
-			if (cI.getAppointmentName().equalsIgnoreCase(event) && cI.isStatus() == false) {
-				String name = JOptionPane.showInputDialog("Appointment name?");
-				if (name != null){	
-					eventH.getAppointments().get(ctr).setAppointmentName(name);
-					eventH.getAppointments().get(ctr).setClientID(mainView.getAppID());
-					eventH.getAppointments().get(ctr).setColor("Blue");
-					eventH.getAppointments().get(ctr).setStatus(true);
-					eventH.getAppointmentManager().updateAppointment(eventH.getAppointments().get(ctr));
+			if (cI.getAppointmentName().equalsIgnoreCase(event)) {
+				if(cI.isStatus() == false){
+					String name = JOptionPane.showInputDialog("Appointment name?");
+					if (name != null){	
+						eventH.getAppointments().get(ctr).setAppointmentName(name);
+						eventH.getAppointments().get(ctr).setClientID(mainView.getAppID());
+						eventH.getAppointments().get(ctr).setColor("Blue");
+						eventH.getAppointments().get(ctr).setStatus(true);
+						eventH.getAppointmentManager().updateAppointment(eventH.getAppointments().get(ctr));
+					}
+				}
+				else
+				{
+					int decide = JOptionPane.showConfirmDialog(null, "Cancel?");
+					if (decide == JOptionPane.YES_OPTION) {
+						eventH.getAppointments().get(ctr).setAppointmentName("Free Appointment");
+						eventH.getAppointments().get(ctr).setClientID(1);
+						eventH.getAppointments().get(ctr).setColor("Red");
+						eventH.getAppointments().get(ctr).setStatus(false);
+						eventH.getAppointmentManager().updateAppointment(eventH.getAppointments().get(ctr));
+					}
 				}
 			}
-			else
-			{
-				int decide = JOptionPane.showConfirmDialog(null, "Cancel?");
-				if (decide == JOptionPane.YES_OPTION) {
-					eventH.getAppointments().get(ctr).setAppointmentName("Free Appointment");
-					eventH.getAppointments().get(ctr).setClientID(1);
-					eventH.getAppointments().get(ctr).setColor("Red");
-					eventH.getAppointments().get(ctr).setStatus(false);
-					eventH.getAppointmentManager().updateAppointment(eventH.getAppointments().get(ctr));
-				}
-			}
+			
 		}
 		
 		refreshDay();
