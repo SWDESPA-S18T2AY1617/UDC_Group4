@@ -10,7 +10,6 @@ import java.util.ArrayList;
 
 import control.CalendarProgram;
 import model.Appointment;
-import model.Appointment;
 import server.DBConnection;
 
 public class AppointmentManager {
@@ -116,8 +115,8 @@ public class AppointmentManager {
 	{
 		try {
 			String query = "INSERT INTO " + Appointment.TABLE_NAME +  
-					" (" + Appointment.COL_ID + 
-					", " + Appointment.COL_DATE + 
+					" (" + 
+					Appointment.COL_DATE + 
 					", " + Appointment.COL_TIMESTART + 
 					", " + Appointment.COL_TIMEEND +
 					", " + Appointment.COL_APPOINTMENTNAME +
@@ -128,22 +127,22 @@ public class AppointmentManager {
 					", " + Appointment.COL_STARTROW + 
 					", " + Appointment.COL_ENDROW + 
 					", " + Appointment.COL_COLWEEK + ") " +
-					" VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+					" VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 			
 			statement = connect.prepareStatement(query);
 			
-			statement.setInt(1, appointment.getAppointmentID());
-			statement.setDate(2, Date.valueOf(appointment.getAppointmentDate()));
-			statement.setTime(3, Time.valueOf(appointment.getLocalTimeIn()));
-			statement.setTime(4, Time.valueOf(appointment.getLocalTimeOut()));
-			statement.setString(5, appointment.getAppointmentName());
-			statement.setNull(6, java.sql.Types.INTEGER);
-			statement.setInt(7, appointment.getDoctorID());
-			statement.setBoolean(8, appointment.isStatus());
-			statement.setString(9, appointment.getColorName());
-			statement.setInt(10, appointment.getStartRowDay());
-			statement.setInt(11, appointment.getEndRowDay());
-			statement.setInt(12, appointment.getColWeek());
+			
+			statement.setDate(1, Date.valueOf(appointment.getAppointmentDate()));
+			statement.setTime(2, Time.valueOf(appointment.getLocalTimeIn()));
+			statement.setTime(3, Time.valueOf(appointment.getLocalTimeOut()));
+			statement.setString(4, appointment.getAppointmentName());
+			statement.setNull(5, java.sql.Types.INTEGER);
+			statement.setInt(6, appointment.getDoctorID());
+			statement.setBoolean(7, appointment.isStatus());
+			statement.setString(8, appointment.getColorName());
+			statement.setInt(9, appointment.getStartRowDay());
+			statement.setInt(10, appointment.getEndRowDay());
+			statement.setInt(11, appointment.getColWeek());
 			
 			statement.executeUpdate();
 			

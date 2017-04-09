@@ -38,8 +38,7 @@ public class Appointment{
 		
 	}
 	
-	public Appointment(int appointmentID, String appointmentName, String color, LocalDate appointmentDate, LocalTime LocalTimeIn, LocalTime LocalTimeOut, int DoctorID){
-		this.appointmentID = appointmentID;
+	public Appointment(String appointmentName, String color, LocalDate appointmentDate, LocalTime LocalTimeIn, LocalTime LocalTimeOut, int DoctorID){
 		this.appointmentName = appointmentName;
 		this.appointmentDate = appointmentDate;
 		this.timeIn = LocalTimeIn;

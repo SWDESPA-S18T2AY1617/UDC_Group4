@@ -286,12 +286,13 @@ public class AppointmentHandler {
 
     public void addAppointment(LocalDate date, String event, LocalTime timeIn, LocalTime timeOut, int doctorID, String color) {
     	
-    	Appointment wantedAppointment = new Appointment(Appointments.size(), event, color, date, timeIn, timeOut, doctorID);
+    	Appointment wantedAppointment = new Appointment(event, color, date, timeIn, timeOut, doctorID);
 
 		if(!checkForConflicts(wantedAppointment)) {
 			System.out.println(checkForConflicts(wantedAppointment));
 			System.out.println("**ADDED!**\n");
 			getAppointments().add(wantedAppointment);
+			sync(wantedAppointment);
 		}
 		
 		else {
