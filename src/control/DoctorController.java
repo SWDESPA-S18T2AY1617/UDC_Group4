@@ -19,9 +19,6 @@ import model.Doctor;
 public class DoctorController extends CalendarProgram
 {
 	private DoctorManager doctorManager;
-	private int col = -1;
-	private int row = -1;
-//	private ArrayList<CalendarProgram> calendarProgram;
 	
 	public DoctorController(AppointmentManager apptManager)
 	{	

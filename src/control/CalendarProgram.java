@@ -13,13 +13,11 @@ import java.time.LocalTime;
 
 import model.Appointment;
 import server.AppointmentManager;
-import view.ClientMainView;
 import view.DoctorMainView;
 import view.MainView;
-import view.SecretaryMainView;
 import view.TableRenderer;
+import model.Person;
 
-import model.Person
 public class CalendarProgram {
 
 	protected GregorianCalendar cal = new GregorianCalendar();
@@ -37,6 +35,7 @@ public class CalendarProgram {
 	protected ArrayList<Appointment> sortedDay;
 	protected ArrayList<Appointment> sortedWeek;
 	protected Person person;
+	
 	public CalendarProgram(MainView mainView, AppointmentManager apptManager, Person person) {
 		monthToday = cal.get(GregorianCalendar.MONTH);
 		yearToday = cal.get(GregorianCalendar.YEAR);
