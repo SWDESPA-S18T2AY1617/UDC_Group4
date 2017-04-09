@@ -38,6 +38,8 @@ public class CalendarProgram {
 	protected ArrayList<Appointment> sortedDay;
 	protected ArrayList<Appointment> sortedWeek;
 	protected ArrayList<Appointment> sortedDoctor;
+	protected ArrayList<Appointment> openSlots;
+	protected ArrayList<Appointment> closedSlots;
 	protected Person person;
 	
 	protected DoctorManager DManager = new DoctorManager();
@@ -102,17 +104,30 @@ public class CalendarProgram {
 			
 			public void itemStateChanged(ItemEvent e) {
 				
+				openSlots = eventH.getOpenSlots();
+				closedSlots = eventH.getClosedSlots();
+				
 				if(mainView instanceof DoctorMainView || mainView instanceof SecretaryMainView) {
 					
 					//if free is clicked.
 					if (mainView.getTypeView().getFreeCheckBox().isSelected()) {
-						
+			
 						//if reserved is also clicked, print both.
 						if (mainView.getTypeView().getReservedCheckBox().isSelected()) {
 							theFilter = "NONE";
 							System.out.println(theFilter);
 							refreshWeek(theFilter);
 							refreshDay(theFilter);
+							
+							for (int ctr = 0; ctr < openSlots.size(); ctr++) {
+								System.out.println("--" + openSlots.get(ctr).getAppointmentName());
+							}
+							
+							for (int ctr = 0; ctr < closedSlots.size(); ctr++) {
+								System.out.println("--" + closedSlots.get(ctr).getAppointmentName());
+							}
+							
+							refreshdAgenda();
 						} 
 						
 						//if not, just print free.
@@ -122,6 +137,12 @@ public class CalendarProgram {
 	    					System.out.println(theFilter);
 							refreshWeek(theFilter);
 							refreshDay(theFilter);
+							
+							for (int ctr = 0; ctr < openSlots.size(); ctr++) {
+								System.out.println("--" + openSlots.get(ctr).getAppointmentName());
+							}
+							
+							showOpen();
 						}
 						
 					} 
@@ -129,10 +150,18 @@ public class CalendarProgram {
 					//if free is deselected, but reserved is selected. Display reserved.
 					else if (!(mainView.getTypeView().getFreeCheckBox().isSelected())
 							&& mainView.getTypeView().getReservedCheckBox().isSelected()) {
-    					theFilter = "RESERVED";
+			
+						theFilter = "RESERVED";
     					System.out.println(theFilter);
 						refreshWeek(theFilter);
 						refreshDay(theFilter);
+						
+						for (int ctr = 0; ctr < closedSlots.size(); ctr++) {
+							System.out.println("--" + closedSlots.get(ctr).getAppointmentName());
+						}
+						
+						showClosed();
+						
 					} 
 					
 					//If none are selected... just print both.. again
@@ -142,6 +171,16 @@ public class CalendarProgram {
 						System.out.println(theFilter);
 						refreshWeek(theFilter);
 						refreshDay(theFilter);
+						
+						for (int ctr = 0; ctr < openSlots.size(); ctr++) {
+							System.out.println("--" + openSlots.get(ctr).getAppointmentName());
+						}
+						
+						for (int ctr = 0; ctr < closedSlots.size(); ctr++) {
+							System.out.println("--" + closedSlots.get(ctr).getAppointmentName());
+						}
+						
+						refreshdAgenda();
 					}
 				}
 				
@@ -175,13 +214,14 @@ public class CalendarProgram {
 					
 
 				}
-
-
 			}
 		});
 		mainView.getTypeView().getReservedCheckBox().addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
+				
+				openSlots = eventH.getOpenSlots();
+				closedSlots = eventH.getClosedSlots();
 				
 				System.out.println("-RESERVED CLICKED-");
 				//if reserved is selected
@@ -194,6 +234,15 @@ public class CalendarProgram {
 						refreshWeek(theFilter);
 						refreshDay(theFilter);
 						
+						for (int ctr = 0; ctr < openSlots.size(); ctr++) {
+							System.out.println("--" + openSlots.get(ctr).getAppointmentName());
+						}
+						
+						for (int ctr = 0; ctr < closedSlots.size(); ctr++) {
+							System.out.println("--" + closedSlots.get(ctr).getAppointmentName());
+						}
+						
+						refreshdAgenda();
 					} 
 					
 					//If not, then just display the reserved.
@@ -202,6 +251,12 @@ public class CalendarProgram {
     					System.out.println(theFilter);
 						refreshWeek(theFilter);
 						refreshDay(theFilter);
+						
+						for (int ctr = 0; ctr < closedSlots.size(); ctr++) {
+							System.out.println("--" + closedSlots.get(ctr).getAppointmentName());
+						}
+						
+						showClosed();
 					}
 					
 				} 
@@ -214,6 +269,12 @@ public class CalendarProgram {
 					refreshWeek(theFilter);
 					refreshDay(theFilter);
 					
+					for (int ctr = 0; ctr < openSlots.size(); ctr++) {
+						System.out.println("--" + openSlots.get(ctr).getAppointmentName());
+					}
+					
+					showOpen();
+					
 				} 
 				
 				//if both are deselected.. just print both
@@ -223,6 +284,16 @@ public class CalendarProgram {
 					System.out.println(theFilter);
 					refreshWeek(theFilter);
 					refreshDay(theFilter);
+					
+					for (int ctr = 0; ctr < openSlots.size(); ctr++) {
+						System.out.println("--" + openSlots.get(ctr).getAppointmentName());
+					}
+					
+					for (int ctr = 0; ctr < closedSlots.size(); ctr++) {
+						System.out.println("--" + closedSlots.get(ctr).getAppointmentName());
+					}
+					
+					refreshdAgenda();
 				}
 
 			}
@@ -270,20 +341,7 @@ public class CalendarProgram {
 		}
 	}
 
-//	protected void refreshDaySpecific(String style) {
-//
-//		
-//		if(mainView instanceof DoctorMainView){
-//			mainView.getDayView().getDayTable().setModel(eventH.getDoctorEventDayModel(mainView.getAppID(), getDate()));
-//			mainView.getDayView().getDayTable().setDefaultRenderer(mainView.getDayView().getDayTable().getColumnClass(0),
-//						eventH.getDoctorDayRenderer(mainView.getAppID()));
-//		}else{
-//			mainView.getDayView().getDayTable().setModel(eventH.getEventDayModel(getDate()));
-//			mainView.getDayView().getDayTable().setDefaultRenderer(mainView.getDayView().getDayTable().getColumnClass(0),
-//					eventH.getDayRenderer());
-//		}
-//	}
-	
+
 	protected void refreshWeek(String filter) {
 		if(mainView instanceof DoctorMainView){
 			mainView.getWeekView().getWeekTable().setModel(eventH.getDoctorWeekModel(mainView.getAppID(), getDate(), filter));
@@ -294,6 +352,62 @@ public class CalendarProgram {
 		}
 	}
 
+	protected void showOpen () {
+		mainView.getAgendaView().getLblEventName().setText("No Upcoming Events");
+		mainView.getAgendaView().getLblEventTime().setText("");
+		
+		for (int ctr = 0; ctr < openSlots.size(); ctr++) {
+			System.out.println("--" + openSlots.get(ctr).getAppointmentName());
+		}
+		
+
+		for (int ctr = 0; ctr < openSlots.size(); ctr++) {
+			if (openSlots.get(ctr).checkSameDate(getDate()) == 0) {
+				if (mainView.getAgendaView().getLblEventName().getText().equalsIgnoreCase("No Upcoming Events")) {
+					mainView.getAgendaView().getLblEventName().setText("<html><font color='"
+							+ openSlots.get(ctr).getColorName() + "'>" + openSlots.get(ctr).getAppointmentName() + "</font>");
+					mainView.getAgendaView().getLblEventTime().setText("<html><font color='"
+							+ openSlots.get(ctr).getColorName() + "'>" + openSlots.get(ctr).getLocalTimeIn() + "-" + openSlots.get(ctr).getLocalTimeOut() + "</font>");
+				} else {
+					mainView.getAgendaView().getLblEventName()
+							.setText(mainView.getAgendaView().getLblEventName().getText() + "<br><font color='"
+									+ openSlots.get(ctr).getColorName() + "'>" + openSlots.get(ctr).getAppointmentName() + "</font>");
+					mainView.getAgendaView().getLblEventTime()
+							.setText(mainView.getAgendaView().getLblEventTime().getText() + "<br><font color='"
+									+ openSlots.get(ctr).getColorName() + "'>" + openSlots.get(ctr).getLocalTimeIn() + "-" + openSlots.get(ctr).getLocalTimeOut() + "</font>");
+				}
+			}
+		}
+	}
+	
+	protected void showClosed () {
+		mainView.getAgendaView().getLblEventName().setText("No Upcoming Events");
+		mainView.getAgendaView().getLblEventTime().setText("");
+		
+		for (int ctr = 0; ctr < closedSlots.size(); ctr++) {
+			System.out.println("--" + closedSlots.get(ctr).getAppointmentName());
+		}
+		
+		for (int ctr = 0; ctr < closedSlots.size(); ctr++) {
+			if (closedSlots.get(ctr).checkSameDate(getDate()) == 0) {
+				if (mainView.getAgendaView().getLblEventName().getText().equalsIgnoreCase("No Upcoming Events")) {
+					mainView.getAgendaView().getLblEventName().setText("<html><font color='"
+							+ closedSlots.get(ctr).getColorName() + "'>" + closedSlots.get(ctr).getAppointmentName() + "</font>");
+					mainView.getAgendaView().getLblEventTime().setText("<html><font color='"
+							+ closedSlots.get(ctr).getColorName() + "'>" + closedSlots.get(ctr).getLocalTimeIn() + "-" + closedSlots.get(ctr).getLocalTimeOut() + "</font>");
+				} else {
+					mainView.getAgendaView().getLblEventName()
+							.setText(mainView.getAgendaView().getLblEventName().getText() + "<br><font color='"
+									+ closedSlots.get(ctr).getColorName() + "'>" + closedSlots.get(ctr).getAppointmentName() + "</font>");
+					mainView.getAgendaView().getLblEventTime()
+							.setText(mainView.getAgendaView().getLblEventTime().getText() + "<br><font color='"
+									+ closedSlots.get(ctr).getColorName() + "'>" + closedSlots.get(ctr).getLocalTimeIn() + "-" + closedSlots.get(ctr).getLocalTimeOut() + "</font>");
+				}
+			}
+		}
+	}
+	
+	
 	protected void refreshdAgenda() {
 		mainView.getAgendaView().getLblEventName().setText("No Upcoming Events");
 		mainView.getAgendaView().getLblEventTime().setText("");

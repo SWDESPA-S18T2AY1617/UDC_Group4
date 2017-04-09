@@ -74,7 +74,7 @@ public class AppointmentHandler {
         
         //All appointments will be displayed.
         if(filter.equalsIgnoreCase("NONE")) {
-        	System.out.println("NO FILTER (updateDayTable)");
+        //	System.out.println("NO FILTER (updateDayTable)");
 	        for (int ctr = 0; ctr < Appointments.size(); ctr++) { //searches for the events for this month and year
 	        	if (Appointments.get(ctr).checkSameDate(date) == 0) {
 	               index = ctr;
@@ -91,7 +91,7 @@ public class AppointmentHandler {
         
         //View free ONLY.
         else if(filter.equalsIgnoreCase("FREE")) {
-        	System.out.println("FREE FILTER (updateDayTable)");
+        	//System.out.println("FREE FILTER (updateDayTable)");
         	//Temporary arrayList
         	ArrayList<Appointment> open = getOpenSlots ();
         	
@@ -111,7 +111,7 @@ public class AppointmentHandler {
         
         //View reserved ONLY.
         else if (filter.equalsIgnoreCase("RESERVED")){
-        	System.out.println("RESERVED FILTER (updateDayTable)");
+        	//System.out.println("RESERVED FILTER (updateDayTable)");
         	//Temporary arrayList
         	ArrayList<Appointment> closed = getClosedSlots();
         	
@@ -142,19 +142,19 @@ public class AppointmentHandler {
 		
 		//use normal appointment list stored in the application/db.
         if(filter.equalsIgnoreCase("NONE")) {
-        	System.out.println("NONE FILTER (updateDoctorDayTable)");
+        //	System.out.println("NONE FILTER (updateDoctorDayTable)");
         	appCopy = Appointments;
         }
         
         //Use appointmint list that only contains RESERVED appointments
         else if(filter.equalsIgnoreCase("RESERVED")) {
-        	System.out.println("RESERVED FILTER (updateDoctorDayTable)");
+        //	System.out.println("RESERVED FILTER (updateDoctorDayTable)");
         	appCopy = this.getClosedSlots();
         }
         
         //Use appointmint list that only contains FREE appointments
         else if(filter.equalsIgnoreCase("FREE")) {
-        	System.out.println("FREE FILTER (updateDoctorDayTable)");
+        //	System.out.println("FREE FILTER (updateDoctorDayTable)");
         	appCopy = this.getOpenSlots();
         }
         
@@ -458,25 +458,25 @@ public class AppointmentHandler {
         
         //use normal appointment list stored in the application/db.
         if(filter.equalsIgnoreCase("NONE")) {
-        	System.out.println("NONE FILTER (updateDoctorWeekTable)");
+       // 	System.out.println("NONE FILTER (updateDoctorWeekTable)");
         	appCopy = Appointments;
         }
         
         //Use appointmint list that only contains RESERVED appointments
         else if(filter.equalsIgnoreCase("RESERVED")) {
-        	System.out.println("RESERVED FILTER (updateDoctorWeekTable)");
+        //	System.out.println("RESERVED FILTER (updateDoctorWeekTable)");
         	appCopy = this.getClosedSlots();
         }
         
         //Use appointmint list that only contains FREE appointments
         else if(filter.equalsIgnoreCase("FREE")) {
-        	System.out.println("FREE FILTER (updateDoctorWeekTable)");
+       // 	System.out.println("FREE FILTER (updateDoctorWeekTable)");
         	appCopy = this.getOpenSlots();
         }
         
         //error, use the original list.
         else {
-        	System.out.println("ERROR, FILTER NOT FOUND (updateDoctorWeekTable)");
+       // 	System.out.println("ERROR, FILTER NOT FOUND (updateDoctorWeekTable)");
         	appCopy = Appointments;
         }
 		
@@ -653,7 +653,7 @@ public class AppointmentHandler {
 //    	System.out.println("Number = " +itemIndex.size());
     	
     	if(filter.equalsIgnoreCase("NONE")) {
-    		System.out.println("NO FILTER, (getDayRenderer)");
+    	//	System.out.println("NO FILTER, (getDayRenderer)");
 	    	for(int i = 0; i < itemIndex.size();i++){
 	    		startRowList.add(getAppointments().get(itemIndex.get(i)).getStartRowDay());
 	    		endRowList.add(getAppointments().get(itemIndex.get(i)).getEndRowDay());
@@ -663,7 +663,7 @@ public class AppointmentHandler {
     	}
     	
     	else if(filter.equalsIgnoreCase("FREE")) {
-    		System.out.println("FREE FILTER, (getDayRenderer)");
+    	//	System.out.println("FREE FILTER, (getDayRenderer)");
     		//temp arraylist again.
     		ArrayList<Appointment> open = this.getOpenSlots();
 	    	for(int i = 0; i < itemIndex.size();i++){
@@ -674,7 +674,7 @@ public class AppointmentHandler {
     	}
     	
     	else if(filter.equalsIgnoreCase("RESERVED")) {
-    		System.out.println("RESERVED FILTER, (getDayRenderer)");
+    	//	System.out.println("RESERVED FILTER, (getDayRenderer)");
     		ArrayList<Appointment> closed = this.getClosedSlots();
 	    	for(int i = 0; i < itemIndex.size();i++){
 	    		startRowList.add(closed.get(itemIndex.get(i)).getStartRowDay());
@@ -698,25 +698,25 @@ public class AppointmentHandler {
     	
     	//Filter that states all appointment to be used.
     	if(filter.equalsIgnoreCase("NONE")) {
-    		System.out.println("NONE, FILTER FOUND. (getDoctorDayRenderer)");
+    	//	System.out.println("NONE, FILTER FOUND. (getDoctorDayRenderer)");
     		appCopy = getAppointments();
     	}
     	
     	//Appointments that are only free/open are given.
     	else if(filter.equalsIgnoreCase("FREE")) {
-    		System.out.println("FREE, FILTER FOUND. (getDoctorDayRenderer)");
+    	//	System.out.println("FREE, FILTER FOUND. (getDoctorDayRenderer)");
     		appCopy = this.getOpenSlots();
     	}
     	
     	//appointments that are only closed/reserved are given.
     	else if(filter.equalsIgnoreCase("RESERVED")) {
-    		System.out.println("RESERVED, FILTER FOUND. (getDoctorDayRenderer)");
+    	//	System.out.println("RESERVED, FILTER FOUND. (getDoctorDayRenderer)");
     		appCopy = this.getClosedSlots();
     	}
     	
     	//error.
     	else {
-    		System.out.println("ERROR, FILTER NOT FOUND. (getDoctorDayRenderer)");
+    	//	System.out.println("ERROR, FILTER NOT FOUND. (getDoctorDayRenderer)");
     		appCopy = getAppointments();
     	}
 		
@@ -753,22 +753,22 @@ public class AppointmentHandler {
     	//Choose what list to use.
     	ArrayList<Appointment> appointmentList;
     	if(filter.equalsIgnoreCase("NONE")) {
-    		System.out.println("NONE, FILTER FOUND. (getWeekRenderer)");
+    	//	System.out.println("NONE, FILTER FOUND. (getWeekRenderer)");
     		appointmentList = getAppointments();
     	}
     	
     	else if(filter.equalsIgnoreCase("FREE")) {
-    		System.out.println("FREE, FILTER FOUND. (getWeekRenderer)");
+    	//	System.out.println("FREE, FILTER FOUND. (getWeekRenderer)");
     		appointmentList = this.getOpenSlots();
     	}
     	
     	else if(filter.equalsIgnoreCase("RESERVED")) {
-    		System.out.println("RESERVED, FILTER FOUND. (getWeekRenderer)");
+    	//	System.out.println("RESERVED, FILTER FOUND. (getWeekRenderer)");
     		appointmentList = this.getClosedSlots();
     	}
     	
     	else {
-    		System.out.println("ERROR, FILTER NOT FOUND. (getWeekRenderer)");
+    	//	System.out.println("ERROR, FILTER NOT FOUND. (getWeekRenderer)");
        		appointmentList = getAppointments();
     	}
     	
@@ -794,25 +794,25 @@ public class AppointmentHandler {
     	
     	//Filter that states all appointment to be used.
     	if(filter.equalsIgnoreCase("NONE")) {
-    		System.out.println("NONE, FILTER FOUND. (getDoctorWeekRenderer)");
+    	//	System.out.println("NONE, FILTER FOUND. (getDoctorWeekRenderer)");
     		appCopy = getAppointments();
     	}
     	
     	//Appointments that are only free/open are given.
     	else if(filter.equalsIgnoreCase("FREE")) {
-    		System.out.println("FREE, FILTER FOUND. (getDoctorWeekRenderer)");
+    	//	System.out.println("FREE, FILTER FOUND. (getDoctorWeekRenderer)");
     		appCopy = this.getOpenSlots();
     	}
     	
     	//appointments that are only closed/reserved are given.
     	else if(filter.equalsIgnoreCase("RESERVED")) {
-    		System.out.println("RESERVED, FILTER FOUND. (getDoctorWeekRenderer)");
+    	//	System.out.println("RESERVED, FILTER FOUND. (getDoctorWeekRenderer)");
     		appCopy = this.getClosedSlots();
     	}
     	
     	//error.
     	else {
-    		System.out.println("ERROR, FILTER NOT FOUND. (getDoctorWeekRenderer)");
+    		//System.out.println("ERROR, FILTER NOT FOUND. (getDoctorWeekRenderer)");
     		appCopy = getAppointments();
     	}
 		

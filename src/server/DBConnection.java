@@ -15,7 +15,7 @@ public class DBConnection {
 	private static String URL;
 	private static String USERNAME;
 	private static String PASSWORD;
-	private static String DATABASE = "clinic";
+	private static String DATABASE;
 	
 	public DBConnection () {
 		open = false;
@@ -30,7 +30,7 @@ public class DBConnection {
 			PASSWORD = reader.readLine();
 		} catch (IOException e) {
 			System.err.println("Error! " + FILE + " not loaded!");
-		}
+		} 
 	}
 	
 	public boolean openConnection () {
