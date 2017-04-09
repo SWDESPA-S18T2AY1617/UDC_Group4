@@ -19,6 +19,7 @@ import view.MainView;
 import view.SecretaryMainView;
 import view.TableRenderer;
 
+import model.Person
 public class CalendarProgram {
 
 	protected GregorianCalendar cal = new GregorianCalendar();
@@ -35,15 +36,15 @@ public class CalendarProgram {
 	protected AppointmentHandler eventH;
 	protected ArrayList<Appointment> sortedDay;
 	protected ArrayList<Appointment> sortedWeek;
-
-	public CalendarProgram(MainView mainView, AppointmentManager apptManager) {
+	protected Person person;
+	public CalendarProgram(MainView mainView, AppointmentManager apptManager, Person person) {
 		monthToday = cal.get(GregorianCalendar.MONTH);
 		yearToday = cal.get(GregorianCalendar.YEAR);
 		yearBound = cal.get(GregorianCalendar.YEAR);
 		dayToday = cal.get(GregorianCalendar.DAY_OF_MONTH);
 		date = LocalDate.of(yearToday, monthToday + 1, dayToday);
 		this.mainView = mainView;
-		
+		this.person = person;
 		sIndex = 100;
 		this.eventH = new AppointmentHandler(apptManager);
 		
@@ -584,6 +585,13 @@ public class CalendarProgram {
 		refreshwAgenda();
 	}
 	
+	public Person getPerson(){
+		return person;
+	}
+
+	public MainView getMainView(){
+		return mainView;
+	}
 //	protected class btnDiscard_Action implements ActionListener {
 //		public void actionPerformed(ActionEvent e) {
 //			mainView.getCreateView().getTextFieldDate().setText("");
