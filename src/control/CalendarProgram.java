@@ -13,6 +13,7 @@ import java.time.LocalTime;
 
 import model.Appointment;
 import server.AppointmentManager;
+import server.DoctorManager;
 import view.DoctorMainView;
 import view.MainView;
 import view.TableRenderer;
@@ -34,7 +35,10 @@ public class CalendarProgram {
 	protected AppointmentHandler eventH;
 	protected ArrayList<Appointment> sortedDay;
 	protected ArrayList<Appointment> sortedWeek;
+	protected ArrayList<Appointment> sortedDoctor;
 	protected Person person;
+	
+	protected DoctorManager DManager = new DoctorManager();
 	
 	public CalendarProgram(MainView mainView, AppointmentManager apptManager, Person person) {
 		monthToday = cal.get(GregorianCalendar.MONTH);
@@ -166,28 +170,49 @@ public class CalendarProgram {
 	}
 
 	protected void refreshDay() {
-
-		mainView.getDayView().getDayTable().setModel(eventH.getDayModel(getDate()));
-		mainView.getDayView().getDayTable().setDefaultRenderer(mainView.getDayView().getDayTable().getColumnClass(0),
-				eventH.getDayRenderer());
+		if(mainView instanceof DoctorMainView){
+			mainView.getDayView().getDayTable().setModel(eventH.getDoctorDayModel(mainView.getAppID(), getDate()));
+			mainView.getDayView().getDayTable().setDefaultRenderer(mainView.getDayView().getDayTable().getColumnClass(0),
+						eventH.getDoctorDayRenderer(mainView.getAppID()));
+		}else{
+			mainView.getDayView().getDayTable().setModel(eventH.getDayModel(getDate()));
+			mainView.getDayView().getDayTable().setDefaultRenderer(mainView.getDayView().getDayTable().getColumnClass(0),
+						eventH.getDayRenderer());
+		}
 	}
 
 	protected void refreshDaySpecific(String style) {
-		mainView.getDayView().getDayTable().setModel(eventH.getEventDayModel(getDate()));
-		mainView.getDayView().getDayTable().setDefaultRenderer(mainView.getDayView().getDayTable().getColumnClass(0),
-				eventH.getDayRenderer());
+		
+		if(mainView instanceof DoctorMainView){
+			mainView.getDayView().getDayTable().setModel(eventH.getDoctorEventDayModel(mainView.getAppID(), getDate()));
+			mainView.getDayView().getDayTable().setDefaultRenderer(mainView.getDayView().getDayTable().getColumnClass(0),
+						eventH.getDoctorDayRenderer(mainView.getAppID()));
+		}else{
+			mainView.getDayView().getDayTable().setModel(eventH.getEventDayModel(getDate()));
+			mainView.getDayView().getDayTable().setDefaultRenderer(mainView.getDayView().getDayTable().getColumnClass(0),
+					eventH.getDayRenderer());
+		}
 	}
 	
 	protected void refreshWeek() {
-		mainView.getWeekView().getWeekTable().setModel(eventH.getWeekModel(getDate()));
-		mainView.getWeekView().getWeekTable().setDefaultRenderer(mainView.getWeekView().getWeekTable().getColumnClass(0), eventH.getWeekRenderer());
+		if(mainView instanceof DoctorMainView){
+			mainView.getWeekView().getWeekTable().setModel(eventH.getDoctorWeekModel(mainView.getAppID(), getDate()));
+			mainView.getWeekView().getWeekTable().setDefaultRenderer(mainView.getWeekView().getWeekTable().getColumnClass(0), eventH.getDoctorWeekRenderer(mainView.getAppID()));
+		}else{
+			mainView.getWeekView().getWeekTable().setModel(eventH.getWeekModel(getDate()));
+			mainView.getWeekView().getWeekTable().setDefaultRenderer(mainView.getWeekView().getWeekTable().getColumnClass(0), eventH.getWeekRenderer());
+		}
 	}
 
 	protected void refreshdAgenda() {
 		mainView.getAgendaView().getLblEventName().setText("No Upcoming Events");
 		mainView.getAgendaView().getLblEventTime().setText("");
-
-		sortedDay = eventH.getDayEvents(getDate());
+		
+		if(mainView instanceof DoctorMainView){
+			sortedDay = eventH.getDoctorDayAppointments(mainView.getAppID(), getDate());
+		}
+		else
+			sortedDay = eventH.getDayEvents(getDate());
 
 		for (int ctr = 0; ctr < sortedDay.size(); ctr++) {
 			if (sortedDay.get(ctr).checkSameDate(getDate()) == 0) {
@@ -211,8 +236,12 @@ public class CalendarProgram {
 	protected void refreshwAgenda(){
 		mainView.getWeekAgendaView().getLblEventName().setText("No Upcoming Events");
 		mainView.getWeekAgendaView().getLblEventTime().setText("");
-
-		sortedWeek = eventH.getWeekEvents(getDate());
+		
+		if(mainView instanceof DoctorMainView){
+			sortedWeek = eventH.getDoctorWeekAppointments(mainView.getAppID(), getDate());
+		}
+		else
+			sortedWeek = eventH.getWeekEvents(getDate());
 		
 		for (int ctr = 0; ctr < sortedWeek.size(); ctr++) {
 			
