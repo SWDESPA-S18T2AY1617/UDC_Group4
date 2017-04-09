@@ -844,20 +844,18 @@ public class CalendarProgram {
 			if (mainView.getTypeView().getComboBox().getSelectedItem() != null) {
 				ArrayList<Appointment> holdAllAppointments = getAppointmentHandler().getAppointments();
 				String selectedDoctor = mainView.getTypeView().getComboBox().getSelectedItem().toString();
-				showOpen();
+				//refresh(openSlots);
 				if(selectedDoctor.equalsIgnoreCase("all")){
-					refresh(openSlots);
 					refreshCalendar();
 					refreshdAgenda("FREE");
 					refreshwAgenda("FREE");
 					refreshDay("FREE");
 					refreshWeek("FREE");
 				}else if(selectedDoctor.equalsIgnoreCase("Doctor 1 1")){
-					refresh(openSlots);
 					ArrayList<Appointment> doctor1 = new ArrayList<Appointment>();
-					for(int i=0;i<openSlots.size();i++){
-						if(openSlots.get(i).getDoctorID() == 1)
-							doctor1.add(openSlots.get(i));
+					for(int i=0;i<getAppointmentHandler().getAppointments().size();i++){
+						if(getAppointmentHandler().getAppointments().get(i).getDoctorID() == 1)
+							doctor1.add(getAppointmentHandler().getAppointments().get(i));
 					}
 					refresh(doctor1);
 					refreshCalendar();
@@ -866,11 +864,10 @@ public class CalendarProgram {
 					refreshDay("FREE");
 					refreshWeek("FREE");
 				}else{
-					refresh(openSlots);
 					ArrayList<Appointment> doctor2 = new ArrayList<Appointment>();
-					for(int i=0;i<openSlots.size();i++){
-						if(openSlots.get(i).getDoctorID() == 2)
-							doctor2.add(openSlots.get(i));
+					for(int i=0;i<getAppointmentHandler().getAppointments().size();i++){
+						if(getAppointmentHandler().getAppointments().get(i).getDoctorID() == 2)
+							doctor2.add(getAppointmentHandler().getAppointments().get(i));
 					}
 					refresh(doctor2);
 					refreshCalendar();
