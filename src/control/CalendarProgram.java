@@ -849,7 +849,7 @@ public class CalendarProgram {
 					refresh(openSlots);
 					refreshCalendar();
 					refreshdAgenda("FREE");
-					refreshwAgenda();
+					refreshwAgenda("FREE");
 					refreshDay("FREE");
 					refreshWeek("FREE");
 				}else if(selectedDoctor.equalsIgnoreCase("Doctor 1 1")){
@@ -862,7 +862,7 @@ public class CalendarProgram {
 					refresh(doctor1);
 					refreshCalendar();
 					refreshdAgenda("FREE");
-					refreshwAgenda();
+					refreshwAgenda("FREE");
 					refreshDay("FREE");
 					refreshWeek("FREE");
 				}else{
@@ -875,7 +875,7 @@ public class CalendarProgram {
 					refresh(doctor2);
 					refreshCalendar();
 					refreshdAgenda("FREE");
-					refreshwAgenda();
+					refreshwAgenda("FREE");
 					refreshDay("FREE");
 					refreshWeek("FREE");
 				}
