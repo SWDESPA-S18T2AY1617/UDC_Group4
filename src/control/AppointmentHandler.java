@@ -956,7 +956,6 @@ public class AppointmentHandler {
 	    		endRowList.add(getAppointments().get(itemIndex.get(i)).getEndRowDay());
 	    		colorList.add(getAppointments().get(itemIndex.get(i)).getColor());
 	    	}
-	    	
     	}
     	
     	else if(filter.equalsIgnoreCase("FREE")) {
