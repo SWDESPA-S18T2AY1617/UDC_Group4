@@ -27,7 +27,7 @@ public class DoctorController extends CalendarProgram
 		doctorManager = new DoctorManager();
 		Doctor d = doctorManager.getDoctor(super.getMainView().getAppID());
 		super.getPerson().setID(d.getID());
-        	super.getPerson().setName(d.getName());
+        super.getPerson().setName(d.getName());
 		
 //		calendarProgram = new ArrayList<CalendarProgram>();
 //		int maxCtr = doctorManager.getAllDoctor().size();
