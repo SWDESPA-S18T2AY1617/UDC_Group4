@@ -15,6 +15,7 @@ import server.DoctorManager;
 import view.DoctorMainView;
 import view.UpdateFrameView;
 
+import model.Doctor;
 public class DoctorController extends CalendarProgram
 {
 	private DoctorManager doctorManager;
@@ -24,8 +25,13 @@ public class DoctorController extends CalendarProgram
 	
 	public DoctorController(AppointmentManager apptManager)
 	{	
-		super(new DoctorMainView(), apptManager);
+		super(new DoctorMainView(), apptManager, new Doctor());
+                
 		doctorManager = new DoctorManager();
+		Doctor d = doctorManager.getDoctor(super.getMainView().getAppID());
+		super.getPerson().setID(d.getID());
+        	super.getPerson().setName(d.getName());
+		
 //		calendarProgram = new ArrayList<CalendarProgram>();
 //		int maxCtr = doctorManager.getAllDoctor().size();
 //		for(int ctr = 0; ctr < maxCtr; ctr++){
