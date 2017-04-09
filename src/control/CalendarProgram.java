@@ -356,13 +356,19 @@ public class CalendarProgram {
 		mainView.getAgendaView().getLblEventName().setText("No Upcoming Events");
 		mainView.getAgendaView().getLblEventTime().setText("");
 		
+
+		if(mainView instanceof DoctorMainView){
+			openSlots = eventH.getDoctorDayAppointments(mainView.getAppID(), getDate());
+		}
+		else
+			openSlots = eventH.getDayEvents(getDate());
+		
 		for (int ctr = 0; ctr < openSlots.size(); ctr++) {
 			System.out.println("--" + openSlots.get(ctr).getAppointmentName());
 		}
 		
-
 		for (int ctr = 0; ctr < openSlots.size(); ctr++) {
-			if (openSlots.get(ctr).checkSameDate(getDate()) == 0) {
+			if (openSlots.get(ctr).checkSameDate(getDate()) == 0 && openSlots.get(ctr).isStatus() == false) {
 				if (mainView.getAgendaView().getLblEventName().getText().equalsIgnoreCase("No Upcoming Events")) {
 					mainView.getAgendaView().getLblEventName().setText("<html><font color='"
 							+ openSlots.get(ctr).getColorName() + "'>" + openSlots.get(ctr).getAppointmentName() + "</font>");
@@ -384,12 +390,18 @@ public class CalendarProgram {
 		mainView.getAgendaView().getLblEventName().setText("No Upcoming Events");
 		mainView.getAgendaView().getLblEventTime().setText("");
 		
+		if(mainView instanceof DoctorMainView){
+			closedSlots = eventH.getDoctorDayAppointments(mainView.getAppID(), getDate());
+		}
+		else
+			closedSlots = eventH.getDayEvents(getDate());
+		
 		for (int ctr = 0; ctr < closedSlots.size(); ctr++) {
 			System.out.println("--" + closedSlots.get(ctr).getAppointmentName());
 		}
 		
 		for (int ctr = 0; ctr < closedSlots.size(); ctr++) {
-			if (closedSlots.get(ctr).checkSameDate(getDate()) == 0) {
+			if (closedSlots.get(ctr).checkSameDate(getDate()) == 0 && closedSlots.get(ctr).isStatus() == true) {
 				if (mainView.getAgendaView().getLblEventName().getText().equalsIgnoreCase("No Upcoming Events")) {
 					mainView.getAgendaView().getLblEventName().setText("<html><font color='"
 							+ closedSlots.get(ctr).getColorName() + "'>" + closedSlots.get(ctr).getAppointmentName() + "</font>");
@@ -406,6 +418,7 @@ public class CalendarProgram {
 			}
 		}
 	}
+	
 	
 	
 	protected void refreshdAgenda() {
