@@ -266,7 +266,7 @@ public class CalendarProgram {
 				refreshwAgenda(theFilter);
 			}
 		});
-        
+        mainView.getTypeView().getComboBox().addActionListener(new cmbView_Action());
 		mainView.getCalendarView().getCmbYear().addActionListener(new cmbYear_Action());
 		
 		refreshDay(theFilter);
@@ -839,6 +839,50 @@ public class CalendarProgram {
 
 	}
 	
+	protected class cmbView_Action implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			if (mainView.getTypeView().getComboBox().getSelectedItem() != null) {
+				ArrayList<Appointment> holdAllAppointments = getAppointmentHandler().getAppointments();
+				String selectedDoctor = mainView.getTypeView().getComboBox().getSelectedItem().toString();
+				showOpen();
+				if(selectedDoctor.equalsIgnoreCase("all")){
+					refresh(openSlots);
+					refreshCalendar();
+					refreshdAgenda("FREE");
+					refreshwAgenda();
+					refreshDay("FREE");
+					refreshWeek("FREE");
+				}else if(selectedDoctor.equalsIgnoreCase("Doctor 1 1")){
+					refresh(openSlots);
+					ArrayList<Appointment> doctor1 = new ArrayList<Appointment>();
+					for(int i=0;i<openSlots.size();i++){
+						if(openSlots.get(i).getDoctorID() == 1)
+							doctor1.add(openSlots.get(i));
+					}
+					refresh(doctor1);
+					refreshCalendar();
+					refreshdAgenda("FREE");
+					refreshwAgenda();
+					refreshDay("FREE");
+					refreshWeek("FREE");
+				}else{
+					refresh(openSlots);
+					ArrayList<Appointment> doctor2 = new ArrayList<Appointment>();
+					for(int i=0;i<openSlots.size();i++){
+						if(openSlots.get(i).getDoctorID() == 2)
+							doctor2.add(openSlots.get(i));
+					}
+					refresh(doctor2);
+					refreshCalendar();
+					refreshdAgenda("FREE");
+					refreshwAgenda();
+					refreshDay("FREE");
+					refreshWeek("FREE");
+				}
+				getAppointmentHandler().setAppointments(holdAllAppointments);
+			}	
+		}
+	}
 	protected class cmbYear_Action implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
